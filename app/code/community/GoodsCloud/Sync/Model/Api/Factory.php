@@ -28,7 +28,7 @@ class GoodsCloud_Sync_Model_Api_Factory
             return $api;
         } catch (Exception $e) {
             if ($e->getCode() == self::ERROR_CODE_CREDENTIALS_INCORRECT) {
-                throw new GoodsCloud_Sync_Model_Exception_WrongCredentials($e->getMessage());
+                throw new GoodsCloud_Sync_Model_Api_Exception_WrongCredentials($e->getMessage());
             }
         }
     }
