@@ -26,7 +26,8 @@ class GoodsCloud_Sync_Model_Api
      *
      * @return Varien_Data_Collection collection with items from api
      * @throws Exception
-     */private function get($model)
+     */
+    private function get($model)
     {
         $response = $this->api->get("/api/internal/$model");
         /* @var $collection Varien_Data_Collection */
@@ -40,7 +41,7 @@ class GoodsCloud_Sync_Model_Api
         return $collection;
     }
 
-    
+
     public function createChannel(Mage_Core_Model_Store $view)
     {
         /** @var $helper GoodsCloud_Sync_Helper_Data */
@@ -70,12 +71,12 @@ class GoodsCloud_Sync_Model_Api
             // created	hybrid_property The time when this row was created . Determined by looking in the history for this table . Read - only .
         );
 
-        $this->putPost('channel', $data);
+        return $this->putPost('channel', $data);
     }
 
     private function putPost($resource, $data)
     {
-        var_dump($this->api->post('/api/internal/' . $resource, array(), $data));
+        return $this->api->post('/api/internal/' . $resource, array(), $data);
     }
 }
 

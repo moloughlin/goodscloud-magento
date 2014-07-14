@@ -35,7 +35,14 @@ class GoodsCloud_Sync_Model_FirstWrite_Channels
         return true;
     }
 
-    private function createChannelFromStoreview($view)
+    /**
+     * create a channel in goodscloud from storeview data
+     *
+     * @param Mage_Core_Model_Store $view
+     *
+     * @return bool|string|void
+     */
+    private function createChannelFromStoreview(Mage_Core_Model_Store $view)
     {
         return $this->api->createChannel($view);
     }

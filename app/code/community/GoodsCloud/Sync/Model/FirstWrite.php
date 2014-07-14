@@ -2,6 +2,9 @@
 
 class GoodsCloud_Sync_Model_FirstWrite
 {
+    /**
+     * do all the things which are needed, when magento and goodscloud are the first time connected
+     */
     public function writeMagentoToGoodscloud()
     {
         // Add a Channel for every StoreView
@@ -17,6 +20,11 @@ class GoodsCloud_Sync_Model_FirstWrite
         $this->createGCCategoriesFromCategories();
     }
 
+    /**
+     * create all channels in goodscloud from storeview data
+     *
+     * @return bool
+     */
     private function createChannelsFromStoreView()
     {
         $stores = Mage::app()->getStores();
