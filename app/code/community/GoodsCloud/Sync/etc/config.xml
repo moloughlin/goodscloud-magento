@@ -11,6 +11,11 @@
                 <class>GoodsCloud_Sync_Model</class>
             </goodscloud_sync>
         </models>
+        <helpers>
+            <goodscloud_sync>
+                <class>GoodsCloud_Sync_Helper</class>
+            </goodscloud_sync>
+        </helpers>
     </global>
     <phpunit>
         <suite>
