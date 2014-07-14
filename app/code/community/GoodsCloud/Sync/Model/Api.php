@@ -1,26 +1,18 @@
 <?php
 
-require 'GoodsCloud/goodscloud.class.php';
-
 class GoodsCloud_Sync_Model_Api
 {
-    const ERROR_CODE_CREDENTIALS_INCORRECT = 1;
+    /**
+     * @var Goodscloud
+     */
+    private $api;
 
     /**
-     * create goodscloud api object
+     * get the api object from the factory
      */
-    function __construct()
+    public function __construct()
     {
-        try {
-            // TODO put credentials in config
-            $uri = 'http://sandbox.goodscloud.com';
-            $email = 'mymail@fbtest.de';
-            $password = '!2';
-            $this->api = new Goodscloud($uri, $email, $password);
-        } catch (Exception $e) {
-            if ($e->getCode() == self::ERROR_CODE_CREDENTIALS_INCORRECT) {
-                throw new GoodsCloud_Sync_Model_Exception_WrongCredentials();
-            }
-        }
+        $factory = Mage::getModel('goodscloud_sync/api_factory');
+        $this->api = $factory->getApi();
     }
 }

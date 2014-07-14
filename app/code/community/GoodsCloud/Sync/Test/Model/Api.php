@@ -2,16 +2,18 @@
 
 class GoodsCloud_Sync_Test_Model_Api extends EcomDev_PHPUnit_Test_Case
 {
-    private $model;
-
-    protected function setUp()
+    /**
+     *  test that api is fetched from factory
+     */
+    public function testSetApiModel()
     {
-        $this->model = Mage::getModel('goodscloud_sync/api');
-    }
+        $factoryMock = $this->getModelMock('goodscloud_sync/api_factory', array('getApi'));
 
-    public function testGetApiModel()
-    {
-        $this->assertInstanceOf('GoodsCloud_Sync_Model_Api', $this->model);
-    }
+        $factoryMock->expects($this->once())
+            ->method('getApi');
 
+        $this->replaceByMock('model', 'goodscloud_sync/api_factory', $factoryMock);
+
+        Mage::getModel('goodscloud_sync/api');
+    }
 }
