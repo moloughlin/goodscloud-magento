@@ -1,6 +1,6 @@
 <config>
     <sections>
-        <goodscloud_options translate="label" module="goodscloud_sync">
+        <goodscloud translate="label" module="goodscloud_sync">
             <label>GoodsCloud</label>
             <tab>advanced</tab>
             <frontend_type>text</frontend_type>
@@ -56,6 +56,6 @@
                     </fields>
                 </advanced>
             </groups>
-        </goodscloud_options>
+        </goodscloud>
     </sections>
 </config>
