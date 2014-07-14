@@ -19,8 +19,10 @@ class GoodsCloud_Sync_Model_FirstWrite
 
     private function createChannelsFromStoreView()
     {
+        $stores = Mage::app()->getStores();
+
         return Mage::getModel('goodscloud_sync/firstWrite_channels')
-            ->createChannelFromStoreviews();
+            ->createChannelFromStoreviews($stores);
     }
 
     private function createPropertySetsFromAttributeSets()

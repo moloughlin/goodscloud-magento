@@ -15,10 +15,16 @@ class GoodsCloud_Sync_Model_FirstWrite_Channels
         $this->api = $api;
     }
 
-    public function createChannelFromStoreviews()
+    /**
+     * create channels from store views
+     *
+     * @param Mage_Core_Model_Store[] $stores
+     *
+     * @return bool
+     * @throws Mage_Core_Exception
+     */
+    public function createChannelFromStoreviews(array $stores)
     {
-        $stores = Mage::app()->getStores();
-
         foreach ($stores as $view) {
             if (!$this->createChannelFromStoreview($view)) {
                 // todo do it transactional against goodscloud?
