@@ -221,5 +221,4 @@ class Goodscloud
     {
         return $this->signed_request('DELETE', $uri, array());
     }
-
 }
