@@ -19,10 +19,8 @@ class GoodsCloud_Sync_Model_Api
             $this->api = new Goodscloud($uri, $email, $password);
         } catch (Exception $e) {
             if ($e->getCode() == self::ERROR_CODE_CREDENTIALS_INCORRECT) {
-                // TODO add message somehow about wrong credentials
+                throw new GoodsCloud_Sync_Model_Exception_WrongCredentials();
             }
         }
     }
-
-
 }
