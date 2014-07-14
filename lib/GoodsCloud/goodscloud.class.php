@@ -30,19 +30,22 @@ class Goodscloud
     private function login($email, $password)
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->uri . '/session');
+        $url = $this->uri . '/session';
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt(
             $ch, CURLOPT_HTTPHEADER, array(
                 'GC-Email: ' . $email,
                 'GC-Password: ' . $password,
+                'Content-Length: 0'
             )
         );
         // Set so curl_exec returns the result instead of outputting it.
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-        $this->session = json_decode(curl_exec($ch));
+        $response = curl_exec($ch);
+        $this->session = json_decode($response);
         curl_close($ch);
         if (!isset($this->session) || $this->session->email != $email) {
             throw new Exception("API credentials incorrect", 1);
