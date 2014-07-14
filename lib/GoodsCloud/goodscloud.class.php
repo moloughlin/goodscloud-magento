@@ -125,7 +125,8 @@ class Goodscloud
         if ($status_code >= 200 and $status_code < 300) {
             return json_decode($result);
         } else {
-            throw new Exception("API request failed with status code " . $status_code);
+            $message = json_decode($result)->message;
+            throw new Exception("API request failed (status code $status_code): $message");
         }
     }
 
