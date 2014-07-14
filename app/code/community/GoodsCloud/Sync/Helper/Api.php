@@ -9,7 +9,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getUri()
     {
-        return 'http://sandbox.goodscloud.com';
+        return Mage::getStoreConfig('goodscloud/advanced/base_url');
     }
 
     /**
@@ -19,7 +19,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getEmail()
     {
-        return 'lalala@fbtest.de';
+        return Mage::getStoreConfig('goodscloud/basic/email');
     }
 
     /**
@@ -29,6 +29,6 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getPassword()
     {
-        return 'asdfg';
+        return Mage::getStoreConfig('goodscloud/basic/password');
     }
 }
