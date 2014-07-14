@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<config>
+    <modules>
+        <GoodsCloud_Sync>
+            <active>true</active>
+            <codePool>community</codePool>
+        </GoodsCloud_Sync>
+    </modules>
+</config>

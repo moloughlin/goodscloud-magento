@@ -1,0 +1,4 @@
+app/code/community/GoodsCloud/Sync                      app/code/community/GoodsCloud/Sync
+lib/GoodsCloud                                          lib/GoodsCloud
+
+app/etc/modules/GoodsCloud_Sync.xml                     app/etc/modules/GoodsCloud_Sync.xml

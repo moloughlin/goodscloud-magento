@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<config>
+    <modules>
+        <GoodsCloud_Sync>
+            <version>1.0.0</version>
+        </GoodsCloud_Sync>
+    </modules>
+    <global>
+        <models>
+            <goodscloud_sync>
+                <class>GoodsCloud_Sync_Model</class>
+            </goodscloud_sync>
+        </models>
+    </global>
+    <phpunit>
+        <suite>
+            <modules>
+                <GoodsCloud_Sync/>
+            </modules>
+        </suite>
+    </phpunit>
+</config>
