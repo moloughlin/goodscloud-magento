@@ -58,13 +58,11 @@ class GoodsCloud_Sync_Model_Api
             // column	UppercaseEnum	not NULL The default currency for this channel. Must be ISO-4217 currency code
             'external_identifier' => $view->getId(), // column	String 256 characters or less .
 
-            // TODO is_inventory?
             // 'is_inventory'	// column	Boolean	not null	false Is this channel an inventory channel ? Read - only, except when creating new objects .
 
             // column	Boolean	not null	false Is this channel a sales channel ? Read - only, except when creating new objects .
             'is_sales'            => true,
 
-            // TODO prefix might be a good idea, or just magento?
             // column	String	not null 256 characters or less .
             'label'               => $helper->getChannelNameByStoreView($view),
 

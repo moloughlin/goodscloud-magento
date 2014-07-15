@@ -14,9 +14,6 @@ class Goodscloud
      */
     public function __construct($uri, $email, $password)
     {
-        // TODO not sure wether this is a good idea, at least in magento
-        // TODO check and replace somehow
-        date_default_timezone_set('Europe/Berlin');
         $this->uri = $uri;
         $this->login($email, $password);
     }
