@@ -14,7 +14,8 @@ class GoodsCloud_Sync_Model_Api_Factory
      *
      * @return Goodscloud
      *
-     * @throws GoodsCloud_Sync_Model_Exception_WrongCredentials
+     * @throws Exception
+     * @throws GoodsCloud_Sync_Model_Api_Exception_WrongCredentials
      */
     public function getApi()
     {
@@ -31,6 +32,7 @@ class GoodsCloud_Sync_Model_Api_Factory
                 throw new GoodsCloud_Sync_Model_Api_Exception_WrongCredentials($e->getMessage());
             }
         }
+        throw new Exception('Api was not created but the credentials were correct - something went totally wrong.');
     }
 
     /**

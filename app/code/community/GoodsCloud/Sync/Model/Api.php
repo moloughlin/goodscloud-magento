@@ -126,10 +126,15 @@ class GoodsCloud_Sync_Model_Api
             $response = $this->api->post('/api/internal/' . $resource, array(), $data);
             return $response;
         } catch (Exception $e) {
-            $this->parseErrorMessage($e);
+            throw $this->parseErrorMessage($e);
         }
     }
 
+    /**
+     * @param Exception $exception
+     *
+     * @return GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     */
     private function parseErrorMessage(Exception $exception)
     {
         $message = $exception->getMessage();
@@ -145,9 +150,10 @@ class GoodsCloud_Sync_Model_Api
                 );
                 $exception->setDetails($matches[4]);
                 $exception->setLongDetails($matches[5]);
-                throw $exception;
+                return $exception;
             }
         }
+        return new Exception('Unknown Error');
     }
 }
 

@@ -14,7 +14,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit
             ->method('createPropertySet')
             ->will(
                 $this->returnCallback(
-                    function ($attributeSet, $view) {
+                    function ($attributeSet) {
                         $propertySetData = new stdClass();
                         $propertySetData->channel_id = 126;
                         $propertySetData->description = '';
@@ -29,11 +29,13 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit
         $stores = Mage::app()->getStores();
 
         $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        /** @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
         $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
             ->addFieldToFilter('entity_type_id', $productEntityId);
 
 
         $firstWritePropertySets = Mage::getModel('goodscloud_sync/firstWrite_propertySets');
+        /** @var GoodsCloud_Sync_Model_Api $apiMock */
         $firstWritePropertySets->setApi($apiMock);
         $firstWritePropertySets->createPropertySetsFromAttributeSets($attributeSets, $stores);
 
