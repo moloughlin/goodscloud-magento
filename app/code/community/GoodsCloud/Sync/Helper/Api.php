@@ -78,4 +78,24 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return 'free';
 
     }
+
+    /**
+     * @param Mage_Eav_Model_Entity_Attribute $attribute attribute to get options for
+     * @param Mage_Core_Model_Store           $view      view to get translated options for
+     *
+     * @return array options for attribute
+     * @throws Mage_Core_Exception
+     */
+    public function getPropertySchemaValuesForAttribute(
+        Mage_Eav_Model_Entity_Attribute $attribute, Mage_Core_Model_Store $view
+    ) {
+        if ($attribute->getSource()) {
+            return $attribute->getSource()->getAllOptions();
+        }
+    }
+
+    public function isAttributeMultiValue(Mage_Eav_Model_Entity_Attribute $attribute)
+    {
+        return $attribute->getFrontendInput() == 'multiselect';
+    }
 }

@@ -62,4 +62,25 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
             $helper->getPropertySchemaTypeForAttribute($attribute)
         );
     }
+
+    /**
+     * @throws Mage_Core_Exception
+     *
+     * @todo add test for attribute with options
+     */
+    public function testGetPropertySchemaValuesForAttributeWithSourceModel()
+    {
+        $helper = Mage::helper('goodscloud_sync/api');
+
+        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        $attribute = Mage::getModel('eav/entity_attribute')->loadByCode($productEntityType, 'country_of_manufacture');
+
+        $sourceModel = Mage::getModel('catalog/product_attribute_source_countryofmanufacture');
+
+        $this->assertEquals(
+            $sourceModel->getAllOptions(),
+            $helper->getPropertySchemaValuesForAttribute($attribute)
+        );
+    }
+
 }
