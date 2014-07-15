@@ -27,7 +27,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_Channels extends EcomDev_PHPUnit_Tes
 
         $firstWriteChannels = Mage::getModel('goodscloud_sync/firstWrite_channels');
         $firstWriteChannels->setApi($apiMock);
-        $firstWriteChannels->createChannelFromStoreviews($stores);
+        $firstWriteChannels->createChannelsFromStoreviews($stores);
 
         foreach ($stores as $store) {
             $this->assertNotNull($store->getGcChannelId());
@@ -48,6 +48,6 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_Channels extends EcomDev_PHPUnit_Tes
         $firstWriteChannels = Mage::getModel('goodscloud_sync/firstWrite_channels');
         $firstWriteChannels->setApi($apiMock);
         $storeMock = Mage::getModel('core/store');
-        $firstWriteChannels->createChannelFromStoreviews(array($storeMock));
+        $firstWriteChannels->createChannelsFromStoreviews(array($storeMock));
     }
 }

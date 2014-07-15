@@ -10,7 +10,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Channels extends GoodsCloud_Sync_Model_Fi
      * @return void
      * @throws Mage_Core_Exception
      */
-    public function createChannelFromStoreviews(array $stores)
+    public function createChannelsFromStoreviews(array $stores)
     {
         foreach ($stores as $view) {
             if (!$view->getGcChannelId()) {
