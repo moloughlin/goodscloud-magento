@@ -35,6 +35,13 @@
                     <description/>
                     <short_description/>
                 </ignored_attributes>
+                <boolean_source_models>
+                    <boolean>eav/entity_attribute_source_boolean</boolean>
+                </boolean_source_models>
+                <enum_types>
+                    <select>select</select>
+                    <multiselect>multiselect</multiselect>
+                </enum_types>
             </api>
         </goodscloud_sync>
     </default>

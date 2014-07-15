@@ -36,4 +36,13 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     {
         return array_keys(Mage::getStoreConfig('goodscloud_sync/api/ignored_attributes'));
     }
-}
+
+    public function getBooleanSourceModels()
+    {
+        return array_keys(Mage::getStoreConfig('goodscloud_sync/api/boolean_source_models'));
+    }
+
+    public function getEnumTypes()
+    {
+        return array_keys(Mage::getStoreConfig('goodscloud_sync/api/enum_types'));
+    }

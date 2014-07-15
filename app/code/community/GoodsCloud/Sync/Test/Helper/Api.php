@@ -21,4 +21,17 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
         $helper = Mage::helper('goodscloud_sync/api');
         $this->assertContains('sku', $helper->getIgnoredAttributes());
     }
+
+    public function testGetBooleanSourceModels()
+    {
+        $helper = Mage::helper('goodscloud_sync/api');
+        $this->assertContains('eav/entity_attribute_source_boolean', $helper->getBooleanSourceModels());
+    }
+
+    public function testGetEnumTypes()
+    {
+        $helper = Mage::helper('goodscloud_sync/api');
+        $this->assertContains('select', $helper->getEnumTypes());
+
+    }
 }
