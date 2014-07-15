@@ -11,6 +11,14 @@
                 <class>GoodsCloud_Sync_Model</class>
             </goodscloud_sync>
         </models>
+        <resources>
+            <goodscloud_sync_setup>
+                <setup>
+                    <module>GoodsCloud_Sync</module>
+                    <class>Mage_Core_Model_Resource_Setup</class>
+                </setup>
+            </goodscloud_sync_setup>
+        </resources>
         <helpers>
             <goodscloud_sync>
                 <class>GoodsCloud_Sync_Helper</class>
