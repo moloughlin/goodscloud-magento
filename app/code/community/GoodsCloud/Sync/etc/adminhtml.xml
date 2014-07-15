@@ -8,9 +8,9 @@
                         <children>
                             <config>
                                 <children>
-                                    <goodscloud>
+                                    <goodscloud_sync>
                                         <title>GoodsCloud Settings</title>
-                                    </goodscloud>
+                                    </goodscloud_sync>
                                 </children>
                             </config>
                         </children>

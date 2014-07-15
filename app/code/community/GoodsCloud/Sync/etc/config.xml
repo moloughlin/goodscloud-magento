@@ -25,6 +25,9 @@
             </goodscloud_sync>
         </helpers>
     </global>
+    <default>
+        <goodscloud_sync></goodscloud_sync>
+    </default>
     <phpunit>
         <suite>
             <modules>
