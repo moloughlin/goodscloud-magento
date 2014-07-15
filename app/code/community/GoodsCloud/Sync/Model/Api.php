@@ -104,9 +104,9 @@ class GoodsCloud_Sync_Model_Api
         }
     }
 
-    private function parseErrorMessage(Exception $e)
+    private function parseErrorMessage(Exception $exception)
     {
-        $message = $e->getMessage();
+        $message = $exception->getMessage();
 
         // IntegrityError:
         //        API request failed (status code 400): (IntegrityError) duplicate key value violates unique constraint "channel_label_company_id_key"
@@ -115,7 +115,7 @@ class GoodsCloud_Sync_Model_Api
         if (preg_match('#API .* \(status code (\d*)\): \((.*)\) (.*)\nDETAIL:  (.*)\n(.*)#', $message, $matches)) {
             if ($matches[2] == 'IntegrityError') {
                 $exception = new GoodsCloud_Sync_Model_Api_Exception_IntegrityError(
-                    $matches[3] . "\n" . $matches[4], $matches[1], $e
+                    $matches[3] . "\n" . $matches[4], $matches[1], $exception
                 );
                 $exception->setDetails($matches[4]);
                 $exception->setLongDetails($matches[5]);
