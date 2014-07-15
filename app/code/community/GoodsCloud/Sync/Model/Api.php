@@ -88,7 +88,7 @@ class GoodsCloud_Sync_Model_Api
         Mage_Eav_Model_Entity_Attribute_Set $set,
         Mage_Core_Model_Store $view
     ) {
-        if(!$view->getGcChannelId()) {
+        if (!$view->getGcChannelId()) {
             Mage::throwException('StoreView has no associated channel!');
         }
         $data = array(
@@ -98,18 +98,17 @@ class GoodsCloud_Sync_Model_Api
             // optional_properties	relationship	List of PropertySchema entries.
             // required_properties	relationship	List of PropertySchema entries.
             // description	column	Text	Any length allowed.
-            'description' => '',
+            'description'         => '',
             // external_identifier	column	String 256 characters or less.
             'external_identifier' => $set->getId(),
             // label	column	String	not NULL	 256 characters or less.
-            'label' => $set->getAttributeSetName(),
+            'label'               => $set->getAttributeSetName(),
             // channel_id	column	Integer	not NULL ForeignKey('channel.id') ON DELETE CASCADE
-            'channel_id' => $view->getGcChannelId(),
+            'channel_id'          => $view->getGcChannelId(),
             // channel	relationship	Single Channel entry. Write-only, value not returned in API responses.
         );
 
         $response = $this->putPost('property_set', $data);
-        var_dump($response);
         return $response;
     }
 
