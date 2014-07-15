@@ -20,19 +20,18 @@ class GoodsCloud_Sync_Model_FirstWrite_Channels
      *
      * @param Mage_Core_Model_Store[] $stores
      *
-     * @return bool
+     * @return void
      * @throws Mage_Core_Exception
      */
     public function createChannelFromStoreviews(array $stores)
     {
         foreach ($stores as $view) {
-            if (!$this->createChannelFromStoreview($view)) {
+            if (!$channelData = $this->createChannelFromStoreview($view)) {
                 // todo do it transactional against goodscloud?
                 Mage::throwException('Error while creating channels');
             }
+            $view->setGcId($channelData->id);
         }
-
-        return true;
     }
 
     /**
