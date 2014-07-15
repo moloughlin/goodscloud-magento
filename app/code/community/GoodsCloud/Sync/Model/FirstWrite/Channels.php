@@ -13,12 +13,12 @@ class GoodsCloud_Sync_Model_FirstWrite_Channels extends GoodsCloud_Sync_Model_Fi
     public function createChannelFromStoreviews(array $stores)
     {
         foreach ($stores as $view) {
-            if (!$view->getGcId()) {
+            if (!$view->getGcChannelId()) {
                 $channelData = $this->createChannelFromStoreview($view);
                 if (!$channelData) {
                     Mage::throwException('Error while creating channels');
                 }
-                $view->setGcId($channelData->id);
+                $view->setGcChannelId($channelData->id);
                 $view->save();
             }
         }

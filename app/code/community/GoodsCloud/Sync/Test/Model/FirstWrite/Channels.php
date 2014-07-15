@@ -30,7 +30,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_Channels extends EcomDev_PHPUnit_Tes
         $firstWriteChannels->createChannelFromStoreviews($stores);
 
         foreach ($stores as $store) {
-            $this->assertNotNull($store->getGcId());
+            $this->assertNotNull($store->getGcChannelId());
         }
     }
 
