@@ -1,4 +1,8 @@
 <?php
+/**
+ * Create a new column to save the goodscloud channel id on the storeview
+ * and make it unique
+ */
 /* @var $this Mage_Core_Model_Resource_Setup */
 $this->getConnection()->addColumn(
     $this->getTable('core/store'),
