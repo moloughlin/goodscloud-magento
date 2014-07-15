@@ -112,6 +112,44 @@ class GoodsCloud_Sync_Model_Api
         return $response;
     }
 
+    public function createPropertySchema(Mage_Eav_Model_Entity_Attribute $attribute, Mage_Core_Model_Store $view)
+    {
+        if (!$view->getGcChannelId()) {
+            Mage::throwException('StoreView has no associated channel!');
+        }
+        $helper = Mage::helper('goodscloud_sync/api');
+
+        array(
+            // id	column	Integer	not NULL	 Primary key.
+            // abstract_properties	relationship	List of AbstractProperty entries.
+            // optional_property_sets	relationship	List of PropertySet entries.
+            // required_property_sets	relationship	List of PropertySet entries.
+            // comparable	column	Boolean		False default	column	String 256 characters or less.
+            'comparable'          => $attribute->getIsComparable(),
+            // description	column	Text Any length allowed.
+            'description'         => '',
+            // external_identifier	column	String 256 characters or less.
+            'external_identifier' => $attribute->getId(),
+            // filterable	column	Boolean		False label	column	String	not NULL 256 characters or less.
+            'filterable'          => $attribute->getIsFilterable() || $attribute->getIsFilterableInSearch(),
+            // max	column	Numeric 0000000000000000.0000000000000000 min	column	Numeric 0000000000000000.0000000000000000
+            // multivalue	column	Boolean	not NULL	False
+            'multivalue'          => $helper->isAttributeMultiValue($attribute), // TODO
+            // searchable	column	Boolean		True
+            'searchable'          => $attribute->getIsSearchable(),
+            // type	column	Enum	not NULL	free Allowed values free, enum, range, bool, datetime
+            'type'                => $helper->getPropertySchemaTypeForAttribute($attribute),
+            // units	column	String 16 characters or less.
+            // values	column	ARRAY of String 256 characters or less.
+            'values'              => $helper->getPropertySchemaValuesForAttribute($attribute),
+            // visible	column	Boolean		True
+            'visible'             => $attribute->getIsVisibleOnFront(),
+            // channel_id	column	Integer	not NULL ForeignKey('channel.id') ON DELETE CASCADE
+            'channel_id'          => $view->getGcChannelId(),
+            // channel	relationship	Single Channel entry.
+        );
+    }
+
     /**
      * @param string $resource resource to send data to
      * @param array  $data     data to send
