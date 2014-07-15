@@ -9,7 +9,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_Channels extends EcomDev_PHPUnit_Tes
     {
         $apiMock = $this->getModelMock('goodscloud_sync/api', array('createChannel'), false, array(), '', false);
         // we'll have default + three storeviews in the fixtures, so we write three storeviews
-        $apiMock->expects($this->exactly(4))
+        $apiMock->expects($this->exactly(3))
             ->method('createChannel')
             ->will($this->returnCallback(
                     function($view) {

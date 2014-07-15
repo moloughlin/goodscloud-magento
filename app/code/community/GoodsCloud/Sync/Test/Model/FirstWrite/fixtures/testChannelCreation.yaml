@@ -35,6 +35,7 @@ scope:
       code: usa
       name: USA Store
       is_active: 1
+      gc_id: 4
     - store_id: 3
       website_id: 3
       group_id: 3
