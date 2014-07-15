@@ -3,10 +3,16 @@
 class GoodsCloud_Sync_Model_FirstWrite
 {
     /**
+     * @var GoodsCloud_Sync_Model_Api
+     */
+    private $api;
+
+    /**
      * do all the things which are needed, when magento and goodscloud are the first time connected
      */
     public function writeMagentoToGoodscloud()
     {
+        $this->api = Mage::getModel('goodscloud_sync/api');
         // Add a Channel for every StoreView
         $this->createChannelsFromStoreView();
 
@@ -31,11 +37,20 @@ class GoodsCloud_Sync_Model_FirstWrite
         $stores = Mage::app()->getStores();
 
         Mage::getModel('goodscloud_sync/firstWrite_channels')
+            ->setApi($this->api)
             ->createChannelFromStoreviews($stores);
     }
 
     private function createPropertySetsFromAttributeSets()
     {
+        $stores = Mage::app()->getStores();
+        $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
+            ->addFieldToFilter('entity_type_id', $productEntityId);
+
+        Mage::getModel('goodscloud_sync/firstWrite_propertySets')
+            ->setApi($this->api)
+            ->createPropertySetsFromAttributeSets($attributeSets, $stores);
     }
 
     private function createPropertySchemasFromAttributes()
