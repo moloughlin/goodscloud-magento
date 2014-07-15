@@ -1,20 +1,7 @@
 <?php
 
-class GoodsCloud_Sync_Model_FirstWrite_Channels
+class GoodsCloud_Sync_Model_FirstWrite_Channels extends GoodsCloud_Sync_Model_FirstWrite_Base
 {
-    /**
-     * @var GoodsCloud_Sync_Model_Api
-     */
-    private $api;
-
-    /**
-     * @param GoodsCloud_Sync_Model_Api $api
-     */
-    public function setApi(GoodsCloud_Sync_Model_Api $api)
-    {
-        $this->api = $api;
-    }
-
     /**
      * create channels from store views
      *
@@ -43,8 +30,6 @@ class GoodsCloud_Sync_Model_FirstWrite_Channels
      */
     private function createChannelFromStoreview(Mage_Core_Model_Store $view)
     {
-        return $this->api->createChannel($view);
+        return $this->getApi()->createChannel($view);
     }
-
-
 }
