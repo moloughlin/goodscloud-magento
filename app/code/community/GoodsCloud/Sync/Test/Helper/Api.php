@@ -34,4 +34,32 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
         $this->assertContains('select', $helper->getEnumTypes());
 
     }
+
+    /**
+     * @dataProvider dataProvider
+     *
+     * @param string $frontendInput
+     * @param string $sourceModel
+     * @param string $backendType
+     */
+    public function testGetPropertySchemaType($frontendInput, $sourceModel, $backendType)
+    {
+        $helper = Mage::helper('goodscloud_sync/api');
+
+        $attribute = Mage::getModel('eav/entity_attribute')
+            ->setData(
+                array(
+                    'frontend_input' => $frontendInput,
+                    'source_model'   => $sourceModel,
+                    'backend_type'   => $backendType
+                )
+            );
+
+        $expectationKey = str_replace('/', '_', "C$frontendInput-$sourceModel-$backendType");
+
+        $this->assertEquals(
+            $this->expected($expectationKey)->getType(),
+            $helper->getPropertySchemaTypeForAttribute($attribute)
+        );
+    }
 }

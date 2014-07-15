@@ -1,0 +1,11 @@
+# C is only any CHAR because yaml forbids - as first character
+Ctext--:
+  type: free
+Cselect-eav_entity_attribute_source_boolean-:
+  type: bool
+Cmultiselect-anything-:
+  type: enum
+C--datetime:
+  type: datetime
+Ctextarea--:
+  type: free

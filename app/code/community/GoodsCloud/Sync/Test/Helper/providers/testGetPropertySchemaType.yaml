@@ -1,0 +1,21 @@
+# frontend_input & source_model
+-
+  - text
+  - ""
+  - ""
+-
+  - select
+  - eav/entity_attribute_source_boolean
+  - ""
+-
+  - multiselect
+  - anything
+  - ""
+- 
+  - ""
+  - ""
+  - datetime
+- 
+  - textarea
+  - ""
+  - ""
