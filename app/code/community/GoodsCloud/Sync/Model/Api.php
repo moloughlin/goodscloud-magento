@@ -54,16 +54,23 @@ class GoodsCloud_Sync_Model_Api
         $data = array(
             // 'id'	// column	Integer	not NULL Primary key.
             'currency_code'       => $helper->getCurrencyByStoreView($view),
+
             // column	UppercaseEnum	not NULL The default currency for this channel. Must be ISO-4217 currency code
             'external_identifier' => $view->getId(), // column	String 256 characters or less .
+
             // TODO is_inventory?
             // 'is_inventory'	// column	Boolean	not null	false Is this channel an inventory channel ? Read - only, except when creating new objects .
-            'is_sales'            => true,
+
             // column	Boolean	not null	false Is this channel a sales channel ? Read - only, except when creating new objects .
+            'is_sales'            => true,
+
             // TODO prefix might be a good idea, or just magento?
-            'label'               => $view->getName(), // column	String	not null 256 characters or less .
-            'language_code'       => $helper->getLanguageByStoreView($view)
+            // column	String	not null 256 characters or less .
+            'label'               => $helper->getChannelNameByStoreView($view),
+
             //	column	LowercaseEnum	not null The default language for this channel . Must be {ISO - 639} codes
+            'language_code'       => $helper->getLanguageByStoreView($view)
+
             // notification_emails	column	ARRAY of String		[] 256 characters or less . List of email addresses to notify of new [Logistic]Orders .
             // quality_score	column	Numeric	not null	0 0.000000000 Quality score calculated by GoodsCloud . Read - only .
             // return_reasons	column	ARRAY of String	not null	['other'] 256 characters or less .     List of reasons for why an item was returned . There is always at least an 'other' reason . This list is also defined, though not used, for         inventory channels .

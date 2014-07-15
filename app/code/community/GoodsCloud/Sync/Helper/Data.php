@@ -26,4 +26,9 @@ class GoodsCloud_Sync_Helper_Data extends Mage_Core_Helper_Abstract
         $currentCurrency = Mage::app()->getStore($view)->getCurrentCurrencyCode();
         return Mage::app()->getLocale()->currency($currentCurrency)->getShortName();
     }
+
+    public function getChannelNameByStoreView(Mage_Core_Model_Store $view)
+    {
+        return $view->getName();
+    }
 }
