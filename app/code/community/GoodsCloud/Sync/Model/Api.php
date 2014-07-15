@@ -41,7 +41,11 @@ class GoodsCloud_Sync_Model_Api
         return $collection;
     }
 
-
+    /**
+     * @param Mage_Core_Model_Store $view storeview to create channel from
+     *
+     * @return bool true on success, false on failure
+     */
     public function createChannel(Mage_Core_Model_Store $view)
     {
         /** @var $helper GoodsCloud_Sync_Helper_Data */
@@ -75,7 +79,15 @@ class GoodsCloud_Sync_Model_Api
         return $return;
     }
 
-    private function putPost($resource, $data)
+    /**
+     * @param string $resource resource to send data to
+     * @param array  $data     data to send
+     *
+     * @return bool true on success, false on failure
+     *
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     */
+    private function putPost($resource, array $data)
     {
         try {
             $putPost = $this->api->post('/api/internal/' . $resource, array(), $data);
