@@ -31,4 +31,9 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     {
         return Mage::getStoreConfig('goodscloud/basic/password');
     }
+
+    public function getIgnoredAttributes()
+    {
+        return array_keys(Mage::getStoreConfig('goodscloud_sync/api/ignored_attributes'));
+    }
 }

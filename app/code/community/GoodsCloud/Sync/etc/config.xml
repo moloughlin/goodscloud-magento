@@ -26,7 +26,17 @@
         </helpers>
     </global>
     <default>
-        <goodscloud_sync></goodscloud_sync>
+        <goodscloud_sync>
+            <api>
+                <ignored_attributes>
+                    <sku/>
+                    <id/>
+                    <visibility/>
+                    <description/>
+                    <short_description/>
+                </ignored_attributes>
+            </api>
+        </goodscloud_sync>
     </default>
     <phpunit>
         <suite>

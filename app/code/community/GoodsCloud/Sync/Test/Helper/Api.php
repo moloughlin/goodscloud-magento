@@ -15,4 +15,10 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
         $this->assertEquals('api@goodscloud.com', $helper->getEmail());
         $this->assertEquals('!"§g$&6%ZHTRasdB', $helper->getPassword());
     }
+
+    public function testGetIgnoredAttributes()
+    {
+        $helper = Mage::helper('goodscloud_sync/api');
+        $this->assertContains('sku', $helper->getIgnoredAttributes());
+    }
 }
