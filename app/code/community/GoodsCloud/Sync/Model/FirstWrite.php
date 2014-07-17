@@ -45,6 +45,7 @@ class GoodsCloud_Sync_Model_FirstWrite
     {
         $stores = Mage::app()->getStores();
         $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+
         /* @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
         $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
             ->addFieldToFilter('entity_type_id', $productEntityId);
