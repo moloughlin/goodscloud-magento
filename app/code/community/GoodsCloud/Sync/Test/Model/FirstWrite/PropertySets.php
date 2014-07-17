@@ -3,7 +3,7 @@
 class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit_Test_Case
 {
     /**
-     * @loadFixture stores.yaml
+     * @loadFixture storesWithGcChannelId.yaml
      */
     public function testCreatePropertySet()
     {
@@ -28,12 +28,9 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit
 
         $stores = Mage::app()->getStores();
 
-        $ignoredAttributes = Mage::helper('goodscloud_sync/api')->getIgnoredAttributes();
         $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
-
         /** @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
-        $attributeSets = Mage::getResourceModel('catalog/product_attribute_collection')
-            ->addFieldToFilter('attribute_code', array('nin' => $ignoredAttributes))
+        $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
             ->addFieldToFilter('entity_type_id', $productEntityId);
 
 
@@ -44,8 +41,35 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit
 
         foreach ($attributeSets as $sets) {
             $this->assertJson($sets->getGcPropertySetIds());
+            $this->assertNotEmpty($sets->getGcPropertySetIds());
         }
     }
+
+    /**
+     * @loadFixture              stores.yaml
+     *
+     * @expectedException Mage_Core_Exception
+     * @expectedExceptionMessage Store Canada Store has no gc channel id set!
+     */
+    public function testCreatePropertySetWithoutChannelId()
+    {
+        $this->createAttributeSets();
+        $apiMock = $this->getModelMock('goodscloud_sync/api', array('createPropertySet'), false, array(), '', false);
+
+        $stores = Mage::app()->getStores();
+
+        $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        /** @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
+        $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
+            ->addFieldToFilter('entity_type_id', $productEntityId);
+
+
+        $firstWritePropertySets = Mage::getModel('goodscloud_sync/firstWrite_propertySets');
+        /** @var GoodsCloud_Sync_Model_Api $apiMock */
+        $firstWritePropertySets->setApi($apiMock);
+        $firstWritePropertySets->createPropertySetsFromAttributeSets($attributeSets, $stores);
+    }
+
 
     /**
      *  create a few attribute sets for testing
@@ -77,4 +101,13 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit
         );
         $shirt->save();
     }
+
+    protected function tearDown()
+    {
+        Mage::getSingleton('core/resource')->getConnection('core_write')->query(
+            'UPDATE eav_attribute_set SET gc_property_set_ids = NULL;'
+        );
+    }
+
+
 }

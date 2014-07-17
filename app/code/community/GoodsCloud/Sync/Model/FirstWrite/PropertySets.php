@@ -12,15 +12,18 @@ class GoodsCloud_Sync_Model_FirstWrite_PropertySets extends GoodsCloud_Sync_Mode
         Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection $attributeSets, array $storeViews
     ) {
         foreach ($storeViews as $view) {
+            if (!$view->getGcChannelId()) {
+                Mage::throwException(sprintf('Store %s has no gc channel id set!', $view->getName()));
+            }
             foreach ($attributeSets as $attributeSet) {
-                $propertySetIds = json_decode($attributeSet->getPropertySetIds(), true);
-                if (!isset($propertySetIds[$view->getId()])) {
+                $propertySetIds = json_decode($attributeSet->getGcPropertySetIds(), true);
+                if (!isset($propertySetIds[$view->getGcChannelId()])) {
                     $propertySetData = $this->createPropertySetFromAttributeSets($attributeSet, $view);
                     if (!$propertySetData) {
                         Mage::throwException('Error while creating property set');
                     }
-                    $propertySetIds[$view->getId()] = $propertySetData->id;
-                    $attributeSet->setPropertySetIds(json_encode($propertySetIds));
+                    $propertySetIds[$view->getGcChannelId()] = $propertySetData->id;
+                    $attributeSet->setGcPropertySetIds(json_encode($propertySetIds));
                     $attributeSet->save();
                 }
             }
