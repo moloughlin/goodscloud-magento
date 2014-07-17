@@ -119,7 +119,7 @@ class GoodsCloud_Sync_Model_Api
         }
         $helper = Mage::helper('goodscloud_sync/api');
 
-        array(
+        $data = array(
             // id	column	Integer	not NULL	 Primary key.
             // abstract_properties	relationship	List of AbstractProperty entries.
             // optional_property_sets	relationship	List of PropertySet entries.
@@ -133,6 +133,8 @@ class GoodsCloud_Sync_Model_Api
             // filterable	column	Boolean		False label	column	String	not NULL 256 characters or less.
             'filterable'          => $attribute->getIsFilterable() || $attribute->getIsFilterableInSearch(),
             // max	column	Numeric 0000000000000000.0000000000000000 min	column	Numeric 0000000000000000.0000000000000000
+            // label	column	String	not NULL 256 characters or less.
+            'label' => $attribute->getName(),
             // multivalue	column	Boolean	not NULL	False
             'multivalue'          => $helper->isAttributeMultiValue($attribute), // TODO
             // searchable	column	Boolean		True
@@ -148,6 +150,8 @@ class GoodsCloud_Sync_Model_Api
             'channel_id'          => $view->getGcChannelId(),
             // channel	relationship	Single Channel entry.
         );
+
+        return $this->putPost('property_schema', $data);
     }
 
     /**
