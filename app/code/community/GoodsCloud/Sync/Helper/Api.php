@@ -92,7 +92,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         try {
             return $attribute->getSource()->getAllOptions();
         } catch (Mage_Core_Exception $e) {
-            $sourceModelNotFound = 'Source model ""';
+            $sourceModelNotFound = 'Source model "" not found for attribute ';
             $length = strlen($sourceModelNotFound);
             if (substr($e->getMessage(), 0, $length) == $sourceModelNotFound) {
                 return array();
