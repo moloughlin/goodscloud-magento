@@ -1,21 +1,21 @@
 eav:
   catalog_category:
-    - entity_id: 1,
-      entity_type_id: 3,
-      attribute_set_id: 0,
-      parent_id: 0,
-      path: 1,
-      position: 0,
-      level: 0,
+    - entity_id: 1
+      entity_type_id: 3
+      attribute_set_id: 0
+      parent_id: null
+      path: 1
+      position: 0
+      level: 0
       children_count: 1
 
-    - entity_id: 2,
-      entity_type_id: 3,
-      attribute_set_id: 3,
-      parent_id: 1,
-      path: 1/2,
-      position: 1,
-      level: 1,
+    - entity_id: 2
+      entity_type_id: 3
+      attribute_set_id: 3
+      parent_id: 1
+      path: 1/2
+      position: 1
+      level: 1
       children_count: 1
 
     - entity_id: 34
@@ -48,6 +48,7 @@ eav:
       /stores:
         - 0
         - 1
+
     - entity_id: 37
       parent_id: 36
       path: 1/2/34/36/37

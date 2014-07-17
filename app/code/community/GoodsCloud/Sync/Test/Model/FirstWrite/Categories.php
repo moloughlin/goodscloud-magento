@@ -10,7 +10,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_Categories extends EcomDev_PHPUnit_T
     {
         $apiMock = $this->getModelMock('goodscloud_sync/api', array('createCategory'), false, array(), '', false);
 
-        $apiMock->expects($this->exactly(6)) // 6 categories * 1 storeview
+        $apiMock->expects($this->exactly(4)) // (6 categories - root + store view root category) * 1 storeview
         ->method('createCategory')
             ->will(
                 $this->returnCallback(
