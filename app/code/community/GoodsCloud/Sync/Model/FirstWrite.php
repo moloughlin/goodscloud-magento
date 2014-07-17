@@ -56,11 +56,9 @@ class GoodsCloud_Sync_Model_FirstWrite
 
     private function createPropertySchemasFromAttributes()
     {
-        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode('catalog_product');
-
         /** @var $attributes Mage_Eav_Model_Resource_Entity_Attribute_Collection */
-        $attributes = Mage::getResourceModel('eav/entity_attribute_collection');
-        $attributes->setEntityTypeFilter($productEntityType);
+        $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
+            ->addFieldToFilter('attribute_code', array('nin' => $ignoredAttributes));
 
         $stores = Mage::app()->getStores();
 

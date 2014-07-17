@@ -29,8 +29,9 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit
         $stores = Mage::app()->getStores();
 
         $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+
         /** @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
-        $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
+        $attributeSets = Mage::getResourceModel('catalog/product_attribute_collection')
             ->addFieldToFilter('entity_type_id', $productEntityId);
 
 

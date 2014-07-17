@@ -46,7 +46,9 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
     {
         $helper = Mage::helper('goodscloud_sync/api');
 
-        $attribute = Mage::getModel('eav/entity_attribute')
+
+        /** @var $attribute Mage_Eav_Model_Entity_Attribute */
+        $attribute = Mage::getModel('catalog/entity_attribute')
             ->setData(
                 array(
                     'frontend_input' => $frontendInput,
@@ -73,7 +75,7 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
         $helper = Mage::helper('goodscloud_sync/api');
 
         $productEntityType = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
-        $attribute = Mage::getModel('eav/entity_attribute')->loadByCode($productEntityType, 'country_of_manufacture');
+        $attribute = Mage::getModel('catalog/entity_attribute')->loadByCode($productEntityType, 'country_of_manufacture');
         $view = Mage::app()->getStore();
 
         $sourceModel = Mage::getModel('catalog/product_attribute_source_countryofmanufacture');
@@ -89,7 +91,7 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
         $helper = Mage::helper('goodscloud_sync/api');
 
         $productEntityType = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
-        $attribute = Mage::getModel('eav/entity_attribute')->loadByCode($productEntityType, 'msrp');
+        $attribute = Mage::getModel('catalog/entity_attribute')->loadByCode($productEntityType, 'msrp');
         $view = Mage::app()->getStore();
 
         $this->assertInternalType('array', $helper->getPropertySchemaValuesForAttribute($attribute, $view));
