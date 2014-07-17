@@ -84,4 +84,17 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
         );
     }
 
+    public function testGetPropertySchemaValuesForAttributeWithoutSourceModel()
+    {
+        $helper = Mage::helper('goodscloud_sync/api');
+
+        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        $attribute = Mage::getModel('eav/entity_attribute')->loadByCode($productEntityType, 'msrp');
+        $view = Mage::app()->getStore();
+
+        $this->assertInternalType('array', $helper->getPropertySchemaValuesForAttribute($attribute, $view));
+        $this->assertEmpty($helper->getPropertySchemaValuesForAttribute($attribute, $view));
+
+    }
+
 }

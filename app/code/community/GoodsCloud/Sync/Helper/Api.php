@@ -89,8 +89,15 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     public function getPropertySchemaValuesForAttribute(
         Mage_Eav_Model_Entity_Attribute $attribute, Mage_Core_Model_Store $view
     ) {
-        if ($attribute->getSource()) {
+        try {
             return $attribute->getSource()->getAllOptions();
+        } catch (Mage_Core_Exception $e) {
+            $sourceModelNotFound = 'Source model ""';
+            $length = strlen($sourceModelNotFound);
+            if (substr($e->getMessage(), 0, $length) == $sourceModelNotFound) {
+                return array();
+            }
+            throw $e;
         }
     }
 
