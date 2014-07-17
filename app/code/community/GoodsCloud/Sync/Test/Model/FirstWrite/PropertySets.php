@@ -28,10 +28,12 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit
 
         $stores = Mage::app()->getStores();
 
+        $ignoredAttributes = Mage::helper('goodscloud_sync/api')->getIgnoredAttributes();
         $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
 
         /** @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
         $attributeSets = Mage::getResourceModel('catalog/product_attribute_collection')
+            ->addFieldToFilter('attribute_code', array('nin' => $ignoredAttributes))
             ->addFieldToFilter('entity_type_id', $productEntityId);
 
 

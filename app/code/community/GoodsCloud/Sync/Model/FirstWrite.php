@@ -56,6 +56,7 @@ class GoodsCloud_Sync_Model_FirstWrite
 
     private function createPropertySchemasFromAttributes()
     {
+        $ignoredAttributes = Mage::helper('goodscloud_sync/api')->getIgnoredAttributes();
         /** @var $attributes Mage_Eav_Model_Resource_Entity_Attribute_Collection */
         $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
             ->addFieldToFilter('attribute_code', array('nin' => $ignoredAttributes));
