@@ -134,7 +134,7 @@ class GoodsCloud_Sync_Model_Api
             'filterable'          => $attribute->getIsFilterable() || $attribute->getIsFilterableInSearch(),
             // max	column	Numeric 0000000000000000.0000000000000000 min	column	Numeric 0000000000000000.0000000000000000
             // label	column	String	not NULL 256 characters or less.
-            'label' => $attribute->getName(),
+            'label'               => $attribute->getName(),
             // multivalue	column	Boolean	not NULL	False
             'multivalue'          => $helper->isAttributeMultiValue($attribute), // TODO
             // searchable	column	Boolean		True
