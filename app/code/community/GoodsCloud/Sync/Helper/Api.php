@@ -39,7 +39,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
     public function getBooleanSourceModels()
     {
-        return array_keys(Mage::getStoreConfig('goodscloud_sync/api/boolean_source_models'));
+        return Mage::getStoreConfig('goodscloud_sync/api/boolean_source_models');
     }
 
     public function getEnumTypes()
