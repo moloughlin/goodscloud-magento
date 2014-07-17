@@ -30,11 +30,12 @@ scope:
       root_category_id: 2 # Default Category
   store: # Initializes store views
     - store_id: 1
-        website_id: 1
-        group_id: 1
-        code: default
-        name: Default Store View
-        is_active: 1
+      website_id: 1
+      group_id: 1
+      code: default
+      name: Default Store View
+      is_active: 1
+      gc_channel_id: null
     - store_id: 2
       website_id: 2
       group_id: 2
@@ -48,9 +49,11 @@ scope:
       code: canada
       name: Canada Store
       is_active: 1
+      gc_channel_id: null
     - store_id: 4
       website_id: 4
       group_id: 4
       code: germany
       name: Germany Store
       is_active: 1
+      gc_channel_id: null
