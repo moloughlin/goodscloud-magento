@@ -1,0 +1,15 @@
+scope:
+  group: # Initializes store groups
+    - group_id: 1
+      website_id: 1
+      name: Default Store Group
+      default_store_id: 1
+      root_category_id: 2 # Default Category
+  store: # Initializes store views
+    - store_id: 1
+      website_id: 1
+      group_id: 1
+      code: default
+      name: Default Store View
+      is_active: 1
+      gc_channel_id: 123

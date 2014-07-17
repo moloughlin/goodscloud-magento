@@ -1,0 +1,60 @@
+eav:
+  catalog_category:
+    - entity_id: 1,
+      entity_type_id: 3,
+      attribute_set_id: 0,
+      parent_id: 0,
+      path: 1,
+      position: 0,
+      level: 0,
+      children_count: 1
+
+    - entity_id: 2,
+      entity_type_id: 3,
+      attribute_set_id: 3,
+      parent_id: 1,
+      path: 1/2,
+      position: 1,
+      level: 1,
+      children_count: 1
+
+    - entity_id: 34
+      parent_id: 2
+      path: 1/2/34
+      name: Ebene 1
+      level: 2
+      children_count: 2
+      is_active: 1
+      /stores:
+        - 0
+        - 1
+    - entity_id: 35
+      parent_id: 34
+      path: 1/2/34/35
+      name: Ebene 2
+      level: 3
+      children_count: 0
+      is_active: 1
+      /stores:
+        - 0
+        - 1
+    - entity_id: 36
+      parent_id: 34
+      path: 1/2/34/36
+      name: Ebene 2a
+      level: 3
+      children_count: 1
+      is_active: 1
+      /stores:
+        - 0
+        - 1
+    - entity_id: 37
+      parent_id: 36
+      path: 1/2/34/36/37
+      name: Ebene 3
+      level: 4
+      children_count: 0
+      is_active: 1
+      /stores:
+        - 0
+        - 1
