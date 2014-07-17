@@ -141,7 +141,7 @@ class GoodsCloud_Sync_Model_Api
             'type'                => $helper->getPropertySchemaTypeForAttribute($attribute),
             // units	column	String 16 characters or less.
             // values	column	ARRAY of String 256 characters or less.
-            'values'              => $helper->getPropertySchemaValuesForAttribute($attribute),
+            'values'              => $helper->getPropertySchemaValuesForAttribute($attribute, $view),
             // visible	column	Boolean		True
             'visible'             => $attribute->getIsVisibleOnFront(),
             // channel_id	column	Integer	not NULL ForeignKey('channel.id') ON DELETE CASCADE

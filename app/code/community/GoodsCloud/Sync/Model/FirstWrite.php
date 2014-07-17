@@ -56,6 +56,19 @@ class GoodsCloud_Sync_Model_FirstWrite
 
     private function createPropertySchemasFromAttributes()
     {
+        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode('catalog_product');
+
+        /** @var $attributes Mage_Eav_Model_Resource_Entity_Attribute_Collection */
+        $attributes = Mage::getResourceModel('eav/entity_attribute_collection');
+        $attributes->setEntityTypeFilter($productEntityType);
+
+        $stores = Mage::app()->getStores();
+
+        Mage::getModel('goodscloud_sync/firstWrite_propertySchemas')
+            ->setApi($this->api)
+            ->createPropertySchemasFromAttributes($attributes, $stores);
+    }
+
     }
 
     private function createGCCategoriesFromCategories()
