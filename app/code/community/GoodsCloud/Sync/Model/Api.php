@@ -27,6 +27,37 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * get all categories
+     *
+     * @return Varien_Data_Collection
+     */
+    public function getCategories()
+    {
+        return $this->get('category');
+    }
+
+    /**
+     * @param int $id category id to delete
+     *
+     * @return bool|string
+     */
+    public function deleteCategory($id)
+    {
+        return $this->delete('category', $id);
+    }
+
+    /**
+     * @param string $resource resource to delete
+     * @param int    $id       id to delete
+     *
+     * @return bool|string
+     */
+    private function delete($resource, $id)
+    {
+        return $this->api->delete("/api/internal/$resource/$id");
+    }
+
+    /**
      * @param string $model name of the resource which is requested
      *
      * @return Varien_Data_Collection collection with items from api
