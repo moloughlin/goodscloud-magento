@@ -16,6 +16,11 @@ class GoodsCloud_Sync_Model_Api
         $this->api = $factory->getApi();
     }
 
+    /**
+     * get all channels
+     *
+     * @return Varien_Data_Collection
+     */
     public function getChannels()
     {
         return $this->get('channel');
@@ -25,6 +30,7 @@ class GoodsCloud_Sync_Model_Api
      * @param string $model name of the resource which is requested
      *
      * @return Varien_Data_Collection collection with items from api
+     *
      * @throws Exception
      */
     private function get($model)
@@ -84,6 +90,15 @@ class GoodsCloud_Sync_Model_Api
         return $response;
     }
 
+    /**
+     * @param Mage_Eav_Model_Entity_Attribute_Set $set
+     * @param Mage_Core_Model_Store               $view
+     *
+     * @return bool
+     *
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws Mage_Core_Exception
+     */
     public function createPropertySet(
         Mage_Eav_Model_Entity_Attribute_Set $set,
         Mage_Core_Model_Store $view
@@ -112,6 +127,15 @@ class GoodsCloud_Sync_Model_Api
         return $response;
     }
 
+    /**
+     * @param Mage_Eav_Model_Entity_Attribute $attribute
+     * @param Mage_Core_Model_Store           $view
+     *
+     * @return string newly create property set data
+     *
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws Mage_Core_Exception
+     */
     public function createPropertySchema(Mage_Eav_Model_Entity_Attribute $attribute, Mage_Core_Model_Store $view)
     {
         if (!$view->getGcChannelId()) {
@@ -158,7 +182,7 @@ class GoodsCloud_Sync_Model_Api
      * @param string $resource resource to send data to
      * @param array  $data     data to send
      *
-     * @return bool true on success, false on failure
+     * @return string data of the created/updated
      *
      * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
      */
