@@ -179,6 +179,42 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @param Mage_Catalog_Model_Category $category
+     * @param Mage_Core_Model_Store       $store
+     * @param int                         $gcParentId
+     *
+     * @return string newly created category data
+     */
+    public function createCategory(Mage_Catalog_Model_Category $category, Mage_Core_Model_Store $store, $gcParentId)
+    {
+        $data = array(
+            //        id	column	Integer	not NULL Primary key.
+            //        children	relationship	List of Category entries. Cascade delete, delete-orphan.
+            //        active	column	Boolean		True
+            'active'              => $category->getIsActive(),
+            //        external_identifier	column	String 256 characters or less.
+            'external_identifier' => $category->getId(),
+            //        label	column	String	not NULL 256 characters or less.
+            'label'               => $category->getName(),
+            //        position	column	Integer Position of this category in the list of categories in its parent category.
+            'position'            => $category->getPosition(),
+            //        selectable	column	Boolean	not NULL	True True means this category can contain products.
+            'selectable'          => $category->getIsAnchor(),
+            //        abstract_category_id	column	Integer ForeignKey('abstract_category.id') ON DELETE SET NULL
+            //        abstract_category	relationship	Single AbstractCategory entry.
+            //        channel_id	column	Integer	not NULL ForeignKey('channel.id') ON DELETE CASCADE
+            'channel_id'          => $store->getGcChannelId(),
+            //        channel	relationship	Single Channel entry. Write-only, value not returned in API responses.
+            //        parent_id	column	Integer ForeignKey('category.id') ON DELETE CASCADE
+            'parent_id'           => $gcParentId,
+            //        parent	relationship	Single Category entry.
+            //        channel_product_views	relationship	List of ChannelProductView entries.
+        );
+
+        return $this->putPost('category', $data);
+    }
+
+    /**
      * @param string $resource resource to send data to
      * @param array  $data     data to send
      *

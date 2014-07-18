@@ -27,10 +27,18 @@ class GoodsCloud_Sync_Model_FirstWrite_Categories extends GoodsCloud_Sync_Model_
                 Mage::throwException(sprintf('Store %s has no gc channel id set!', $view->getName()));
             }
 
-            // Builds an expression like 1/2/
-            $categoryIdPrefix = Mage_Catalog_Model_Category::TREE_ROOT_ID . '/' . $view->getRootCategoryId() . '/';
+            // Builds an expression like ^1/2(/.*)$
+            $categoryIdPrefix = '^' . Mage_Catalog_Model_Category::TREE_ROOT_ID . '/' . $view->getRootCategoryId() . '(/.*)?$';
             $this->categories = Mage::getResourceModel('catalog/category_collection')
-                ->addPathsFilter($categoryIdPrefix)
+                ->addPathFilter($categoryIdPrefix)
+                ->addAttributeToSelect(
+                    array(
+                        'gc_channel_id',
+                        'name',
+                        'is_active',
+                        'is_anchor',
+                    )
+                )
                 ->setOrder('level');
 
             $gcParentId = null;
@@ -40,7 +48,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Categories extends GoodsCloud_Sync_Model_
                 if (!isset($categoryIds[$view->getGcChannelId()])) {
 
                     // if the parent is the root of the store, set it NULL so it is the root in goodscloud
-                    if ($category->getParentId() != $view->getRootCategoryId()) {
+                    if ($category->getId() != $view->getRootCategoryId()) {
                         $gcParentId = $this->categoryIdCache[$category->getParentId()];
                     }
 
@@ -50,12 +58,11 @@ class GoodsCloud_Sync_Model_FirstWrite_Categories extends GoodsCloud_Sync_Model_
                         Mage::throwException('Error while creating category');
                     }
 
-                    $this->categoryIdCache[$category->getId()] = $categoryData->id;
-
                     $categoryIds[$view->getGcChannelId()] = $categoryData->id;
                     $category->setGcCategoryIds(json_encode($categoryIds));
                     $category->save();
                 }
+                $this->categoryIdCache[$category->getId()] = $categoryIds[$view->getGcChannelId()];
             }
         }
     }
@@ -66,6 +73,8 @@ class GoodsCloud_Sync_Model_FirstWrite_Categories extends GoodsCloud_Sync_Model_
      * @param Mage_Catalog_Model_Category $category   category to create
      * @param Mage_Core_Model_Store       $store      channel (storeview) to create the category in
      * @param int                         $gcParentId parent id of the gc category
+     *
+     * @return string|void
      */
     private function createCategory(Mage_Catalog_Model_Category $category, Mage_Core_Model_Store $store, $gcParentId)
     {
