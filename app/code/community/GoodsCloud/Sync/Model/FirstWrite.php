@@ -73,5 +73,10 @@ class GoodsCloud_Sync_Model_FirstWrite
 
     private function createGCCategoriesFromCategories()
     {
+        $stores = Mage::app()->getStores();
+
+        Mage::getModel('goodscloud_sync/firstWrite_categories')
+            ->setApi($this->api)
+            ->createCategories($stores);
     }
 }
