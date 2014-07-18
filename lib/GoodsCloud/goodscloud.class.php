@@ -119,11 +119,15 @@ class Goodscloud
         $result = curl_exec($ch);
         $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+        $decodedResult = json_decode($result);
         if ($status_code >= 200 and $status_code < 300) {
-            return json_decode($result);
+            return $decodedResult;
         } else {
-            $message = json_decode($result)->message;
-            throw new Exception("API request failed (status code $status_code): $message");
+            if (isset($decodedResult->message)) {
+                $message = $decodedResult->message;
+                throw new Exception("API request failed (status code $status_code): $message");
+            }
+            throw new Exception("API request failed (status code $status_code): Unknown error");
         }
     }
 
