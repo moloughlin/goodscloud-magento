@@ -77,6 +77,19 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit
     private function createAttributeSets()
     {
         $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+
+        /* @var $default Mage_Eav_Model_Entity_Attribute_Set */
+        $default = Mage::getModel('eav/entity_attribute_set')->load(4);
+        $default->addData(
+            array(
+                'entity_type_id'      => $productEntityId,
+                'attribute_set_name'  => 'Default',
+                'sort_order'          => '1',
+                'gc_property_set_ids' => '',
+            )
+        );
+        $default->save();
+
         /* @var $furniture Mage_Eav_Model_Entity_Attribute_Set */
         $furniture = Mage::getModel('eav/entity_attribute_set')->load('Furniture', 'attribute_set_name');
         $furniture->addData(
