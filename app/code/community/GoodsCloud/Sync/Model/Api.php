@@ -19,7 +19,7 @@ class GoodsCloud_Sync_Model_Api
     /**
      * get all channels
      *
-     * @return Varien_Data_Collection
+     * @return GoodsCloud_Sync_Model_Api_Channel_Collection
      */
     public function getChannels()
     {
@@ -29,18 +29,24 @@ class GoodsCloud_Sync_Model_Api
     /**
      * get all categories
      *
-     * @return Varien_Data_Collection
+     * @return GoodsCloud_Sync_Model_Api_Category_Collection
      */
     public function getCategories()
     {
         return $this->get('category');
     }
 
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Property_Set_Collection
+     */
     public function getPropertySets()
     {
-        return $this->get('proeprty_set');
+        return $this->get('property_set');
     }
 
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Property_Schema_Collection
+     */
     public function getPropertySchemas()
     {
         return $this->get('property_schema');
