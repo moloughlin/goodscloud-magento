@@ -36,6 +36,16 @@ class GoodsCloud_Sync_Model_Api
         return $this->get('category');
     }
 
+    public function getPropertySets()
+    {
+        return $this->get('proeprty_set');
+    }
+
+    public function getPropertySchemas()
+    {
+        return $this->get('property_schema');
+    }
+
     /**
      * @param int $id category id to delete
      *
