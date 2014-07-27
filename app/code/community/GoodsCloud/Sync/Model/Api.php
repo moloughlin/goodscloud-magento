@@ -262,6 +262,25 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @param array $requiredPropertySchemaIds
+     * @param array $optionalPropertySchemaIds
+     * @param int   $propertySetId
+     *
+     * @internal param int[] $propertySchemaIds
+     */
+    public function mapPropertySchema2PropertySet(
+        array $requiredPropertySchemaIds, array $optionalPropertySchemaIds, $propertySetId
+    ) {
+        $data = array(
+            'id'                  => $propertySetId,
+            'optional_properties' => $optionalPropertySchemaIds,
+            'required_properties' => $requiredPropertySchemaIds,
+        );
+
+        $this->putPost('property_set', $data);
+    }
+
+    /**
      * @param string $resource resource to send data to
      * @param array  $data     data to send
      *
