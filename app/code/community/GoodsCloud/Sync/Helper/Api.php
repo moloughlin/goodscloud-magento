@@ -90,7 +90,11 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         Mage_Eav_Model_Entity_Attribute $attribute, Mage_Core_Model_Store $view
     ) {
         try {
-            return $attribute->getSource()->getAllOptions();
+            $values = array();
+            foreach ($attribute->getSource()->getAllOptions() as $option) {
+                $values[] = $option['value'];
+            }
+            return $values;
         } catch (Mage_Core_Exception $e) {
             $sourceModelNotFound = 'Source model "" not found for attribute ';
             $length = strlen($sourceModelNotFound);
