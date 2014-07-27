@@ -272,7 +272,11 @@ class GoodsCloud_Sync_Model_Api
     private function putPost($resource, array $data)
     {
         try {
-            $response = $this->api->post('/api/internal/' . $resource, array(), $data);
+            if (isset($data['id'])) {
+                $response = $this->api->put('/api/internal/' . $resource, array(), $data);
+            } else {
+                $response = $this->api->post('/api/internal/' . $resource, array(), $data);
+            }
             return $response;
         } catch (Exception $e) {
             throw $this->parseErrorMessage($e);
