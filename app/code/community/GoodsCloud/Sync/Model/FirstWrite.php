@@ -22,6 +22,9 @@ class GoodsCloud_Sync_Model_FirstWrite
         // Add every Attribute as PropertySchema to every PropertySet
         $this->createPropertySchemasFromAttributes();
 
+        // Map all PropertySchemas to the corresponding PropertySets
+        $this->mapPropertySchemasToPropertySets();
+
         // Copy the category tree to GoodsCloud
         $this->createGCCategoriesFromCategories();
     }
@@ -69,6 +72,18 @@ class GoodsCloud_Sync_Model_FirstWrite
             ->createPropertySchemasFromAttributes($attributes, $stores);
     }
 
+    private function mapPropertySchemasToPropertySets()
+    {
+        $propertySchemaMapper = Mage::getModel('goodscloud_sync/firstWrite_propertySchema2PropertySetMapper');
+
+        $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        /* @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
+        $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
+            ->addFieldToFilter('entity_type_id', $productEntityId);
+
+        $stores = Mage::app()->getStores();
+
+        $propertySchemaMapper->mapProperty2PropertySets($attributeSets, $stores);
     }
 
     private function createGCCategoriesFromCategories()
