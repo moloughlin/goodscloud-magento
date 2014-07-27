@@ -11,4 +11,5 @@ Steps of implementation:
 2. Add a Channel for every StoreView
 3. Add every AttributeSet as PropertySet to every Channel
 4. Add every Attribute as PropertySchema to every PropertySet
-5. Copy the category tree to GoodsCloud
+5. Map properties to property sets
+6. Copy every store view category tree to GoodsCloud
