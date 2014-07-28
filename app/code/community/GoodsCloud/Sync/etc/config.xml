@@ -133,6 +133,42 @@
                     </goodscloud_sync>
                 </observers>
             </catalog_category_save_before>
+            <catalog_controller_product_delete>
+                <observers>
+                    <goodscloud_sync>
+                        <type>singleton</type>
+                        <class>goodscloud_sync/observer</class>
+                        <method>catalogControllerProductDelete</method>
+                    </goodscloud_sync>
+                </observers>
+            </catalog_controller_product_delete>
+            <catalog_product_attribute_update_before>
+                <observers>
+                    <goodscloud_sync>
+                        <type>singleton</type>
+                        <class>goodscloud_sync/observer</class>
+                        <method>catalogProductAttributeUpdateBefore</method>
+                    </goodscloud_sync>
+                </observers>
+            </catalog_product_attribute_update_before>
+            <catalog_entity_attribute_save_before>
+                <observers>
+                    <goodscloud_sync>
+                        <type>singleton</type>
+                        <class>goodscloud_sync/observer</class>
+                        <method>catalogEntityAttributeSaveBefore</method>
+                    </goodscloud_sync>
+                </observers>
+            </catalog_entity_attribute_save_before>
+            <eav_entity_attribute_set_save_before>
+                <observers>
+                    <goodscloud_sync>
+                        <type>singleton</type>
+                        <class>goodscloud_sync/observer</class>
+                        <method>eavEntityAttributeSetSaveBefore</method>
+                    </goodscloud_sync>
+                </observers>
+            </eav_entity_attribute_set_save_before>
         </events>
         <translate>
             <modules>
