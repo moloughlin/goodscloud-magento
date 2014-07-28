@@ -1,4 +1,5 @@
 app/code/community/GoodsCloud/Sync                      app/code/community/GoodsCloud/Sync
 lib/GoodsCloud                                          lib/GoodsCloud
+app/locale/de_DE/GoodsCloud_Sync.csv                    app/locale/de_DE/GoodsCloud_Sync.csv
 
 app/etc/modules/GoodsCloud_Sync.xml                     app/etc/modules/GoodsCloud_Sync.xml
