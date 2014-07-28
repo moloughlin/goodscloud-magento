@@ -114,6 +114,26 @@
         </suite>
     </phpunit>
     <adminhtml>
+        <events>
+            <catalog_product_save_before>
+                <observers>
+                    <goodscloud_sync>
+                        <type>singleton</type>
+                        <class>goodscloud_sync/observer</class>
+                        <method>catalogProductSaveBefore</method>
+                    </goodscloud_sync>
+                </observers>
+            </catalog_product_save_before>
+            <catalog_category_save_before>
+                <observers>
+                    <goodscloud_sync>
+                        <type>singleton</type>
+                        <class>goodscloud_sync/observer</class>
+                        <method>catalogCategorySaveBefore</method>
+                    </goodscloud_sync>
+                </observers>
+            </catalog_category_save_before>
+        </events>
         <translate>
             <modules>
                 <goodscloud_sync>
