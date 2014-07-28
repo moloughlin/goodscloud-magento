@@ -113,4 +113,15 @@
             </modules>
         </suite>
     </phpunit>
+    <adminhtml>
+        <translate>
+            <modules>
+                <goodscloud_sync>
+                    <files>
+                        <default>GoodsCloud_Sync.csv</default>
+                    </files>
+                </goodscloud_sync>
+            </modules>
+        </translate>
+    </adminhtml>
 </config>
