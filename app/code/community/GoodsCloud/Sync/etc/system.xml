@@ -37,6 +37,27 @@
                         </password>
                     </fields>
                 </basic>
+                <shop>
+                    <label>Shop Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>15</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <username>
+                            <label>EAN Attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Product attribute which contains the EAN</comment>
+                            <source_model>goodscloud_sync/source_product_attributes</source_model>
+                        </username>
+                    </fields>
+                </shop>
                 <advanced>
                     <label>Advanced Settings</label>
                     <frontend_type>text</frontend_type>
