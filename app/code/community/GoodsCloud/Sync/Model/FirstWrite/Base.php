@@ -29,5 +29,12 @@ class GoodsCloud_Sync_Model_FirstWrite_Base
         return $this->api;
     }
 
+    protected function log($message)
+    {
+        $file = 'goodscloud' . strrchr(__CLASS__, '_') . '.log';
+        Mage::log($message, Zend_Log::DEBUG, $file);
+
+    }
+
 
 }
