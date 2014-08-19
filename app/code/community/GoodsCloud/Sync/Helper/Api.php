@@ -2,6 +2,8 @@
 
 class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 {
+    const XML_CONFIG_IDENTIFIER_TYPE = 'goodscloud_sync/shop/identifier_type';
+    const XML_CONFIG_IDENTIFIER_ATTRIBUTE = 'goodscloud_sync/shop/identifier_attribute';
     const XML_CONFIG_BASE_URL = 'goodscloud_sync/advanced/base_url';
     const XML_CONFIG_EMAIL = 'goodscloud_sync/basic/email';
     const XML_CONFIG_PASSWORD = 'goodscloud_sync/basic/password';
@@ -83,7 +85,6 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             return 'datetime';
         }
         return 'free';
-
     }
 
     /**
@@ -115,5 +116,15 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     public function isAttributeMultiValue(Mage_Eav_Model_Entity_Attribute $attribute)
     {
         return $attribute->getFrontendInput() == 'multiselect';
+    }
+
+    public function getIdentifierType()
+    {
+        return Mage::getStoreConfig(self::XML_CONFIG_IDENTIFIER_TYPE);
+    }
+
+    public function getIdentifierAttribute()
+    {
+        return Mage::getStoreConfig(self::XML_CONFIG_IDENTIFIER_ATTRIBUTE);
     }
 }

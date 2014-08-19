@@ -46,16 +46,26 @@
                     <show_in_store>0</show_in_store>
                     <expanded>1</expanded>
                     <fields>
-                        <username>
-                            <label>EAN Attribute</label>
+                        <identifier_attribute>
+                            <label>Identifier Attribute</label>
                             <frontend_type>select</frontend_type>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment>Product attribute which contains the EAN</comment>
+                            <comment>Product attribute which contains the EAN/GNIT/UPC</comment>
                             <source_model>goodscloud_sync/source_product_attributes</source_model>
-                        </username>
+                        </identifier_attribute>
+                        <identifier_type>
+                            <label>Identifier Type</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Type of identifier: GNIT, UPC or EAN</comment>
+                            <source_model>goodscloud_sync/source_identifierType</source_model>
+                        </identifier_type>
                     </fields>
                 </shop>
                 <advanced>
