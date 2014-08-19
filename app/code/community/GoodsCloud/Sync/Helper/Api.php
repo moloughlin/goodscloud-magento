@@ -2,6 +2,13 @@
 
 class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 {
+    const XML_CONFIG_BASE_URL = 'goodscloud_sync/advanced/base_url';
+    const XML_CONFIG_EMAIL = 'goodscloud_sync/basic/email';
+    const XML_CONFIG_PASSWORD = 'goodscloud_sync/basic/password';
+    const XML_CONFIG_IGNORED_ATTRIBUTES = 'goodscloud_sync/api/ignored_attributes';
+    const XML_CONFIG_BOOLEAN_SOURCE_MODELS = 'goodscloud_sync/api/boolean_source_models';
+    const XML_CONFIG_ENUM_TYPES = 'goodscloud_sync/api/enum_types';
+
     /**
      * get the baseuri for api requests
      *
@@ -9,7 +16,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getUri()
     {
-        return Mage::getStoreConfig('goodscloud/advanced/base_url');
+        return Mage::getStoreConfig(self::XML_CONFIG_BASE_URL);
     }
 
     /**
@@ -19,7 +26,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getEmail()
     {
-        return Mage::getStoreConfig('goodscloud/basic/email');
+        return Mage::getStoreConfig(self::XML_CONFIG_EMAIL);
     }
 
     /**
@@ -29,22 +36,22 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getPassword()
     {
-        return Mage::getStoreConfig('goodscloud/basic/password');
+        return Mage::getStoreConfig(self::XML_CONFIG_PASSWORD);
     }
 
     public function getIgnoredAttributes()
     {
-        return array_keys(Mage::getStoreConfig('goodscloud_sync/api/ignored_attributes'));
+        return array_keys(Mage::getStoreConfig(self::XML_CONFIG_IGNORED_ATTRIBUTES));
     }
 
     public function getBooleanSourceModels()
     {
-        return Mage::getStoreConfig('goodscloud_sync/api/boolean_source_models');
+        return Mage::getStoreConfig(self::XML_CONFIG_BOOLEAN_SOURCE_MODELS);
     }
 
     public function getEnumTypes()
     {
-        return array_keys(Mage::getStoreConfig('goodscloud_sync/api/enum_types'));
+        return array_keys(Mage::getStoreConfig(self::XML_CONFIG_ENUM_TYPES));
     }
 
     /**
