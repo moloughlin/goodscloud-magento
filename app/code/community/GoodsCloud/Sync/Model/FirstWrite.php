@@ -12,6 +12,8 @@ class GoodsCloud_Sync_Model_FirstWrite
      */
     public function writeMagentoToGoodscloud()
     {
+        $this->checkInstalled();
+
         $this->api = Mage::getModel('goodscloud_sync/api');
         // Add a Channel for every StoreView
         $this->createChannelsFromStoreView();
@@ -93,5 +95,20 @@ class GoodsCloud_Sync_Model_FirstWrite
         Mage::getModel('goodscloud_sync/firstWrite_categories')
             ->setApi($this->api)
             ->createCategories($stores);
+    }
+
+    private function checkInstalled()
+    {
+        if (!Mage::helper('goodscloud_sync/api')->getIdentifierAttribute()) {
+            throw new GoodsCloud_Sync_Model_Exception_MissingConfigurationException(
+                'Please configure identifier attribute.'
+            );
+        }
+
+        if (!Mage::helper('goodscloud_sync/api')->getIdentifierType()) {
+            throw new GoodsCloud_Sync_Model_Exception_MissingConfigurationException(
+                'Please configure identifier type.'
+            );
+        }
     }
 }
