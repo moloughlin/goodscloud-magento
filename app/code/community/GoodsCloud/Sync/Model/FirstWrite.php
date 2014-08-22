@@ -15,6 +15,8 @@ class GoodsCloud_Sync_Model_FirstWrite
         $this->checkInstalled();
 
         $this->api = Mage::getModel('goodscloud_sync/api');
+        $this->getAndSaveCompanyId();
+
         // Add a Channel for every StoreView
         $this->createChannelsFromStoreView();
 
@@ -111,4 +113,18 @@ class GoodsCloud_Sync_Model_FirstWrite
             );
         }
     }
+
+    // TODO make private
+    public function getAndSaveCompanyId()
+    {
+        if (!Mage::helper('goodscloud_sync/api')->getCompanyId()) {
+            /* @var $company GoodsCloud_Sync_Model_Api_Company */
+            $company = Mage::getModel('goodscloud_sync/firstWrite_company')
+                ->setApi($this->api)
+                ->getCompany();
+
+            Mage::helper('goodscloud_sync/api')->setCompanyId($company->getId());
+        }
+    }
+
 }

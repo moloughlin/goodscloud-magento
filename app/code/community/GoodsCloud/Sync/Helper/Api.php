@@ -127,4 +127,28 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     {
         return Mage::getStoreConfig(self::XML_CONFIG_IDENTIFIER_ATTRIBUTE);
     }
+
+    /**
+     * get the company if from goodscloud
+     *
+     * @return int
+     */
+    public function getCompanyId()
+    {
+        return Mage::getStoreConfig(self::XML_CONFIG_COMPANY_ID);
+    }
+
+    /**
+     * save the company id from goodscloud in the config and refresh the cache
+     *
+     * reinit the config, so the value from DB is available in this request
+     * and the cache is refreshed
+     *
+     * @param int $companyId
+     */
+    public function setCompanyId($companyId)
+    {
+        Mage::getConfig()->saveConfig(self::XML_CONFIG_COMPANY_ID, $companyId);
+        Mage::app()->getConfig()->reinit();
+    }
 }
