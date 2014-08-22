@@ -5,11 +5,13 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     const XML_CONFIG_IDENTIFIER_TYPE = 'goodscloud_sync/shop/identifier_type';
     const XML_CONFIG_IDENTIFIER_ATTRIBUTE = 'goodscloud_sync/shop/identifier_attribute';
     const XML_CONFIG_BASE_URL = 'goodscloud_sync/advanced/base_url';
-    const XML_CONFIG_EMAIL = 'goodscloud_sync/basic/email';
+    const XML_CONFIG_EMAIL = 'goodscloud_sync/basic/username';
     const XML_CONFIG_PASSWORD = 'goodscloud_sync/basic/password';
     const XML_CONFIG_IGNORED_ATTRIBUTES = 'goodscloud_sync/api/ignored_attributes';
     const XML_CONFIG_BOOLEAN_SOURCE_MODELS = 'goodscloud_sync/api/boolean_source_models';
     const XML_CONFIG_ENUM_TYPES = 'goodscloud_sync/api/enum_types';
+
+    const XML_CONFIG_COMPANY_ID = 'goodscloud_sync/api/company_id';
 
     /**
      * get the baseuri for api requests
