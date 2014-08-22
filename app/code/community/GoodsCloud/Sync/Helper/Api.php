@@ -151,8 +151,12 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function setCompanyId($companyId)
     {
-        Mage::getConfig()->saveConfig(self::XML_CONFIG_COMPANY_ID, $companyId);
-        Mage::app()->getConfig()->reinit();
+        $config = Mage::app()->getConfig();
+        $config->saveConfig(self::XML_CONFIG_COMPANY_ID, $companyId);
+        $config->reinit();
+        $config->saveCache();
+    }
+
     public function getDefaultPriceList()
     {
         return Mage::getStoreConfig(self::XML_CONFIG_DEFAULT_PRICE_LIST_ID);
