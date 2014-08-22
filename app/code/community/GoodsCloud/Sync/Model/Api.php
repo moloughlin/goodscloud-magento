@@ -140,7 +140,10 @@ class GoodsCloud_Sync_Model_Api
             //    company	relationship	Single Company entry. Write-only, value not returned in API responses.
             //    created	hybrid_property	The time when this row was created. Determined by looking in the history for this table. Read-only.
         );
-        $this->putPost('price_list', $data);
+
+        return $this->putPost('price_list', $data);
+    }
+
     }
 
      * @param Mage_Core_Model_Store $view storeview to create channel from

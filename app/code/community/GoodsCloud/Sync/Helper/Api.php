@@ -155,7 +155,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         Mage::app()->getConfig()->reinit();
     public function getDefaultPriceList()
     {
-        return Mage::getStoreConfig(self::XML_CONFIG_COMPANY_ID);
+        return Mage::getStoreConfig(self::XML_CONFIG_DEFAULT_PRICE_LIST_ID);
     }
 
     public function setDefaultPriceList($priceListId)

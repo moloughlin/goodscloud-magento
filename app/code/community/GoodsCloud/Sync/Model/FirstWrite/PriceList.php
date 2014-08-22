@@ -4,6 +4,14 @@ class GoodsCloud_Sync_Model_FirstWrite_PriceList extends GoodsCloud_Sync_Model_F
 {
     public function createAndSaveDefaultPriceList()
     {
+        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+
+        $defaultPriceListId = $apiHelper->getDefaultPriceList();
+        if ($defaultPriceListId) {
+            return $defaultPriceListId;
+        }
+
         $countryCollection = Mage::getResourceModel('directory/country_collection')
             ->loadByStore();
 
@@ -12,12 +20,15 @@ class GoodsCloud_Sync_Model_FirstWrite_PriceList extends GoodsCloud_Sync_Model_F
             $countryList[] = $country->getIso2Code();
         }
 
-        $this->getApi()->createPriceList(
-            Mage::helper('goodscloud_sync')->__('Magento Standard Sales Price List') . '4sdfas',
+        $priceList = $this->getApi()->createPriceList(
+            Mage::helper('goodscloud_sync')->__('Magento Standard Sales Price List'),
             0,
             false,
-            // TODO fix
-            array('DE') // $countryList
+            array('DE')
+            #$countryList
         );
+
+        $apiHelper->setDefaultPriceList($priceList->getId());
+        return $priceList->getId();
     }
 }
