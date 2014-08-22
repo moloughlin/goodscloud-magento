@@ -344,7 +344,11 @@ class GoodsCloud_Sync_Model_Api
             } else {
                 $response = $this->api->post('/api/internal/' . $resource, array(), $data);
             }
-            return $response;
+
+            $item = Mage::getModel('goodscloud_sync/api_' . $resource);
+            $item->setData(get_object_vars($response));
+            return $item;
+
         } catch (Exception $e) {
             throw $this->parseErrorMessage($e);
         }

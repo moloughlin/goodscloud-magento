@@ -20,7 +20,7 @@ class GoodsCloud_Sync_Model_FirstWrite_PropertySchemas extends GoodsCloud_Sync_M
                     if (!$propertySchemaData) {
                         Mage::throwException('Error while creating property schema');
                     }
-                    $propertySchemaIds[$store->getGcChannelId()] = $propertySchemaData->id;
+                    $propertySchemaIds[$store->getGcChannelId()] = $propertySchemaData->getId();
                     $attribute->setGcPropertySchemaIds(json_encode($propertySchemaIds));
                     $attribute->save();
                 }

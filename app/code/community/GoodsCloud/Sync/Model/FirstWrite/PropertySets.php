@@ -22,7 +22,7 @@ class GoodsCloud_Sync_Model_FirstWrite_PropertySets extends GoodsCloud_Sync_Mode
                     if (!$propertySetData) {
                         Mage::throwException('Error while creating property set');
                     }
-                    $propertySetIds[$view->getGcChannelId()] = $propertySetData->id;
+                    $propertySetIds[$view->getGcChannelId()] = $propertySetData->getId();
                     $attributeSet->setGcPropertySetIds(json_encode($propertySetIds));
                     $attributeSet->save();
                 }

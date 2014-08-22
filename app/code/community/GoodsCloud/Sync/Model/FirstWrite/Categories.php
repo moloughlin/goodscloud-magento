@@ -58,7 +58,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Categories extends GoodsCloud_Sync_Model_
                         Mage::throwException('Error while creating category');
                     }
 
-                    $categoryIds[$view->getGcChannelId()] = $categoryData->id;
+                    $categoryIds[$view->getGcChannelId()] = $categoryData->getId();
                     $category->setGcCategoryIds(json_encode($categoryIds));
                     $category->save();
                 }

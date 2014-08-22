@@ -18,7 +18,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Channels extends GoodsCloud_Sync_Model_Fi
                 if (!$channelData) {
                     Mage::throwException('Error while creating channels');
                 }
-                $view->setGcChannelId($channelData->id);
+                $view->setGcChannelId($channelData->getId());
                 $view->save();
             }
         }
