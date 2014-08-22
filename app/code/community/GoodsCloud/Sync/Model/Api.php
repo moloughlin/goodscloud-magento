@@ -95,6 +95,54 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @param string   $name
+     * @param int      $store
+     * @param bool     $isDiscount
+     * @param string[] $countryList
+     *
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     */
+    public function createPriceList($name, $store, $isDiscount, $countryList)
+    {
+        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+
+        $data = array(
+            //    id	column	Integer	not NULL Primary key.
+            //    channel_products	relationship	List of ChannelProduct entries. Write-only, value not returned in API responses.
+            //    discounted_channel_products	relationship	List of ChannelProduct entries. Write-only, value not returned in API responses.
+            //    prices	relationship	List of Price entries. Write-only, value not returned in API responses. Cascade delete, delete-orphan.
+            //    source_channels	relationship	List of Channel entries.
+            //    target_channels	relationship	List of Channel entries.
+            //    currency_code	column	UppercaseEnum The currency this price is denominated in. Must be ISO-3166 codes
+            'currency_code'            => Mage::app()->getStore($store)->getCurrentCurrencyCode(),
+            //    direction	column	Enum	not NULL	outgoing Allowed values incoming, outgoing
+            'direction'                => 'outgoing',
+            //    end_date	column	DateTime ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this price list becomes inactive.
+            //    external_identifier	column	String 256 characters or less. The identifier of this price list in an external system.
+            'external_identifier'      => 'magento_default',
+            //    external_source_channel	column	String 256 characters or less. The identifier for a supplier that is external to GoodsCloud.
+            //    is_discount	column	Boolean	not NULL	False	 Is this a discount or a normal price?
+            'is_discount'              => $isDiscount,
+            //    label	column	String	not NULL 256 characters or less.  The name of this price list.
+            'label'                    => $name,
+            //    source_of_truth	column	Enum	not NULL	net Allowed values net, gross
+            // TODO check what type magento prices are and set the correct value
+            'source_of_truth'          => 'net',
+            //    start_date	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this price list becomes active.
+            //    target_country_code_list	column	country_type_array List of codes for the country that this price is active in. Should be ISO-3166 codes
+            'target_country_code_list' => $countryList,
+            //    target_region_code_list	column	ARRAY of String 256 characters or less. List of codes for the state/province/region that this price is active in.
+            //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+            //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
+            //    company_id	column	Integer	not NULL ForeignKey('company.id') ON DELETE RESTRICT The company that owns this price list.
+            'company_id'               => $apiHelper->getCompanyId(),
+            //    company	relationship	Single Company entry. Write-only, value not returned in API responses.
+            //    created	hybrid_property	The time when this row was created. Determined by looking in the history for this table. Read-only.
+        );
+        $this->putPost('price_list', $data);
+    }
+
      * @param Mage_Core_Model_Store $view storeview to create channel from
      *
      * @return bool true on success, false on failure

@@ -12,6 +12,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     const XML_CONFIG_ENUM_TYPES = 'goodscloud_sync/api/enum_types';
 
     const XML_CONFIG_COMPANY_ID = 'goodscloud_sync/api/company_id';
+    const XML_CONFIG_DEFAULT_PRICE_LIST_ID = 'goodscloud_sync/api/default_price_list_id';
 
     /**
      * get the baseuri for api requests
@@ -152,5 +153,16 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     {
         Mage::getConfig()->saveConfig(self::XML_CONFIG_COMPANY_ID, $companyId);
         Mage::app()->getConfig()->reinit();
+    public function getDefaultPriceList()
+    {
+        return Mage::getStoreConfig(self::XML_CONFIG_COMPANY_ID);
+    }
+
+    public function setDefaultPriceList($priceListId)
+    {
+        $config = Mage::app()->getConfig();
+        $config->saveConfig(self::XML_CONFIG_DEFAULT_PRICE_LIST_ID, $priceListId);
+        $config->reinit();
+        $config->saveCache();
     }
 }
