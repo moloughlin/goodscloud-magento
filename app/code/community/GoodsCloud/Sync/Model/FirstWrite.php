@@ -124,8 +124,7 @@ class GoodsCloud_Sync_Model_FirstWrite
         }
     }
 
-    // TODO make private
-    public function getAndSaveCompanyId()
+    private function getAndSaveCompanyId()
     {
         if (!Mage::helper('goodscloud_sync/api')->getCompanyId()) {
             /* @var $company GoodsCloud_Sync_Model_Api_Company */

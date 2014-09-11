@@ -17,6 +17,16 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * return own company object
+     *
+     * @return GoodsCloud_Sync_Model_Api_Company
+     */
+    public function getCompany()
+    {
+        return $this->get('company')->getFirstItem();
+    }
+
+    /**
      * get all channels
      *
      * @return GoodsCloud_Sync_Model_Api_Channel_Collection
