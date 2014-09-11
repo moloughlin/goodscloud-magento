@@ -177,6 +177,60 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('vat_rate', $data);
     }
 
+    public function createCompanyProduct(Mage_Catalog_Model_Product $product)
+    {
+
+        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+        $data = array(
+            //    id	column	Integer	not NULL Primary key.
+            //    available_descriptions	relationship	List of ProductDescription entries.
+            'available_descriptions' => $apiHelper->createDescriptions($product),
+            //    available_images	relationship	List of ProductImage entries.
+            'available_images'       => $apiHelper->createImages($product),
+            //    channel_products	relationship	List of ChannelProduct entries. Cascade delete, delete-orphan.
+            //    company_product_views	relationship	List of CompanyProductView entries.
+            //    inventory_agreements	relationship	List of SourceAgreement entries. Cascade delete, delete-orphan.
+            //    prices	relationship	List of Price entries. Cascade delete, delete-orphan.
+            'prices'                 => $apiHelper->createPrices($product),
+            //    sales_agreements	relationship	List of SourceAgreement entries. Cascade delete, delete-orphan.
+            //    active	column	Boolean	not NULL	True Whether or not this company product is currently active
+            'active'                 => $product->getStatus() === Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
+            //    atp	column	Integer	not NULL The quantity of this product that is "available to promise". Sum of atp_internal and atp_external. Read-only.
+            //    atp_external	column	Integer	not NULL The quantity of this product from external companies that is "available to promise". Read-only.
+            //    atp_internal	column	Integer	not NULL The quantity of this product in this company that is "available to promise". Read-only.
+            //    country_of_origin	column	UppercaseEnum Country of manufacture, production, or growth. Cf. the Wikipedia article. Should be ISO-3166 codes.
+            //    dimensions	column	JSON	not NULL	{} A JSON object.    Indisputable facts about this product like length, weight, and intrastat codes.
+            //    gtin	column	String	not NULL 14 characters or less. GTIN-8, GTIN-12, GTIN-13 or GTIN-14, see Wikipedia. All GTINs will be converted to GTIN-14s before insertion, so reading this field will always return a GTIN-14. Alternatively, EAN or UPC can be provided. See these attributes for details.
+            //    label	column	String	not NULL 256 characters or less. A short name for this company product.
+            'label'                  => substr($product->getName(), 0, 256),
+            //    manufacturer_code	column	String 256 characters or less. Unique code used by the manufacturer for this product.
+            //    manufacturer_name	column	String 256 characters or less. Name of the manufacturer.
+            'manufacturer_name'      => $product->getAttributeText('manufacturer'),
+            //    physical	column	Boolean		True False means virtual product
+
+            'physical'               => true, // we don't export virtual products yet!
+
+            //    physical_quantity	column	Integer	not NULL The physical quantity of this product in this company. Read-only.
+            //    properties	column	JSON	not NULL	{} A JSON object.
+            //    customer group, gender, date of birth, list of IP addresses, etc.
+            //    stocked	column	Boolean		True False means never out of stock: manufactured on demand or virtual
+            'stocked'                => (bool)$product->getStockItem()->getManageStock(),
+            //    stocked_quantity	column	Integer	not NULL The total physical quantity of this product in this company that is stocked in storage cells. Read-only.
+            //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+            //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
+            //    abstract_product_id	column	Integer	not NULL ForeignKey('abstract_product.id') ON DELETE RESTRICT abstract_product	relationship	Single AbstractProduct entry.
+            //    company_id	column	Integer	not NULL ForeignKey('company.id') ON DELETE RESTRICT company	relationship	Single Company entry.
+            'company_id'             => $apiHelper->getCompanyId(),
+            //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
+            //    ean	hybrid_property The EAN representation of the underlying GTIN value. None if conversion is not possible. Supported formats: EAN-8, EAN-13
+            //    upc	hybrid_property The UPC-A representation of the underlying GTIN value. None if conversion is not possible.
+        );
+
+        // depending on what identifier exists we set different keys
+        $data[$apiHelper->getIdentifierType()] = $product->getData($apiHelper->getIdentifierAttribute());
+
+        return $this->putPost('company_product', $data);
     }
 
     /**
