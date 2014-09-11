@@ -179,6 +179,7 @@ class GoodsCloud_Sync_Model_Api
 
     }
 
+    /**
      * @param Mage_Core_Model_Store $view storeview to create channel from
      *
      * @return bool true on success, false on failure
@@ -423,6 +424,6 @@ class GoodsCloud_Sync_Model_Api
             }
         }
 
-        return new Exception('Unknown Error');
+        return new Exception('Unknown Error: ' . $message);
     }
 }
