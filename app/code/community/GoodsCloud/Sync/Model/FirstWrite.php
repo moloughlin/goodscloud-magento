@@ -36,6 +36,27 @@ class GoodsCloud_Sync_Model_FirstWrite
         // Copy the category tree to GoodsCloud
         $this->createGCCategoriesFromCategories();
 
+        // create price list
+        $this->createDefaultPriceList();
+
+        // create company products (if needed) for all products
+
+        // create channel products for all store views
+
+    }
+
+    /**
+     * create one default price list
+     *
+     * @return int
+     */
+    private function createDefaultPriceList()
+    {
+        return Mage::getModel('goodscloud_sync/firstWrite_priceList')
+            ->setApi($this->api)
+            ->createAndSaveDefaultPriceList();
+    }
+
     private function createDefaultVatRate()
     {
         Mage::getModel('goodscloud_sync/firstWrite_vatRate')
