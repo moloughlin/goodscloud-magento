@@ -14,7 +14,8 @@ class GoodsCloud_Sync_Model_FirstWrite
     {
         $this->checkInstalled();
 
-        $this->api = Mage::getModel('goodscloud_sync/api');
+        $this->initApi();
+
         $this->getAndSaveCompanyId();
 
         // create default vat rate
@@ -136,4 +137,8 @@ class GoodsCloud_Sync_Model_FirstWrite
         }
     }
 
+    private function initApi()
+    {
+        $this->api = Mage::getModel('goodscloud_sync/api');
+    }
 }
