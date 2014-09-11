@@ -207,6 +207,37 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
         return $images;
     }
+
+    public function createPrices(Mage_Catalog_Model_Product $product)
+    {
+        $prices = array();
+
+        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+
+        $prices[] = array(
+            //id	column	Integer	not NULL Primary key.
+            //minimum_quantity	column	Integer	not NULL	1
+            'minimum_quantity' => 1,
+            //net	column	Numeric	not NULL 00000000.00 Net monetary price
+            'net'              => $product->getPriceModel()->getFinalPrice(1, $product),
+            //updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00.The time when this row was last updated. Read-only.
+            //vat_amount	column	Numeric 00000000.00 VAT amount for this net price
+            //version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
+            //company_product_id	column	Integer	not NULL ForeignKey('company_product.id') ON DELETE CASCADE
+            //company_product	relationship	Single CompanyProduct entry.
+            //price_list_id	column	Integer	not NULL ForeignKey('price_list.id') ON DELETE CASCADE
+            'price_list_id'    => $apiHelper->getDefaultPriceListId(),
+            //price_list	relationship	Single PriceList entry.
+            //vat_rate_id	column	Integer	not NULL ForeignKey('vat_rate.id') ON DELETE RESTRICT The VAT rate originally used for calculating VAT amount.
+            //vat_rate	relationship	Single VatRate entry.
+            //created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
+            //gross	hybrid_property The gross price for this net price and VAT rate. Read-only.
+        );
+
+        return $prices;
+    }
+
     /**
      * get the company if from goodscloud
      *
