@@ -164,7 +164,7 @@ class GoodsCloud_Sync_Model_Api
             //id	column	Integer	not NULL Primary key.
             //channel_vat_rates	relationship	List of ChannelVatRate entries. Cascade delete, delete-orphan.
             //label	column	String	not NULL 256 characters or less.
-            'label'      => 'Magento VAT Rate' . uniqid(),
+            'label'      => 'Magento VAT Rate',
             //rate	column	Numeric			 00.00000000
             //updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //version	column	Integer	not NULL	1	Current version number of this entry, incremented each time it is changed. Read-only.
