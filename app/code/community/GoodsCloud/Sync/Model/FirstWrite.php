@@ -39,6 +39,9 @@ class GoodsCloud_Sync_Model_FirstWrite
         // create price list
         $this->createDefaultPriceList();
 
+        // create vat rate
+        $this->createDefaultVatRate();
+
         // create company products (if needed) for all products
 
         // create channel products for all store views
@@ -57,11 +60,16 @@ class GoodsCloud_Sync_Model_FirstWrite
             ->createAndSaveDefaultPriceList();
     }
 
+    /**
+     * create one default vat rate
+     *
+     * @return int
+     */
     private function createDefaultVatRate()
     {
-        Mage::getModel('goodscloud_sync/firstWrite_vatRate')
+        return Mage::getModel('goodscloud_sync/firstWrite_vatRate')
             ->setApi($this->api)
-            ->createVatRate();
+            ->createAndSaveDefaultPriceList();
     }
 
     /**

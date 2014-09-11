@@ -2,6 +2,10 @@
 
 class GoodsCloud_Sync_Model_FirstWrite_VatRate extends GoodsCloud_Sync_Model_FirstWrite_Base
 {
+
+    /**
+     * @return int
+     */
     public function createAndSaveDefaultPriceList()
     {
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
