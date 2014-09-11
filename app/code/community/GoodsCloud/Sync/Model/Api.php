@@ -144,6 +144,29 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('price_list', $data);
     }
 
+    public function createVatRate()
+    {
+
+        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+
+        $data = array(
+            //id	column	Integer	not NULL Primary key.
+            //channel_vat_rates	relationship	List of ChannelVatRate entries. Cascade delete, delete-orphan.
+            //label	column	String	not NULL 256 characters or less.
+            'label'      => 'Magento VAT Rate' . uniqid(),
+            //rate	column	Numeric			 00.00000000
+            //updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+            //version	column	Integer	not NULL	1	Current version number of this entry, incremented each time it is changed. Read-only.
+            //audit_user_id	column	Integer			ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
+            //company_id	column	Integer	not NULL		ForeignKey('company.id') ON DELETE CASCADE
+            'company_id' => $apiHelper->getCompanyId(),
+            //company	relationship	Single Company entry. created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
+        );
+
+        return $this->putPost('vat_rate', $data);
+    }
+
     }
 
      * @param Mage_Core_Model_Store $view storeview to create channel from

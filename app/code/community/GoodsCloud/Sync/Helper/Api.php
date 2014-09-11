@@ -13,6 +13,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
     const XML_CONFIG_COMPANY_ID = 'goodscloud_sync/api/company_id';
     const XML_CONFIG_DEFAULT_PRICE_LIST_ID = 'goodscloud_sync/api/default_price_list_id';
+    const XML_CONFIG_DEFAULT_VAT_RATE_ID = 'goodscloud_sync/api/default_vat_rate_id';
 
     /**
      * get the baseuri for api requests
@@ -166,6 +167,19 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     {
         $config = Mage::app()->getConfig();
         $config->saveConfig(self::XML_CONFIG_DEFAULT_PRICE_LIST_ID, $priceListId);
+        $config->reinit();
+        $config->saveCache();
+    }
+
+    public function getDefaultVatRate()
+    {
+        return Mage::getStoreConfig(self::XML_CONFIG_DEFAULT_VAT_RATE_ID);
+    }
+
+    public function setDefaultVatRate($vatRate)
+    {
+        $config = Mage::app()->getConfig();
+        $config->saveConfig(self::XML_CONFIG_DEFAULT_VAT_RATE_ID, $vatRate);
         $config->reinit();
         $config->saveCache();
     }

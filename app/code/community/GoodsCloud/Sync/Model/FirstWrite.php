@@ -17,6 +17,9 @@ class GoodsCloud_Sync_Model_FirstWrite
         $this->api = Mage::getModel('goodscloud_sync/api');
         $this->getAndSaveCompanyId();
 
+        // create default vat rate
+        $this->createDefaultVatRate();
+
         // Add a Channel for every StoreView
         $this->createChannelsFromStoreView();
 
@@ -31,6 +34,12 @@ class GoodsCloud_Sync_Model_FirstWrite
 
         // Copy the category tree to GoodsCloud
         $this->createGCCategoriesFromCategories();
+
+    private function createDefaultVatRate()
+    {
+        Mage::getModel('goodscloud_sync/firstWrite_vatRate')
+            ->setApi($this->api)
+            ->createVatRate();
     }
 
     /**
