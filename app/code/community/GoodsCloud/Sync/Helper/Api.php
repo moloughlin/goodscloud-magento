@@ -165,6 +165,48 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
         return $descriptions;
     }
+
+    public function createImages(Mage_Catalog_Model_Product $product)
+    {
+        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+
+        $images = array();
+        $mediaGalleryImages = $product->getMediaGallery();
+        if (is_array($mediaGalleryImages) && is_array($mediaGalleryImages['images'])) {
+            foreach ($mediaGalleryImages['images'] as $image) {
+                $imageInfo = getimagesize($product->getMediaConfig()->getMediaPath($image['file']));
+
+                $images[] = array(
+                    //            id	column	Integer	not NULL Primary key.
+                    //            company_product_views	relationship	List of CompanyProductView entries.
+                    //            company_products	relationship	List of CompanyProduct entries.
+                    //            alt_text	column	Text Any length allowed. alt attribute text
+                    'alt_text'            => $image['label'],
+                    //            external_identifier	column	String 512 characters or less. If this is a valid http:// or https:// URL, the image is processed and uploaded to Amazon S3 on PUT and PATCH requests. If you have multiple image sizes available, please submit the largest version.
+                    'external_identifier' => $product->getMediaConfig()->getMediaUrl($image['file']),
+                    //            height	column	Integer
+                    'height'              => $imageInfo[1],
+                    //            mimetype	column	String 32 characters or less.
+                    'mimetype'            => $imageInfo['mime'],
+                    //            rights	column	String 10 characters or less. The rights to the image, might change to an enum
+                    //            updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+                    //            url_fragment	column	String 512 characters or less.
+                    //            version	column	Integer	not NULL	1  Current version number of this entry, incremented each time it is changed. Read-only.
+                    //            width	column	Integer
+                    'width'               => $imageInfo[0],
+                    //            company_id	column	Integer	not NULL ForeignKey('company.id') ON DELETE CASCADE
+                    'company_id'          => $apiHelper->getCompanyId(),
+                    //            company	relationship	Single Company entry.
+                    //            created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
+                    //            channel_product_views	relationship	List of ChannelProductView entries.
+                    //            channel_products	relationship	List of ChannelProduct entries.
+                );
+            }
+        }
+
+        return $images;
+    }
     /**
      * get the company if from goodscloud
      *
