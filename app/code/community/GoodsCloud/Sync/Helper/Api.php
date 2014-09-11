@@ -132,6 +132,39 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig(self::XML_CONFIG_IDENTIFIER_ATTRIBUTE);
     }
 
+    public function createDescriptions(Mage_Catalog_Model_Product $product)
+    {
+        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+        $descriptions
+            = array(
+            array(
+                //    id	column	Integer	not NULL Primary key.
+                //    chosen_channel_product_views	relationship	List of ChannelProductView entries.
+                //    chosen_channel_products	relationship	List of ChannelProduct entries.
+                //    company_product_views	relationship	List of CompanyProductView entries.
+                //    company_products	relationship	List of CompanyProduct entries.
+                //    label	column	String 256 characters or less.
+                'label'             => $product->getStore()->getName(),
+                //    language_code	column	LowercaseEnum	not NULL The language for this description. Must be ISO-639 codes
+                // TODO get the language somewhere
+                'language_code'     => 'en',
+                //    long_description	column	Text Any length allowed.
+                'long_description'  => $product->getDescription(),
+                //    rights	column	String 10 characters or less. the rights to the description, might change to an enum
+                //    short_description	column	Text Any length allowed.
+                'short_description' => $product->getShortDescription(),
+                //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+                //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
+                //    company_id	column	Integer	not NULL ForeignKey('company.id') ON DELETE CASCADE
+                'company_id'        => $apiHelper->getCompanyId(),
+                //    company	relationship	Single Company entry.
+                //    created	hybrid_property The time when this row was created. Determin  ed by looking in the history for this table. Read-only.
+            )
+        );
+
+        return $descriptions;
+    }
     /**
      * get the company if from goodscloud
      *
