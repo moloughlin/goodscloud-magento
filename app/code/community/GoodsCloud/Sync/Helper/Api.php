@@ -229,6 +229,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             //price_list_id	column	Integer	not NULL ForeignKey('price_list.id') ON DELETE CASCADE
             'price_list_id'    => $apiHelper->getDefaultPriceListId(),
             //price_list	relationship	Single PriceList entry.
+            'vat_rate_id'      => $apiHelper->getDefaultVatRate(),
             //vat_rate_id	column	Integer	not NULL ForeignKey('vat_rate.id') ON DELETE RESTRICT The VAT rate originally used for calculating VAT amount.
             //vat_rate	relationship	Single VatRate entry.
             //created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
