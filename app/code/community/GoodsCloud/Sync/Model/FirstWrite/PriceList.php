@@ -24,11 +24,10 @@ class GoodsCloud_Sync_Model_FirstWrite_PriceList extends GoodsCloud_Sync_Model_F
             Mage::helper('goodscloud_sync')->__('Magento Standard Sales Price List'),
             0,
             false,
-            array('DE')
-            #$countryList
+            $countryList
         );
 
-        $apiHelper->setDefaultPriceList($priceList->getId());
+        $apiHelper->setDefaultPriceListId($priceList->getId());
         return $priceList->getId();
     }
 }
