@@ -63,23 +63,25 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
 
             foreach ($collection as $product) {
                 try {
-                    /** @var $product Mage_Catalog_Model_Product */
-                    $gcProduct = $this->createCompanyProduct($product);
+                    $json = json_decode($product->getGcProductIds(), true);
+                    if (!$json['company'] || !is_numeric($json['company'])) {
+                        /** @var $product Mage_Catalog_Model_Product */
+                        $gcProduct = $this->createCompanyProduct($product);
 
-                    // company product is created before any channel product, therefore gc_product_ids is empty
-                    // and we don't need to merge anything
-                    $product->setGcProductIds(json_encode(array('company' => $gcProduct->getId())));
-                    $this->productList->removeProductId($product->getId());
-                    die();
+                        // company product is created before any channel product, therefore gc_product_ids is empty
+                        // and we don't need to merge anything
+                        $product->setGcProductIds(json_encode(array('company' => $gcProduct->getId())));
+                        $this->productList->removeProductId($product->getId());
+                    }
                 } catch (Mage_Core_Exception $e) {
                     // TODO handle exception
                     throw $e;
                 }
             }
+            $collection->save();
             $page++;
 
         }
-        $this->productList->save();
     }
 
     private function createCompanyProduct(Mage_Catalog_Model_Product $product)
