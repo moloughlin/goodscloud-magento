@@ -33,6 +33,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Categories extends GoodsCloud_Sync_Model_
                 ->addPathFilter($categoryIdPrefix)
                 ->addAttributeToSelect(
                     array(
+                        'gc_category_ids',
                         'gc_channel_id',
                         'name',
                         'is_active',
