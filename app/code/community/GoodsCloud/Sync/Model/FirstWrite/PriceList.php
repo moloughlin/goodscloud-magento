@@ -11,7 +11,7 @@ class GoodsCloud_Sync_Model_FirstWrite_PriceList extends GoodsCloud_Sync_Model_F
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
         $apiHelper = Mage::helper('goodscloud_sync/api');
 
-        $defaultPriceListId = $apiHelper->getDefaultPriceList();
+        $defaultPriceListId = $apiHelper->getDefaultPriceListId();
         if ($defaultPriceListId) {
             return $defaultPriceListId;
         }
