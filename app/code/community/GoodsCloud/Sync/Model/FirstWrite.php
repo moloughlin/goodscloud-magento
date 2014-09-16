@@ -12,39 +12,54 @@ class GoodsCloud_Sync_Model_FirstWrite
      */
     public function writeMagentoToGoodscloud()
     {
-        $this->checkInstalled();
+        try {
 
-        $this->initApi();
+            /* @var $emulation Mage_Core_Model_App_Emulation */
+            $emulation = Mage::getModel('core/app_emulation');
+            $initialEnvironmentInfo = $emulation->startEnvironmentEmulation(
+                Mage_Core_Model_App::ADMIN_STORE_ID,
+                Mage_Core_Model_App_Area::AREA_ADMINHTML
+            );
 
-        $this->getAndSaveCompanyId();
+            $this->checkInstalled();
 
-        // create default vat rate
-        $this->createDefaultVatRate();
+            $this->initApi();
 
-        // Add a Channel for every StoreView
-        $this->createChannelsFromStoreView();
+            $this->getAndSaveCompanyId();
 
-        // Add every AttributeSet as PropertySet to every Channel
-        $this->createPropertySetsFromAttributeSets();
+            // create default vat rate
+            $this->createDefaultVatRate();
 
-        // Add every Attribute as PropertySchema to every PropertySet
-        $this->createPropertySchemasFromAttributes();
+            // Add a Channel for every StoreView
+            $this->createChannelsFromStoreView();
 
-        // Map all PropertySchemas to the corresponding PropertySets
-        $this->mapPropertySchemasToPropertySets();
+            // Add every AttributeSet as PropertySet to every Channel
+            $this->createPropertySetsFromAttributeSets();
 
-        // Copy the category tree to GoodsCloud
-        $this->createGCCategoriesFromCategories();
+            // Add every Attribute as PropertySchema to every PropertySet
+            $this->createPropertySchemasFromAttributes();
 
-        // create price list
-        $this->createDefaultPriceList();
+            // Map all PropertySchemas to the corresponding PropertySets
+            $this->mapPropertySchemasToPropertySets();
 
-        // create vat rate
-        $this->createDefaultVatRate();
+            // Copy the category tree to GoodsCloud
+            $this->createGCCategoriesFromCategories();
 
-        // create company products (if needed) for all products
+            // create price list
+            $this->createDefaultPriceList();
 
-        // create channel products for all store views
+            // create vat rate
+            $this->createDefaultVatRate();
+
+            // create company products (if needed) for all products
+            // create channel products for all store views
+            $this->createCompanyProducts();
+        } catch (Mage_Core_Exception $e) {
+            throw $e;
+        }
+        $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
+
+    }
 
     private function createCompanyProducts()
     {
