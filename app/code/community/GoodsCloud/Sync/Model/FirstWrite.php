@@ -46,6 +46,15 @@ class GoodsCloud_Sync_Model_FirstWrite
 
         // create channel products for all store views
 
+    private function createCompanyProducts()
+    {
+
+        /* @var $stores Mage_Core_Model_Store[] */
+        $stores = Mage::app()->getStores();
+
+        return Mage::getModel('goodscloud_sync/firstWrite_products')
+            ->setApi($this->api)
+            ->createProducts($stores);
     }
 
     /**
