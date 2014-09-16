@@ -69,7 +69,7 @@ class GoodsCloud_Sync_Model_FirstWrite
     {
         return Mage::getModel('goodscloud_sync/firstWrite_vatRate')
             ->setApi($this->api)
-            ->createAndSaveDefaultPriceList();
+            ->createAndSaveDefaultVatList();
     }
 
     /**
