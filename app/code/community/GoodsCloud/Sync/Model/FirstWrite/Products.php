@@ -56,31 +56,33 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
 
         $lastPageNumber = PHP_INT_MAX;
         $page = 0;
-        $ids = $this->productList->getProductList();
+        $ids = $this->companyProductList->getProductList();
         while ($page <= $lastPageNumber) {
             $collection = $this->getProductCollection($ids, $page, $adminStore->getId());
             $lastPageNumber = $collection->getLastPageNumber();
 
             foreach ($collection as $product) {
+                $save = false;
                 try {
-                    $json = json_decode($product->getGcProductIds(), true);
-                    if (!$json['company'] || !is_numeric($json['company'])) {
+                    if ($this->apiHelper->getGcProductId($product->getId())) {
                         /** @var $product Mage_Catalog_Model_Product */
                         $gcProduct = $this->createCompanyProduct($product);
 
                         // company product is created before any channel product, therefore gc_product_ids is empty
                         // and we don't need to merge anything
-                        $product->setGcProductIds(json_encode(array('company' => $gcProduct->getId())));
-                        $this->productList->removeProductId($product->getId());
+                        $this->apiHelper->addGcProductId($product, $gcProduct->getId(), 'company');
+                        $save = true;
                     }
+                    $this->companyProductList->removeProductId($product->getId());
                 } catch (Mage_Core_Exception $e) {
                     // TODO handle exception
                     throw $e;
                 }
             }
-            $collection->save();
+            if (isset($save) && $save) {
+                $collection->save();
+            }
             $page++;
-
         }
     }
 
@@ -89,12 +91,54 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
         return $this->getApi()->createCompanyProduct($product);
     }
 
+    private function createChannelProduct(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store)
+    {
+        return $this->getApi()->createChannelProduct($product, $store);
+    }
+
     /**
      * @param array $views
+     *
+     * @throws Exception
+     * @throws Mage_Core_Exception
      */
     private function createChannelProducts(array $views)
     {
+        /** @see http://magento.stackexchange.com/a/25908/217 */
+        // It is intended to create two collections! Don't change this, because of a core bug!
 
+        foreach ($views as $view) {
+            Mage::getResourceModel('catalog/product_collection')->setStore($view->getId());
+
+            $lastPageNumber = PHP_INT_MAX;
+            $page = 0;
+            $ids = $this->getChannelProductList($view)->getProductList();
+            while ($page <= $lastPageNumber) {
+                $collection = $this->getProductCollection($ids, $page, $view->getId());
+                $lastPageNumber = $collection->getLastPageNumber();
+
+                foreach ($collection as $product) {
+                    try {
+                        $json = json_decode($product->getGcProductIds(), true);
+                        if (!isset($json[$view->getId()]) || !is_numeric($json[$view->getId()])) {
+                            /** @var $product Mage_Catalog_Model_Product */
+                            $gcProduct = $this->createChannelProduct($product, $view);
+
+                            // company product is created before any channel product, therefore gc_product_ids is empty
+                            // and we don't need to merge anything
+                            $json[$view->getId()] = $gcProduct->getId();
+                            $product->setGcProductIds(json_encode($json));
+                            $this->getChannelProductList($view)->removeProductId($product->getId());
+                        }
+                    } catch (Mage_Core_Exception $e) {
+                        // TODO handle exception
+                        throw $e;
+                    }
+                }
+                $collection->save();
+                $page++;
+            }
+        }
     }
 
     /**

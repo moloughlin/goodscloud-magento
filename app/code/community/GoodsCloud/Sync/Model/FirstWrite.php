@@ -53,17 +53,20 @@ class GoodsCloud_Sync_Model_FirstWrite
 
             // create company products (if needed) for all products
             // create channel products for all store views
-            $this->createCompanyProducts();
+            $this->createProducts();
+
         } catch (Mage_Core_Exception $e) {
+            $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
             throw $e;
         }
         $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
-
     }
 
-    private function createCompanyProducts()
+    /**
+     * @return boolean
+     */
+    private function createProducts()
     {
-
         /* @var $stores Mage_Core_Model_Store[] */
         $stores = Mage::app()->getStores();
 

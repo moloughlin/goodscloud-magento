@@ -290,4 +290,21 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         $config->reinit();
         $config->saveCache();
     }
+
+    public function getGcProductId($product, $channel = 'company')
+    {
+        $json = json_decode($product->getGcProductIds());
+        if (isset($json[$channel])) {
+            return $json[$channel];
+        }
+        return null;
+    }
+
+    public function addGcProductId(Mage_Catalog_Model_Product $product, $id, $channel = 'company')
+    {
+        $json = json_decode($product->getGcProductIds());
+        $json[$channel] = $id;
+        $product->setGcProductIds(json_encode($json));
+
+    }
 }
