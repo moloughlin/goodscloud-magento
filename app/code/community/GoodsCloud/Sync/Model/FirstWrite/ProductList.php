@@ -7,11 +7,22 @@ class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag 
 
     protected $indexedProductList = array();
 
-    protected function _construct()
+    /**
+     * @param string $code
+     *
+     * @return GoodsCloud_Sync_Model_FirstWrite_ProductList
+     */
+    public function setFlagCode($code)
     {
-        parent::_construct();
-        $this->loadSelf();
+        $this->_flagCode = $code;
+        return $this;
+    }
+
+    public function loadSelf()
+    {
+        $return = parent::loadSelf();
         $this->indexProductList();
+        return $return;
     }
 
     /**
