@@ -68,7 +68,10 @@ class GoodsCloud_Sync_Model_FirstWrite
     private function createProducts()
     {
         /* @var $stores Mage_Core_Model_Store[] */
-        $stores = Mage::app()->getStores();
+        $stores = Mage::app()->getStores(true);
+
+        // make sure admin store is first
+        ksort($stores);
 
         return Mage::getModel('goodscloud_sync/firstWrite_products')
             ->setApi($this->api)
