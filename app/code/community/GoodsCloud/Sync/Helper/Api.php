@@ -296,7 +296,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return $store->getGcChannelId();
     }
 
-    public function getGcProductId($product, $channel = 'company')
+    public function getGcProductId($product, $channel)
     {
         $json = json_decode($product->getGcProductIds());
         if (isset($json[$channel])) {
@@ -305,7 +305,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return null;
     }
 
-    public function addGcProductId(Mage_Catalog_Model_Product $product, $id, $channel = 'company')
+    public function addGcProductId(Mage_Catalog_Model_Product $product, $id, $channel)
     {
         $json = json_decode($product->getGcProductIds());
         $json[$channel] = $id;
