@@ -251,6 +251,59 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('company_product', $data);
     }
 
+    public function createChannelProduct(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store)
+    {
+
+        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+        $data = array(
+            //    id	column	Integer	not NULL Primary key.
+            //    logistic_order_items	relationship	List of LogisticOrderItem entries. Write-only, value not returned in API responses.
+            //    logistic_return_items	relationship	List of LogisticReturnItem entries. Write-only, value not returned in API responses.
+            //    order_items	relationship	List of OrderItem entries. Write-only, value not returned in API responses.
+            //    storage_cell_inventories	relationship	List of StorageCellInventory entries. Cascade delete, delete-orphan.
+            //    active	column	Boolean	not NULL	True Whether or not this channel product is currently active
+            'active'             => $product->getStatus() === Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
+            //    atp	column	Integer	not NULL The quantity of this product in this channel that is "available to promise". Read-only.
+            //    notify_quantity	column	Integer	not NULL	0 The quantity at which to send a notification about low inventory.
+            //    packaging_unit	column	Integer			 Smallest number of this article that is sold by this channel physical_quantity	column	Integer	not NULL The total physical quantity of this product in this channel. Read-only.
+            //    properties	column	JSON	not NULL	{} A JSON object.
+            'properties'         => '', // TODO
+            //    reserved_quantity	column	Integer	not NUL The quantity of the product in this channel that is reserved for presales or replacements Read-only.
+            //    safety_quantity	column	Integer	not NULL	0 The quantity of this product that must always be kept in stock, e.g. for photos to be taken, or as a buffer.
+            //    sku	column	String 256 characters or less. The SKU (stock-keeping unit) used to track this product in this channel.
+            'sku'                => $product->getSku(),
+            //    sold_quantity	column	Integer	not NULL The quantity of the product in this channel that is sold but has not yet been removed from storage cells. Read-only.
+            //    stocked_quantity	column	Integer	not NULL The total physical quantity of this product in this channel that is stocked in storage cells. Read-only.
+            //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+            //    version	column	Integer	not NULL	1	 Current version number of this entry, incremented each time it is changed. Read-only.
+            //    audit_user_id	column	Integer			 ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
+            //    channel_id	column	Integer	not NULL ForeignKey('channel.id') ON DELETE RESTRICT
+            'channel_id'         => $apiHelper->getChannelId($store),
+            //    channel	relationship	Single Channel entry.
+            //    chosen_description_id	column	Integer ForeignKey('product_description.id') ON DELETE SET NULL
+            //    chosen_description	relationship	Single ProductDescription entry.
+            //    company_product_id	column	Integer	not NULL ForeignKey('company_product.id') ON DELETE CASCADE
+            'company_product_id' => $apiHelper->getCompanyProductId($product),
+            //    company_product	relationship	Single CompanyProduct entry.
+            //    discount_price_list_id	column	Integer ForeignKey('price_list.id') ON DELETE SET NULL
+            //    discount_price_list	relationship	Single PriceList entry.
+            //    price_list_id	column	Integer ForeignKey('price_list.id') ON DELETE SET NULL
+            'price_list_id'      => $apiHelper->getDefaultPriceListId(),
+            //    price_list	relationship	Single PriceList entry.
+            //    property_set_id	column	Integer ForeignKey('property_set.id') ON DELETE SET NULL
+            'property_set_id'    => $apiHelper->getPropertySetId($product),
+            //    property_set	relationship	Single PropertySet entry.
+            //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
+            //    chosen_images	relationship	List of ProductImage entries.
+        );
+
+        // depending on what identifier exists we set different keys
+        $data[$apiHelper->getIdentifierType()] = $product->getData($apiHelper->getIdentifierAttribute());
+
+        return $this->putPost('company_product', $data);
+    }
+
     /**
      * @param Mage_Core_Model_Store $view storeview to create channel from
      *
