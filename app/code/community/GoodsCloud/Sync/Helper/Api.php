@@ -305,10 +305,10 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return null;
     }
 
-    public function addGcProductId(Mage_Catalog_Model_Product $product, $id, $channel)
+    public function addGcProductId(Mage_Catalog_Model_Product $product, $id, $storeId)
     {
         $json = json_decode($product->getGcProductIds());
-        $json[$channel] = $id;
+        $json[$storeId] = $id;
         $product->setGcProductIds(json_encode($json));
 
     }
