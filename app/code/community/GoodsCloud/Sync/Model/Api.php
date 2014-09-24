@@ -98,6 +98,7 @@ class GoodsCloud_Sync_Model_Api
      */
     private function delete($resource, $id)
     {
+        Mage::log("DELETE $resource with ID $id", Zend_Log::DEBUG, 'goodscloud.log');
         return $this->api->delete("/api/internal/$resource/$id");
     }
 
@@ -110,7 +111,9 @@ class GoodsCloud_Sync_Model_Api
      */
     private function get($model)
     {
+        Mage::log("GET $model", Zend_Log::DEBUG, 'goodscloud.log');
         $response = $this->api->get("/api/internal/$model");
+        Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
         /* @var $collection Varien_Data_Collection */
         $collection = Mage::getModel('goodscloud_sync/api_' . $model . '_collection');
         foreach ($response->objects as $objects) {
@@ -499,10 +502,16 @@ class GoodsCloud_Sync_Model_Api
     {
         try {
             if (isset($data['id'])) {
+                Mage::log("PUT . $resource", Zend_Log::DEBUG, 'goodscloud.log');
+                Mage::log($data, Zend_Log::DEBUG, 'goodscloud.log');
                 $response = $this->api->put('/api/internal/' . $resource, array(), $data);
             } else {
+                Mage::log("POST . $resource", Zend_Log::DEBUG, 'goodscloud.log');
+                Mage::log($data, Zend_Log::DEBUG, 'goodscloud.log');
                 $response = $this->api->post('/api/internal/' . $resource, array(), $data);
             }
+            Mage::log('RESPONSE', Zend_Log::DEBUG, 'goodscloud.log');
+            Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
 
             $item = Mage::getModel('goodscloud_sync/api_' . $resource);
             $item->setData(get_object_vars($response));

@@ -2,6 +2,9 @@
 
 class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_FirstWrite_Base
 {
+    /**
+     * number of products which are exported in one loop
+     */
     const PAGE_SIZE = 100;
 
     /**
@@ -19,7 +22,15 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
         $this->apiHelper = Mage::helper('goodscloud_sync/api');
     }
 
-
+    /**
+     * create a list of all products and export them to goodscloud
+     *
+     * @param Mage_Core_Model_Store[] $views
+     *
+     * @return bool
+     * @throws Exception
+     * @throws Mage_Core_Exception
+     */
     public function createProducts($views)
     {
         foreach ($views as $view) {
@@ -35,6 +46,11 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
         return true;
     }
 
+    /**
+     * check whether all products were exported
+     *
+     * @return bool
+     */
     /**
      * @param Mage_Core_Model_Store $view
      *
@@ -108,6 +124,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
             $page = 0;
             $ids = $this->getProductList($view)->getProductList();
             while ($page <= $lastPageNumber) {
+                Mage::log("Page: $page von $lastPageNumber");
                 $collection = $this->getProductCollection($ids, $page, $view->getId());
                 $lastPageNumber = $collection->getLastPageNumber();
 

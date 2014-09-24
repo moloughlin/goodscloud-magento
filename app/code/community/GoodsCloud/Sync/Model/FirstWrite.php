@@ -23,36 +23,48 @@ class GoodsCloud_Sync_Model_FirstWrite
 
             $this->checkInstalled();
 
+            Mage::log('Init API');
             $this->initApi();
 
+            Mage::log('get and save company id');
             $this->getAndSaveCompanyId();
 
+
             // create default vat rate
+            Mage::log('create default vat rate');
             $this->createDefaultVatRate();
 
             // Add a Channel for every StoreView
+            Mage::log(' Add a Channel for every StoreView');
             $this->createChannelsFromStoreView();
 
             // Add every AttributeSet as PropertySet to every Channel
+            Mage::log('Add every AttributeSet as PropertySet to every Channel');
             $this->createPropertySetsFromAttributeSets();
 
             // Add every Attribute as PropertySchema to every PropertySet
+            Mage::log('Add every Attribute as PropertySchema to every PropertySet');
             $this->createPropertySchemasFromAttributes();
 
             // Map all PropertySchemas to the corresponding PropertySets
+            Mage::log('Map all PropertySchemas to the corresponding PropertySets');
             $this->mapPropertySchemasToPropertySets();
 
             // Copy the category tree to GoodsCloud
+            Mage::log('Copy the category tree to GoodsCloud');
             $this->createGCCategoriesFromCategories();
 
             // create price list
+            Mage::log('create price list');
             $this->createDefaultPriceList();
 
             // create vat rate
+            Mage::log('create vat rate');
             $this->createDefaultVatRate();
 
             // create company products (if needed) for all products
             // create channel products for all store views
+            Mage::log('create products');
             $this->createProducts();
 
         } catch (Mage_Core_Exception $e) {
