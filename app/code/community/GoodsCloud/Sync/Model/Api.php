@@ -298,10 +298,7 @@ class GoodsCloud_Sync_Model_Api
             //    chosen_images	relationship	List of ProductImage entries.
         );
 
-        // depending on what identifier exists we set different keys
-        $data[$apiHelper->getIdentifierType()] = $product->getData($apiHelper->getIdentifierAttribute());
-
-        return $this->putPost('company_product', $data);
+        return $this->putPost('channel_product', $data);
     }
 
     /**
