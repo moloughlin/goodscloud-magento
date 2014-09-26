@@ -159,7 +159,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig(self::XML_CONFIG_IDENTIFIER_ATTRIBUTE);
     }
 
-    public function createDescriptions(Mage_Catalog_Model_Product $product)
+    public function createDescriptions(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null)
     {
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
         $apiHelper = Mage::helper('goodscloud_sync/api');
@@ -174,8 +174,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                 //    label	column	String 256 characters or less.
                 'label'             => $product->getStore()->getName(),
                 //    language_code	column	LowercaseEnum	not NULL The language for this description. Must be ISO-639 codes
-                // TODO get the language somewhere
-                'language_code'     => 'en',
+                'language_code'     => $apiHelper->getLanguage($store),
                 //    long_description	column	Text Any length allowed.
                 'long_description'  => $product->getDescription(),
                 //    rights	column	String 10 characters or less. the rights to the description, might change to an enum
@@ -410,4 +409,16 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             )
         );
     }
+    /**
+     * get language of store
+     *
+     * @param Mage_Core_Model_Store $store
+     *
+     * @return string
+     */
+    public function getLanguage(Mage_Core_Model_Store $store = null)
+    {
+        return substr(Mage::getStoreConfig('general/locale/code', $store), 0, 2);
+    }
+
 }
