@@ -318,20 +318,42 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         $config->saveCache();
     }
 
+    /**
+     * get channel id for store
+     *
+     * @param Mage_Core_Model_Store $store
+     *
+     * @return int
+     */
     public function getChannelId(Mage_Core_Model_Store $store)
     {
         return $store->getGcChannelId();
     }
 
-    public function getGcProductId($product, $channel)
+    /**
+     * get the gc product id for a specific channel/store
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @param int                        $storeId
+     *
+     * @return int
+     */
+    public function getGcProductId(Mage_Catalog_Model_Product $product, $storeId)
     {
         $json = json_decode($product->getGcProductIds(), true);
-        if (isset($json[$channel])) {
-            return $json[$channel];
+        if (isset($json[$storeId])) {
+            return $json[$storeId];
         }
         return null;
     }
 
+    /**
+     * add a gc product id to a product for a specific store (channel)
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @param int                        $id
+     * @param int                        $storeId
+     */
     public function addGcProductId(Mage_Catalog_Model_Product $product, $id, $storeId)
     {
         $json = json_decode($product->getGcProductIds(), true);
@@ -340,6 +362,14 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
     }
 
+    /**
+     * get the GC property set id from a product
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @param Mage_Core_Model_Store      $store
+     *
+     * @return int
+     */
     public function getPropertySetId(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store)
     {
 
@@ -350,7 +380,14 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return $this->attr2PropSet[$product->getAttributeSetId()][$store->getId()];
     }
 
-    public function getCompanyProductId($product)
+    /**
+     * get the gc company id from a product
+     *
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return int
+     */
+    public function getCompanyProductId(Mage_Catalog_Model_Product $product)
     {
         return $this->getGcProductId($product, Mage_Core_Model_App::ADMIN_STORE_ID);
     }
