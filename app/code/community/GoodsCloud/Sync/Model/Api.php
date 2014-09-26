@@ -312,7 +312,7 @@ class GoodsCloud_Sync_Model_Api
             'price_list_id'      => $apiHelper->getDefaultPriceListId(),
             //    price_list	relationship	Single PriceList entry.
             //    property_set_id	column	Integer ForeignKey('property_set.id') ON DELETE SET NULL
-            'property_set_id'    => $apiHelper->getPropertySetId($product),
+            'property_set_id'    => $apiHelper->getPropertySetId($product, $store),
             //    property_set	relationship	Single PropertySet entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    chosen_images	relationship	List of ProductImage entries.
