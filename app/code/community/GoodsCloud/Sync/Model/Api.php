@@ -284,7 +284,9 @@ class GoodsCloud_Sync_Model_Api
             'active'             => $product->getStatus() === Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
             //    atp	column	Integer	not NULL The quantity of this product in this channel that is "available to promise". Read-only.
             //    notify_quantity	column	Integer	not NULL	0 The quantity at which to send a notification about low inventory.
-            //    packaging_unit	column	Integer			 Smallest number of this article that is sold by this channel physical_quantity	column	Integer	not NULL The total physical quantity of this product in this channel. Read-only.
+            //    packaging_unit	column	Integer			 Smallest number of this article that is sold by this channel
+            'packaging_unit'     => $apiHelper->getPackagingUnit($product),
+            // physical_quantity	column	Integer	not NULL The total physical quantity of this product in this channel. Read-only.
             //    properties	column	JSON	not NULL	{} A JSON object.
             'properties'         => '', // TODO
             //    reserved_quantity	column	Integer	not NUL The quantity of the product in this channel that is reserved for presales or replacements Read-only.

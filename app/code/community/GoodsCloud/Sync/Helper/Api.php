@@ -432,4 +432,16 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return substr(Mage::getStoreConfig('general/locale/code', $store), 0, 2);
     }
 
+    public function getPackagingUnit(Mage_Catalog_Model_Product $product)
+    {
+        /* @var $stockItem Mage_CatalogInventory_Model_Stock_Item */
+        $stockItem = $product->getStockItem();
+        if ($stockItem) {
+            if ($stockItem->getEnableQtyIncrements() && is_numeric($stockItem->getQtyIncrements())) {
+                return $stockItem->getQtyIncrements();
+            }
+        }
+        return 1;
+    }
+
 }
