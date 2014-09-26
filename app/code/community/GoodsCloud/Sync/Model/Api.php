@@ -131,6 +131,7 @@ class GoodsCloud_Sync_Model_Api
      * @param bool     $isDiscount
      * @param string[] $countryList
      *
+     * @return GoodsCloud_Sync_Model_Api_Price_List
      * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
      */
     public function createPriceList($name, $store, $isDiscount, $countryList)
@@ -175,6 +176,10 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('price_list', $data);
     }
 
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Vat_Rate
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     */
     public function createVatRate()
     {
 
@@ -198,6 +203,12 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('vat_rate', $data);
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return GoodsCloud_Sync_Model_Api_Company_Product
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     */
     public function createCompanyProduct(Mage_Catalog_Model_Product $product)
     {
 
@@ -254,6 +265,13 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('company_product', $data);
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     * @param Mage_Core_Model_Store      $store
+     *
+     * @return GoodsCloud_Sync_Model_Api_Channel_Product
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     */
     public function createChannelProduct(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store)
     {
 
@@ -307,7 +325,7 @@ class GoodsCloud_Sync_Model_Api
     /**
      * @param Mage_Core_Model_Store $view storeview to create channel from
      *
-     * @return bool true on success, false on failure
+     * @return GoodsCloud_Sync_Model_Api_Channel
      */
     public function createChannel(Mage_Core_Model_Store $view)
     {
@@ -343,15 +361,14 @@ class GoodsCloud_Sync_Model_Api
             // created	hybrid_property The time when this row was created . Determined by looking in the history for this table . Read - only .
         );
 
-        $response = $this->putPost('channel', $data);
-        return $response;
+        return $this->putPost('channel', $data);
     }
 
     /**
      * @param Mage_Eav_Model_Entity_Attribute_Set $set
      * @param Mage_Core_Model_Store               $view
      *
-     * @return bool
+     * @return GoodsCloud_Sync_Model_Api_Property_Set
      *
      * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
      * @throws Mage_Core_Exception
@@ -388,7 +405,7 @@ class GoodsCloud_Sync_Model_Api
      * @param Mage_Eav_Model_Entity_Attribute $attribute
      * @param Mage_Core_Model_Store           $view
      *
-     * @return string newly create property set data
+     * @return GoodsCloud_Sync_Model_Api_Property_Schema
      *
      * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
      * @throws Mage_Core_Exception
@@ -440,7 +457,7 @@ class GoodsCloud_Sync_Model_Api
      * @param Mage_Core_Model_Store       $store
      * @param int                         $gcParentId
      *
-     * @return string newly created category data
+     * @return GoodsCloud_Sync_Model_Api_Category
      */
     public function createCategory(Mage_Catalog_Model_Category $category, Mage_Core_Model_Store $store, $gcParentId)
     {
