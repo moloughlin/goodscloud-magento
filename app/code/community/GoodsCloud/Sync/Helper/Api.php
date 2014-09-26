@@ -16,6 +16,33 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     const XML_CONFIG_DEFAULT_VAT_RATE_ID = 'goodscloud_sync/api/default_vat_rate_id';
 
     /**
+     * array to map attributesets for the different stores on the property sets
+     *
+     * format:
+     * $array[attributesetId][$storeViewId] = $propertySetId
+     *
+     * @var array
+     */
+    private $attr2PropSet;
+
+    private function initAttributeSetMapping()
+    {
+        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode(Mage_Catalog_Model_Product::ENTITY);
+
+        $attributeSetCollection = Mage::getResourceModel('eav/entity_attribute_set_collection');
+        $attributeSetCollection->setEntityTypeFilter($productEntityType->getId());
+        foreach ($attributeSetCollection as $attrSet) {
+            $propertySetIds = json_decode($attrSet->getGcPropertySetIds(), true);
+            foreach (Mage::app()->getStores() as $store) {
+                if (isset($propertySetIds[$store->getGcChannelId()])) {
+                    $this->attr2PropSet[$attrSet->getId()][$store->getId()] = $propertySetIds[$store->getGcChannelId()];
+                }
+            }
+        }
+
+    }
+
+    /**
      * get the baseuri for api requests
      *
      * @return string
@@ -298,7 +325,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
     public function getGcProductId($product, $channel)
     {
-        $json = json_decode($product->getGcProductIds());
+        $json = json_decode($product->getGcProductIds(), true);
         if (isset($json[$channel])) {
             return $json[$channel];
         }
@@ -307,9 +334,24 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
     public function addGcProductId(Mage_Catalog_Model_Product $product, $id, $storeId)
     {
-        $json = json_decode($product->getGcProductIds());
+        $json = json_decode($product->getGcProductIds(), true);
         $json[$storeId] = $id;
-        $product->setGcProductIds(json_encode($json));
+        $product->setGcProductIds(json_encode($json, JSON_FORCE_OBJECT));
 
+    }
+
+    public function getPropertySetId(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store)
+    {
+
+        if (empty($this->attr2PropSet)) {
+            $this->initAttributeSetMapping();
+        }
+
+        return $this->attr2PropSet[$product->getAttributeSetId()][$store->getId()];
+    }
+
+    public function getCompanyProductId($product)
+    {
+        return $this->getGcProductId($product, Mage_Core_Model_App::ADMIN_STORE_ID);
     }
 }
