@@ -3,7 +3,7 @@
 
 class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag implements Iterator
 {
-    protected $_flagCode = 'goodscloud_product_list';
+    protected $_flagCode;
 
     protected $indexedProductList = array();
 
@@ -15,6 +15,7 @@ class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag 
     public function setFlagCode($code)
     {
         $this->_flagCode = $code;
+        $this->setData('flag_code', $code);
         return $this;
     }
 
