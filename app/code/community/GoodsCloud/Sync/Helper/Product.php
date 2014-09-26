@@ -11,7 +11,6 @@ class GoodsCloud_Sync_Helper_Product extends Mage_Core_Helper_Abstract
      *
      * @return Mage_Catalog_Model_Resource_Eav_Mysql4_Product_Collection
      *
-     * @todo find a better way to add the product images!
      * @see  http://www.magentocommerce.com/boards/viewthread/17414/#t141830
      */
     public function addMediaGalleryAttributeToCollection(
