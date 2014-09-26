@@ -38,7 +38,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
                 ->setFlagCode('goodscloud_channel_product_list_' . $view->getId())
                 ->loadSelf();
         }
-        if (!$this->companyProductList->isFinished()) {
+        if (!$this->isFinished()) {
             $this->prepareProductLists();
             $this->createCompanyAndChannelProducts($views);
         }
@@ -51,6 +51,16 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
      *
      * @return bool
      */
+    private function isFinished()
+    {
+        foreach ($this->productLists as $lists) {
+            if ($lists->isFinished()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @param Mage_Core_Model_Store $view
      *
@@ -118,6 +128,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
         // It is intended to create two collections! Don't change this, because of a core bug!
 
         foreach ($views as $view) {
+            Mage::log('View: ' . $view->getCode() . '(' . $view->getId() . ')');
             Mage::getResourceModel('catalog/product_collection')->setStore($view->getId());
 
             $lastPageNumber = PHP_INT_MAX;
@@ -130,21 +141,11 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
 
                 foreach ($collection as $product) {
                     try {
-                        $json = json_decode($product->getGcProductIds(), true);
-                        if (!isset($json[$view->getId()]) || !is_numeric($json[$view->getId()])) {
-                            if ($view->getCode() == Mage_Core_Model_Store::ADMIN_CODE) {
-                                /** @var $product Mage_Catalog_Model_Product */
-                                $gcProduct = $this->createCompanyProduct($product);
-                            } else {
-                                /** @var $product Mage_Catalog_Model_Product */
-                                $gcProduct = $this->createChannelProduct($product, $view);
-                            }
-
-                            $this->apiHelper->addGcProductId($product, $gcProduct->getId(), $view->getId());
-
-                            $this->getProductList($view)->removeProductId($product->getId());
+                        if (!$this->apiHelper->getGcProductId($product, $view->getId())) {
+                            $this->createGcProductAndUpdateProduct($view, $product);
                         }
                     } catch (Mage_Core_Exception $e) {
+                        $collection->save();
                         // TODO handle exception
                         throw $e;
                     }
@@ -174,5 +175,23 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
             ->setCurPage($page);
 
         return Mage::helper('goodscloud_sync/product')->addMediaGalleryAttributeToCollection($collection, $storeId);
+    }
+
+    /**
+     * @param Mage_Core_Model_Store      $view
+     * @param Mage_Catalog_Model_Product $product
+     */
+    private function createGcProductAndUpdateProduct(Mage_Core_Model_Store $view, Mage_Catalog_Model_Product $product)
+    {
+        if ($view->getCode() == Mage_Core_Model_Store::ADMIN_CODE) {
+            /** @var $product Mage_Catalog_Model_Product */
+            $gcProduct = $this->createCompanyProduct($product);
+        } else {
+            /** @var $product Mage_Catalog_Model_Product */
+            $gcProduct = $this->createChannelProduct($product, $view);
+        }
+
+        $this->apiHelper->addGcProductId($product, $gcProduct->getId(), $view->getId());
+        $this->getProductList($view)->removeProductId($product->getId());
     }
 }
