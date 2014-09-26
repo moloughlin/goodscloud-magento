@@ -555,6 +555,6 @@ class GoodsCloud_Sync_Model_Api
             }
         }
 
-        return new Exception('Unknown Error: ' . $message);
+        Mage::throwException('Unknown Error: ' . $message);
     }
 }
