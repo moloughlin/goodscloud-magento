@@ -84,9 +84,10 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
             'type_id', array(
                 'in' => array(
                     Mage_Catalog_Model_Product_Type::TYPE_SIMPLE,
-                    Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE,
-                    Mage_Catalog_Model_Product_Type::TYPE_GROUPED,
-                    Mage_Catalog_Model_Product_Type::TYPE_BUNDLE,
+                    Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL,
+                    //                    Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE,
+                    //                    Mage_Catalog_Model_Product_Type::TYPE_GROUPED,
+                    //                    Mage_Catalog_Model_Product_Type::TYPE_BUNDLE,
                 )
             )
         )->addAttributeToFilter(
