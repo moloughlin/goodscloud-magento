@@ -12,6 +12,7 @@ $this->addAttribute(
     Mage_Catalog_Model_Product::ENTITY,
     'gc_product_ids',
     array(
+        'user_defined'    => 0,
         'global'          => 1,
         'required'        => 0,
         'visible'         => 0,
