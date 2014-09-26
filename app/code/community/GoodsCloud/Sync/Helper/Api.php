@@ -391,4 +391,23 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     {
         return $this->getGcProductId($product, Mage_Core_Model_App::ADMIN_STORE_ID);
     }
+
+    /**
+     * is the product physical?
+     *
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return bool
+     */
+    public function isPhysical(Mage_Catalog_Model_Product $product)
+    {
+        // don't oversee the !
+        return !in_array(
+            $product->getTypeId(),
+            array(
+                Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL,
+                Mage_Downloadable_Model_Product_Type::TYPE_DOWNLOADABLE,
+            )
+        );
+    }
 }

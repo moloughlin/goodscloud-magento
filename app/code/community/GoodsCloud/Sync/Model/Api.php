@@ -240,9 +240,7 @@ class GoodsCloud_Sync_Model_Api
             //    manufacturer_name	column	String 256 characters or less. Name of the manufacturer.
             'manufacturer_name'      => $product->getAttributeText('manufacturer'),
             //    physical	column	Boolean		True False means virtual product
-
-            'physical'               => true, // we don't export virtual products yet!
-
+            'physical'               => $apiHelper->isPhysical($product),
             //    physical_quantity	column	Integer	not NULL The physical quantity of this product in this company. Read-only.
             //    properties	column	JSON	not NULL	{} A JSON object.
             //    customer group, gender, date of birth, list of IP addresses, etc.
