@@ -409,6 +409,17 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             )
         );
     }
+
+    /**
+     * @param Mage_Core_Model_Store $store
+     *
+     * @return string
+     */
+    public function getSourceOfTruth(Mage_Core_Model_Store $store = null)
+    {
+        return Mage::getStoreConfig('tax/calculation/price_includes_tax', $store) ? 'net' : 'gross';
+    }
+
     /**
      * get language of store
      *

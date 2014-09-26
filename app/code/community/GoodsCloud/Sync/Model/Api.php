@@ -159,8 +159,7 @@ class GoodsCloud_Sync_Model_Api
             //    label	column	String	not NULL 256 characters or less.  The name of this price list.
             'label'                    => $name,
             //    source_of_truth	column	Enum	not NULL	net Allowed values net, gross
-            // TODO check what type magento prices are and set the correct value
-            'source_of_truth'          => 'net',
+            'source_of_truth'          => $apiHelper->getSourceOfTruth(),
             //    start_date	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this price list becomes active.
             //    target_country_code_list	column	country_type_array List of codes for the country that this price is active in. Should be ISO-3166 codes
             'target_country_code_list' => $countryList,
