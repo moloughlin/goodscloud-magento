@@ -232,6 +232,10 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
     public function createDescriptions(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null)
     {
+        if ($product->getStoreId() != Mage::app()->getStore($store)->getId()) {
+            Mage::throwException('Description is from wrong scope.');
+        }
+
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
         $apiHelper = Mage::helper('goodscloud_sync/api');
         $descriptions
