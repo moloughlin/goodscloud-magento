@@ -242,7 +242,7 @@ class GoodsCloud_Sync_Model_Api
             'physical'               => $apiHelper->isPhysical($product),
             //    physical_quantity	column	Integer	not NULL The physical quantity of this product in this company. Read-only.
             //    properties	column	JSON	not NULL	{} A JSON object.
-            'properties' => $apiHelper->getProperties($product),
+            'properties' => $apiHelper->getPropertiesWithValuesAsJson($product),
             //    customer group, gender, date of birth, list of IP addresses, etc.
             //    stocked	column	Boolean		True False means never out of stock: manufactured on demand or virtual
             'stocked'                => (bool)$product->getStockItem()->getManageStock(),
@@ -289,7 +289,7 @@ class GoodsCloud_Sync_Model_Api
             'packaging_unit'     => $apiHelper->getPackagingUnit($product),
             // physical_quantity	column	Integer	not NULL The total physical quantity of this product in this channel. Read-only.
             //    properties	column	JSON	not NULL	{} A JSON object.
-            'properties'         => '', // TODO
+            'properties'         => $apiHelper->getPropertiesWithValuesAsJson($product, $store),
             //    reserved_quantity	column	Integer	not NUL The quantity of the product in this channel that is reserved for presales or replacements Read-only.
             //    safety_quantity	column	Integer	not NULL	0 The quantity of this product that must always be kept in stock, e.g. for photos to be taken, or as a buffer.
             //    sku	column	String 256 characters or less. The SKU (stock-keeping unit) used to track this product in this channel.
@@ -303,6 +303,7 @@ class GoodsCloud_Sync_Model_Api
             'channel_id'         => $apiHelper->getChannelId($store),
             //    channel	relationship	Single Channel entry.
             //    chosen_description_id	column	Integer ForeignKey('product_description.id') ON DELETE SET NULL
+            'chosen_description_id' => $apiHelper->createDescriptions($product, $store, true),
             //    chosen_description	relationship	Single ProductDescription entry.
             //    company_product_id	column	Integer	not NULL ForeignKey('company_product.id') ON DELETE CASCADE
             'company_product_id' => $apiHelper->getCompanyProductId($product),
