@@ -98,7 +98,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     public function getPropertiesWithValuesAsJson(
         Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null
     ) {
-        if ($store->getId() != $product->getStoreId()) {
+        if (!$this->isCorrectScope($product, $store)) {
             Mage::throwException('Product was loaded in wrong scope. It would export wrong data.');
         }
         $properties = array();
@@ -233,7 +233,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     public function createDescriptions(
         Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null, $companyProductExists = false
     ) {
-        if ($product->getStoreId() != Mage::app()->getStore($store)->getId()) {
+        if (!$this->isCorrectScope($product, $store)) {
             Mage::throwException('Description is from wrong scope.');
         }
 
@@ -522,6 +522,18 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             }
         }
         return 1;
+    }
+
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     * @param Mage_Core_Model_Store      $store
+     *
+     * @return bool
+     */
+    private function isCorrectScope(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null)
+    {
+        $storeId = Mage::app()->getStore($store)->getId();
+        return $storeId == $product->getStoreId();
     }
 
 }
