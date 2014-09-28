@@ -2,6 +2,8 @@
 
 class Goodscloud
 {
+    const ERROR_CREDENTIALS_INCORRECT_SERVER_UNREACHABLE = 1;
+
     private $uri;
     private $session;
 
@@ -45,7 +47,10 @@ class Goodscloud
         $this->session = json_decode($response);
         curl_close($ch);
         if (!isset($this->session) || $this->session->email != $email) {
-            throw new Exception("API credentials incorrect", 1);
+            throw new Exception(
+                "API credentials incorrect or server unreachable",
+                self::ERROR_CREDENTIALS_INCORRECT_SERVER_UNREACHABLE
+            );
         }
     }
 
