@@ -242,6 +242,7 @@ class GoodsCloud_Sync_Model_Api
             'physical'               => $apiHelper->isPhysical($product),
             //    physical_quantity	column	Integer	not NULL The physical quantity of this product in this company. Read-only.
             //    properties	column	JSON	not NULL	{} A JSON object.
+            'properties' => $apiHelper->getProperties($product),
             //    customer group, gender, date of birth, list of IP addresses, etc.
             //    stocked	column	Boolean		True False means never out of stock: manufactured on demand or virtual
             'stocked'                => (bool)$product->getStockItem()->getManageStock(),

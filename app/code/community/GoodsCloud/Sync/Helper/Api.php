@@ -25,6 +25,15 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     private $attr2PropSet;
 
+    /**
+     * array of format:
+     *
+     * array (attributeSetId => array(attributes))
+     *
+     * @var array
+     */
+    private $attributesInSet;
+
     private function initAttributeSetMapping()
     {
         $productEntityType = Mage::getModel('eav/entity_type')->loadByCode(Mage_Catalog_Model_Product::ENTITY);
@@ -39,7 +48,69 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                 }
             }
         }
+    }
 
+    /**
+     * create the array to get all attributes in one set
+     */
+    private function initAttributesToAttributeSetMapping()
+    {
+        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode(Mage_Catalog_Model_Product::ENTITY);
+
+        $attributes = Mage::getResourceModel('eav/entity_attribute_collection')
+            ->setEntityTypeFilter($productEntityType->getId())
+            ->addSetInfo()
+            ->getData();
+
+
+        foreach ($attributes as $attribute) {
+            /** @var $attribute Mage_Eav_Model_Entity_Attribute */
+            foreach (array_keys($attribute['attribute_set_info']) as $attributeSetId) {
+                $this->attributesInSet[$attributeSetId][] = $attribute['attribute_code'];
+            }
+        }
+    }
+
+    /**
+     * get the attribute which are not ignores
+     *
+     * @param Mage_Catalog_Model_Product $product
+     */
+    private function getAttributes(Mage_Catalog_Model_Product $product)
+    {
+        if (empty($this->attributesInSet)) {
+            $this->initAttributesToAttributeSetMapping();
+        }
+
+        return $this->attributesInSet[$product->getAttributeSetId()];
+    }
+
+    /**
+     * get all attributes which should be exported as json
+     *
+     * make sure the product is in the right context and loaded the correct scope!
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @param Mage_Core_Model_Store      $store
+     *
+     * @return string
+     */
+    public function getPropertiesWithValuesAsJson(
+        Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null
+    ) {
+        if ($store->getId() != $product->getStoreId()) {
+            Mage::throwException('Product was loaded in wrong scope. It would export wrong data.');
+        }
+        $properties = array();
+        foreach ($this->getAttributes($product) as $attributeCode) {
+            $ignoredAttributes = $this->getIgnoredAttributes();
+            if (!in_array($attributeCode, $ignoredAttributes)) {
+                $properties[$attributeCode] = $product->getAttributeText($attributeCode) ? $product->getAttributeText(
+                    $attributeCode
+                ) : ($attributeCode);
+            }
+        }
+        return json_encode($properties);
     }
 
     /**
