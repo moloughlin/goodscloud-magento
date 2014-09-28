@@ -71,7 +71,25 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
-     * @param $id company product id to delete
+     * @return GoodsCloud_Sync_Model_Api_Channel_Product_Collection
+     */
+    public function getChannelProducts()
+    {
+        return $this->get('channel_product');
+    }
+
+    /**
+     * @param $id
+     *
+     * @return bool|string
+     */
+    public function deleteChannelProduct($id)
+    {
+        return $this->delete('channel_product', $id);
+    }
+
+    /**
+     * @param int $id product id to delete
      *
      * @return bool|string
      */
