@@ -37,6 +37,7 @@
                 <ignored_attributes>
                     <!--<cost/>-->
                     <!--<country_of_manufacture/>-->
+                    <category_ids />
                     <created_at/>
                     <custom_design/>
                     <custom_design_from/>
@@ -46,9 +47,10 @@
                     <gallery/>
                     <!--<gift_message_available/>-->
                     <group_price/>
-                    <!--<has_options/>-->
-                    <!--<image/>-->
-                    <!--<image_label/>-->
+                    <gc_product_ids />
+                    <has_options/>
+                    <image/>
+                    <image_label/>
                     <is_recurring/>
                     <links_exist/>
                     <links_purchased_separately/>
@@ -114,6 +116,7 @@
         </suite>
     </phpunit>
     <adminhtml>
+        <!--
         <events>
             <catalog_product_save_before>
                 <observers>
@@ -170,6 +173,7 @@
                 </observers>
             </eav_entity_attribute_set_save_before>
         </events>
+        -->
         <translate>
             <modules>
                 <goodscloud_sync>
@@ -180,4 +184,15 @@
             </modules>
         </translate>
     </adminhtml>
+    <frontend>
+        <routers>
+            <YOUR_NEW_ROUTER_NAME_HERE>
+                <use>standard</use>
+                <args>
+                    <module>GoodsCloud_Sync</module>
+                    <frontName>goodscloud</frontName>
+                </args>
+            </YOUR_NEW_ROUTER_NAME_HERE>
+        </routers>
+    </frontend>
 </config>
