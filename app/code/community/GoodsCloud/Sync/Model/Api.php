@@ -644,7 +644,9 @@ class GoodsCloud_Sync_Model_Api
             if (isset($data['id'])) {
                 Mage::log("PUT . $resource", Zend_Log::DEBUG, 'goodscloud.log');
                 Mage::log($data, Zend_Log::DEBUG, 'goodscloud.log');
-                $response = $this->api->put('/api/internal/' . $resource, array(), $data);
+                $url = "/api/internal/$resource/{$data['id']}";
+                unset($data['id']);
+                $response = $this->api->put($url, array(), $data);
             } else {
                 Mage::log("POST . $resource", Zend_Log::DEBUG, 'goodscloud.log');
                 Mage::log($data, Zend_Log::DEBUG, 'goodscloud.log');
