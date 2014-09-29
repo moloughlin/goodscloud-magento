@@ -148,22 +148,32 @@ class GoodsCloud_Sync_Model_Api
      * @throws Exception
      */
     private function get(
-        $model, array $filters = array(), $disjunction = false, $limit = PHP_INT_MAX, $offset = 0, $orderBy = array(),
+        $model, array $filters = array(), $disjunction = false, $limit = null, $offset = 0, $orderBy = array(),
         $single = false
     ) {
         $params = array();
         if (!empty($filters)) {
             $params['filters'] = $filters;
         }
-        $params['disjunction'] = $disjunction;
-        $params['limit'] = $limit;
+
+        if ($disjunction) {
+            $params['disjunction'] = $disjunction;
+        }
+
+        if ($limit) {
+            $params['limit'] = $limit;
+        }
+
         $params['offset'] = $offset;
+
         if (!empty($orderBy)) {
             $params['order_by'] = $orderBy;
         }
+
         if ($single) {
             $params['single'] = $single;
         }
+
         $params = array('q' => $params);
         $requestPath = "/api/internal/$model";
         Mage::log("GET $requestPath", Zend_Log::DEBUG, 'goodscloud.log');
