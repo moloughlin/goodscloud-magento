@@ -377,6 +377,7 @@ class GoodsCloud_Sync_Model_Api
         $apiHelper = Mage::helper('goodscloud_sync/api');
         $descriptions = $apiHelper->getDescriptionData($product, $store, true);
         $description = $this->createDescription(array_pop($descriptions));
+        $this->addDescriptionToCompanyProduct($description->getId(), $apiHelper->getCompanyProductId($product));
         $data = array(
             //    id	column	Integer	not NULL Primary key.
             //    logistic_order_items	relationship	List of LogisticOrderItem entries. Write-only, value not returned in API responses.
@@ -594,6 +595,20 @@ class GoodsCloud_Sync_Model_Api
         );
 
         return $this->putPost('category', $data);
+    }
+
+    public function addDescriptionToCompanyProduct($descriptionId, $companyProductId)
+    {
+        $requestData = array(
+            'id'                     => $companyProductId,
+            'available_descriptions' => array(
+                'add' => array(
+                    array('id' => $descriptionId)
+                )
+            ),
+        );
+
+        $this->patchPost('company_product', $requestData);
     }
 
     /**
