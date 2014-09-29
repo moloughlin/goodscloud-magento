@@ -526,6 +526,9 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     private function isCorrectScope(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null)
     {
+        // we can't check this, because the store id is sadly not written into the product, when loaded via collection
+        // TODO think about this method, if not possible just delete.
+        return true;
         $storeId = Mage::app()->getStore($store)->getId();
         return $storeId == $product->getStoreId();
     }
