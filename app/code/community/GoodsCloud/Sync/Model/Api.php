@@ -406,7 +406,7 @@ class GoodsCloud_Sync_Model_Api
             'channel_id'            => $apiHelper->getChannelId($store),
             //    channel	relationship	Single Channel entry.
             //    chosen_description_id	column	Integer ForeignKey('product_description.id') ON DELETE SET NULL
-            'chosen_description_id' => $description,
+            'chosen_description_id' => $description->getId(),
             //    chosen_description	relationship	Single ProductDescription entry.
             //    company_product_id	column	Integer	not NULL ForeignKey('company_product.id') ON DELETE CASCADE
             'company_product_id'    => $apiHelper->getCompanyProductId($product),
