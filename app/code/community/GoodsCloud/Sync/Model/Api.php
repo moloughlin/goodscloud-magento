@@ -121,16 +121,22 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
-     * @param string $model name of the resource which is requested
+     * @param string $model   name of the resource which is requested
+     * @param array  $filters query to filter by
      *
      * @return Varien_Data_Collection collection with items from api
      *
      * @throws Exception
      */
-    private function get($model)
+    private function get($model, array $filters = array())
     {
+        $query = '';
+        if (!empty($filters)) {
+            $query = '?q=' . urlencode(json_encode($filters));
+        }
+
         Mage::log("GET $model", Zend_Log::DEBUG, 'goodscloud.log');
-        $response = $this->api->get("/api/internal/$model");
+        $response = $this->api->get("/api/internal/$model.$query");
         Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
         /* @var $collection Varien_Data_Collection */
         $collection = Mage::getModel('goodscloud_sync/api_' . $model . '_collection');
@@ -141,6 +147,23 @@ class GoodsCloud_Sync_Model_Api
         }
 
         return $collection;
+    }
+
+    private function getById($model, $id)
+    {
+        $query = array(
+            array(
+                'name' => 'id',
+                'op'   => 'eq',
+                'val'  => $id,
+            )
+        );
+        return $this->get($model, $query);
+    }
+
+    public function getCompanyProductById($id)
+    {
+        return $this->getById('company_product', $id);
     }
 
     /**
