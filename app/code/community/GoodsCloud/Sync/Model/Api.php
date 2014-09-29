@@ -655,6 +655,7 @@ class GoodsCloud_Sync_Model_Api
             Mage::log('RESPONSE', Zend_Log::DEBUG, 'goodscloud.log');
             Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
 
+            /** @var $item Varien_Object */
             $item = Mage::getModel('goodscloud_sync/api_' . $resource);
             $item->setData(get_object_vars($response));
             return $item;
@@ -667,14 +668,14 @@ class GoodsCloud_Sync_Model_Api
     /**
      * @param Exception $exception
      *
-     * @return GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @return GoodsCloud_Sync_Model_Api_Exception_IntegrityError|GoodsCloud_Sync_Model_Api_Exception_NoResultFound|Mage_Core_Exception
      */
     private function parseErrorMessage(Exception $exception)
     {
         $msg = $exception->getMessage();
 
         if (strpos($msg, 'status code 404') !== false) {
-            throw new GoodsCloud_Sync_Model_Api_Exception_NoResultFound();
+            return new GoodsCloud_Sync_Model_Api_Exception_NoResultFound();
         } elseif (preg_match('#API .* \(status code (\d*)\): \((.*)\) (.*)\nDETAIL:  (.*)\n(.*)#', $msg, $matches)) {
             // IntegrityError:
             //        API request failed (status code 400): (IntegrityError) duplicate key value violates unique constraint "channel_label_company_id_key"
