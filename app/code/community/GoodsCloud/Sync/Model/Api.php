@@ -79,6 +79,25 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @return GoodsCloud_Sync_Model_Api_Product_Description_Collection
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     */
+    public function getProductDescriptions()
+    {
+        return $this->get('product_description');
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool|string
+     */
+    public function deleteProductDescription($id)
+    {
+        return $this->delete('product_description', $id);
+    }
+
+    /**
      * @param $id
      *
      * @return bool|string
