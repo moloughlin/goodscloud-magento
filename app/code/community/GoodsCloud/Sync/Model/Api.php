@@ -608,7 +608,7 @@ class GoodsCloud_Sync_Model_Api
             ),
         );
 
-        $this->patchPost('company_product', $requestData);
+        $this->putPost('company_product', $requestData);
     }
 
     /**
