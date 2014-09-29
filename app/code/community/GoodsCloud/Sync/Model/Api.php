@@ -124,15 +124,32 @@ class GoodsCloud_Sync_Model_Api
      * @param string $model   name of the resource which is requested
      * @param array  $filters query to filter by
      *
-     * @return Varien_Data_Collection collection with items from api
+     * @return Varien_Data_Collection|Varien_Object collection with items from api or single item
      *
      * @throws Exception
      */
-    private function get($model, array $filters = array())
-    {
-        $query = '';
+    private function get(
+        $model, array $filters = array(), $disjunction = false, $limit = PHP_INT_MAX, $offset = 0, $orderBy = array(),
+        $single = false
+    ) {
+        $params = array();
         if (!empty($filters)) {
-            $query = '?q=' . urlencode(json_encode($filters));
+            $params['filters'] = $filters;
+        }
+        $params['disjunction'] = $disjunction;
+        $params['limit'] = $limit;
+        $params['offset'] = $offset;
+        if (!empty($orderBy)) {
+            $params['order_by'] = $orderBy;
+        }
+        if ($single) {
+            $params['single'] = $single;
+        }
+        $params = array('q' => $params);
+        $requestPath = "/api/internal/$model";
+        Mage::log("GET $requestPath", Zend_Log::DEBUG, 'goodscloud.log');
+        Mage::log("Parameter:");
+        Mage::log($params);
         try {
             $response = $this->api->get($requestPath, $params);
         } catch (Exception $e) {
@@ -143,15 +160,20 @@ class GoodsCloud_Sync_Model_Api
             }
         }
 
-        Mage::log("GET $model", Zend_Log::DEBUG, 'goodscloud.log');
-        $response = $this->api->get("/api/internal/$model.$query");
         Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
-        /* @var $collection Varien_Data_Collection */
-        $collection = Mage::getModel('goodscloud_sync/api_' . $model . '_collection');
-        foreach ($response->objects as $objects) {
+        if ($single) {
             /* @var $item Varien_Object */
             $item = Mage::getModel('goodscloud_sync/api_' . $model);
-            $collection->addItem($item->setData(get_object_vars($objects)));
+            $item->setData(get_object_vars($response));
+            return $item;
+        } else {
+            /* @var $collection Varien_Data_Collection */
+            $collection = Mage::getModel('goodscloud_sync/api_' . $model . '_collection');
+            foreach ($response->objects as $objects) {
+                /* @var $item Varien_Object */
+                $item = Mage::getModel('goodscloud_sync/api_' . $model);
+                $collection->addItem($item->setData(get_object_vars($objects)));
+            }
         }
 
         return $collection;
@@ -159,14 +181,14 @@ class GoodsCloud_Sync_Model_Api
 
     private function getById($model, $id)
     {
-        $query = array(
+        $filters = array(
             array(
                 'name' => 'id',
                 'op'   => 'eq',
                 'val'  => $id,
             )
         );
-        return $this->get($model, $query);
+        return $this->get($model, $filters, false, PHP_INT_MAX, 0, array(), true);
     }
 
     public function getCompanyProductById($id)
