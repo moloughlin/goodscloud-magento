@@ -234,7 +234,7 @@ class GoodsCloud_Sync_Model_Api
         $data = array(
             //    id	column	Integer	not NULL Primary key.
             //    available_descriptions	relationship	List of ProductDescription entries.
-            'available_descriptions' => $apiHelper->createDescriptions($product),
+            'available_descriptions' => $apiHelper->getDescriptionData($product),
             //    available_images	relationship	List of ProductImage entries.
             'available_images'       => $apiHelper->createImages($product),
             //    channel_products	relationship	List of ChannelProduct entries. Cascade delete, delete-orphan.
@@ -293,6 +293,8 @@ class GoodsCloud_Sync_Model_Api
 
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
         $apiHelper = Mage::helper('goodscloud_sync/api');
+        $descriptions = $apiHelper->getDescriptionData($product, $store, true);
+        $description = $this->createDescription(array_pop($descriptions));
         $data = array(
             //    id	column	Integer	not NULL Primary key.
             //    logistic_order_items	relationship	List of LogisticOrderItem entries. Write-only, value not returned in API responses.
@@ -321,9 +323,7 @@ class GoodsCloud_Sync_Model_Api
             'channel_id'            => $apiHelper->getChannelId($store),
             //    channel	relationship	Single Channel entry.
             //    chosen_description_id	column	Integer ForeignKey('product_description.id') ON DELETE SET NULL
-            'chosen_description_id' => $this->createDescription(
-                array_pop($apiHelper->createDescriptions($product, $store, true))->getId()
-            ),
+            'chosen_description_id' => $description,
             //    chosen_description	relationship	Single ProductDescription entry.
             //    company_product_id	column	Integer	not NULL ForeignKey('company_product.id') ON DELETE CASCADE
             'company_product_id'    => $apiHelper->getCompanyProductId($product),

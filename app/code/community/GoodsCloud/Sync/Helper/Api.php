@@ -105,9 +105,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         foreach ($this->getAttributes($product) as $attributeCode) {
             $ignoredAttributes = $this->getIgnoredAttributes();
             if (!in_array($attributeCode, $ignoredAttributes)) {
-                $properties[$attributeCode] = $product->getAttributeText($attributeCode) ? $product->getAttributeText(
-                    $attributeCode
-                ) : ($attributeCode);
+                $attrValue = $product->getAttributeText($attributeCode);
+                $properties[$attributeCode] = $attrValue ? $attrValue : $product->getDataUsingMethod($attributeCode);
             }
         }
         return json_encode($properties);
@@ -230,9 +229,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig(self::XML_CONFIG_IDENTIFIER_ATTRIBUTE);
     }
 
-    public function createDescriptions(
-        Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null, $companyProductExists = false
-    ) {
+    public function getDescriptionData(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null)
+    {
         if (!$this->isCorrectScope($product, $store)) {
             Mage::throwException('Description is from wrong scope.');
         }
@@ -264,10 +262,6 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                 //    created	hybrid_property The time when this row was created. Determin  ed by looking in the history for this table. Read-only.
             )
         );
-
-        if ($companyProductExists) {
-            $descriptions['company_products'] = array($this->getCompanyProductId($product));
-        }
 
         return $descriptions;
     }
