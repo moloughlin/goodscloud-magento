@@ -168,7 +168,9 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
     {
         /* @var $collection Mage_Catalog_Model_Resource_Product_Collection */
         $collection = Mage::getResourceModel('catalog/product_collection')
-            ->addIdFilter($ids)
+            ->setStoreId($storeId);
+
+        $collection->addIdFilter($ids)
             ->addAttributeToSelect('*')
             ->addAttributeToSort('type_id', Mage_Catalog_Model_Resource_Product_Collection::SORT_ORDER_DESC)
             ->setFlag('require_stock_items')
