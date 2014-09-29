@@ -95,7 +95,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function getPropertiesWithValuesAsJson(
+    public function getPropertiesWithValues(
         Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null
     ) {
         if (!$this->isCorrectScope($product, $store)) {
@@ -109,7 +109,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                 $properties[$attributeCode] = $attrValue ? $attrValue : $product->getDataUsingMethod($attributeCode);
             }
         }
-        return json_encode($properties);
+        return $properties;
     }
 
     /**
