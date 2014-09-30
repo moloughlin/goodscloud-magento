@@ -253,7 +253,7 @@ class GoodsCloud_Sync_Model_Api
         return $this->get($model, $filters, false, self::DEFAULT_PAGE_SIZE, self::DEFAULT_OFFSET, array(), true);
     }
 
-    public function getCustomerByEmail($email)
+    public function getConsumerByEmail($email)
     {
         return $this->getOneBy('consumer', 'email', $email);
     }
@@ -628,6 +628,11 @@ class GoodsCloud_Sync_Model_Api
         );
 
         return $this->putPost('category', $data);
+    }
+
+    public function createConsumer(array $data)
+    {
+        return $this->putPost('consumer', $data);
     }
 
     public function addDescriptionToCompanyProduct($descriptionId, $companyProductId)
