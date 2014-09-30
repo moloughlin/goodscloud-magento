@@ -37,7 +37,7 @@
                 <ignored_attributes>
                     <!--<cost/>-->
                     <!--<country_of_manufacture/>-->
-                    <category_ids />
+                    <category_ids/>
                     <created_at/>
                     <custom_design/>
                     <custom_design_from/>
@@ -47,7 +47,7 @@
                     <gallery/>
                     <!--<gift_message_available/>-->
                     <group_price/>
-                    <gc_product_ids />
+                    <gc_product_ids/>
                     <has_options/>
                     <image/>
                     <image_label/>
