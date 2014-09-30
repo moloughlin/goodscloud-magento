@@ -7,5 +7,6 @@ class GoodsCloud_Sync_Model_Export_Cron
         $api = Mage::getModel('goodscloud_sync/api');
         $orderExport = Mage::getModel('goodscloud_sync/export_order');
         $orderExport->setApi($api);
+        $orderExport->exportOrders();
     }
 }
