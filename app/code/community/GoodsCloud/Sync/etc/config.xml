@@ -122,7 +122,6 @@
         </suite>
     </phpunit>
     <adminhtml>
-        <!--
         <events>
             <catalog_product_save_before>
                 <observers>
@@ -179,7 +178,6 @@
                 </observers>
             </eav_entity_attribute_set_save_before>
         </events>
-        -->
         <translate>
             <modules>
                 <goodscloud_sync>
@@ -190,15 +188,4 @@
             </modules>
         </translate>
     </adminhtml>
-    <frontend>
-        <routers>
-            <YOUR_NEW_ROUTER_NAME_HERE>
-                <use>standard</use>
-                <args>
-                    <module>GoodsCloud_Sync</module>
-                    <frontName>goodscloud</frontName>
-                </args>
-            </YOUR_NEW_ROUTER_NAME_HERE>
-        </routers>
-    </frontend>
 </config>
