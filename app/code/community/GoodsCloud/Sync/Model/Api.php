@@ -4,7 +4,7 @@ class GoodsCloud_Sync_Model_Api
 {
 
     const DEFAULT_OFFSET = 0;
-    const DEFAULT_PAGE_SIZE = self::DEFAULT_PAGE_SIZE;
+    const DEFAULT_PAGE_SIZE = 0;
 
     /**
      * @var Goodscloud
