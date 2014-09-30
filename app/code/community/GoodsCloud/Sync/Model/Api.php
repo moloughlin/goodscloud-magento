@@ -232,19 +232,30 @@ class GoodsCloud_Sync_Model_Api
 
     private function getById($model, $id)
     {
-        $filters = array(
-            array(
-                'name' => 'id',
-                'op'   => 'eq',
-                'val'  => $id,
-            )
-        );
-        return $this->get($model, $filters, false, PHP_INT_MAX, 0, array(), true);
+        return $this->getOneBy($model, 'id', $id);
     }
 
     public function getCompanyProductById($id)
     {
         return $this->getById('company_product', $id);
+    }
+
+    private function getOneBy($model, $attribute, $value)
+    {
+        $filters = array(
+            array(
+                'name' => $attribute,
+                'op'   => 'eq',
+                'val'  => $value,
+            )
+        );
+
+        return $this->get($model, $filters, false, self::DEFAULT_PAGE_SIZE, self::DEFAULT_OFFSET, array(), true);
+    }
+
+    public function getCustomerByEmail($email)
+    {
+        return $this->getOneBy('consumer', 'email', $email);
     }
 
     /**
