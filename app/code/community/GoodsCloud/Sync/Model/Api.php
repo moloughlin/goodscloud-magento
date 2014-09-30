@@ -2,6 +2,10 @@
 
 class GoodsCloud_Sync_Model_Api
 {
+
+    const DEFAULT_OFFSET = 0;
+    const DEFAULT_PAGE_SIZE = self::DEFAULT_PAGE_SIZE;
+
     /**
      * @var Goodscloud
      */
@@ -151,30 +155,8 @@ class GoodsCloud_Sync_Model_Api
         $model, array $filters = array(), $disjunction = false, $limit = null, $offset = 0, $orderBy = array(),
         $single = false
     ) {
-        $params = array();
-        if (!empty($filters)) {
-            $params['filters'] = $filters;
-        }
+        $params = $this->buildGetParamsArray($filters, $disjunction, $limit, $offset, $orderBy, $single);
 
-        if ($disjunction) {
-            $params['disjunction'] = $disjunction;
-        }
-
-        if ($limit) {
-            $params['limit'] = $limit;
-        }
-
-        $params['offset'] = $offset;
-
-        if (!empty($orderBy)) {
-            $params['order_by'] = $orderBy;
-        }
-
-        if ($single) {
-            $params['single'] = $single;
-        }
-
-        $params = array('q' => $params);
         $requestPath = "/api/internal/$model";
         Mage::log("GET $requestPath", Zend_Log::DEBUG, 'goodscloud.log');
         Mage::log("Parameter:");
@@ -207,6 +189,46 @@ class GoodsCloud_Sync_Model_Api
 
         return $collection;
     }
+
+    /**
+     * @param array  $filters array of filters
+     * @param bool   $disjunction
+     * @param int    $limit   limit of collection
+     * @param int    $offset  offset as in mysql
+     * @param string $orderBy order by attribute
+     * @param bool   $single  expect single result - avoids collection and returns one object
+     *
+     * @return array
+     */
+    private function buildGetParamsArray(array $filters, $disjunction, $limit, $offset, $orderBy, $single)
+    {
+        $params = array();
+        if (!empty($filters)) {
+            $params['filters'] = $filters;
+        }
+
+        if ($disjunction) {
+            $params['disjunction'] = $disjunction;
+        }
+
+        if ($limit) {
+            $params['limit'] = $limit;
+        }
+
+        $params['offset'] = $offset;
+
+        if (!empty($orderBy)) {
+            $params['order_by'] = $orderBy;
+        }
+
+        if ($single) {
+            $params['single'] = $single;
+        }
+
+        $params = array('q' => $params);
+        return $params;
+    }
+
 
     private function getById($model, $id)
     {
@@ -702,4 +724,5 @@ class GoodsCloud_Sync_Model_Api
 
         Mage::throwException('Unknown Error: ' . $msg);
     }
+
 }
