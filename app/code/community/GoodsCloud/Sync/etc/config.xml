@@ -30,6 +30,12 @@
                     <class>Mage_Sales_Model_Resource_Setup</class>
                 </setup>
             </goodscloud_sync_sales_setup>
+            <goodscloud_sync_customer_setup>
+                <setup>
+                    <module>GoodsCloud_Sync</module>
+                    <class>Mage_Customer_Model_Resource_Setup</class>
+                </setup>
+            </goodscloud_sync_customer_setup>
         </resources>
         <helpers>
             <goodscloud_sync>
