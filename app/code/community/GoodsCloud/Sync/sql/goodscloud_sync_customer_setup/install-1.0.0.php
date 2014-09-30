@@ -4,7 +4,7 @@ $this->startSetup();
 
 $this->addAttribute(
     'customer',
-    'gc_customer_id',
+    'gc_consumer_id',
     array(
         'type'     => 'int',
         'label'    => 'Goodscloud ID',
