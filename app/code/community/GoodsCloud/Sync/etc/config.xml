@@ -18,12 +18,12 @@
                     <class>Mage_Core_Model_Resource_Setup</class>
                 </setup>
             </goodscloud_sync_setup>
-            <goodscloud_sync_eav_setup>
+            <goodscloud_sync_catalog_setup>
                 <setup>
                     <module>GoodsCloud_Sync</module>
                     <class>Mage_Catalog_Model_Resource_Setup</class>
                 </setup>
-            </goodscloud_sync_eav_setup>
+            </goodscloud_sync_catalog_setup>
         </resources>
         <helpers>
             <goodscloud_sync>
