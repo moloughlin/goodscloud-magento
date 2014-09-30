@@ -497,12 +497,13 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     /**
      * get language of store
      *
-     * @param Mage_Core_Model_Store $store
+     * @param Mage_Core_Model_Store|int $store store object or store view id
      *
      * @return string
      */
-    public function getLanguage(Mage_Core_Model_Store $store = null)
+    public function getLanguage($store = null)
     {
+        $store = Mage::app()->getStore($store);
         return substr(Mage::getStoreConfig('general/locale/code', $store), 0, 2);
     }
 
