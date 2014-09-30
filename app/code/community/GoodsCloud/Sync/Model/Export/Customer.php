@@ -66,13 +66,41 @@ class GoodsCloud_Sync_Model_Export_Customer
                     $customer->setGcConsumerId($gcConsumer->getId())->save();
                 }
             }
-
-            return $gcConsumerId;
         } else {
             // use the data from the order to create one
+            $gcConsumerId = $this->getGoodscloudConsumerIdByEmail($order->getCustomerEmail());
+            if (!$gcConsumerId) {
+                $gcConsumerId = $this->createGcConsumerFromOrder($order)->getId();
+            }
         }
+        return $gcConsumerId;
     }
 
+    private function createGcConsumerFromOrder(Mage_Sales_Model_Order $order)
+    {
+        $attributes = array(
+            'email',
+            'firstname',
+            'lastname',
+            'prefix',
+            'middlename',
+            'dob',
+            'gender',
+            'suffix',
+        );
+        $customer = Mage::getModel('customer/customer');
+        foreach ($attributes as $attribute) {
+            $customer->setDataUsingMethod($attribute, $order->getDataUsingMethod('customer_' . $attribute));
+        }
+
+        return $this->createGcConsumer($customer);
+    }
+
+    /**
+     * @param Mage_Customer_Model_Customer $customer
+     *
+     * @return GoodsCloud_Sync_Model_Api_Consumer
+     */
     private function createGcConsumer(Mage_Customer_Model_Customer $customer)
     {
         $apiHelper = Mage::helper('goodscloud_sync/api');
