@@ -134,8 +134,8 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
 
             $lastPageNumber = PHP_INT_MAX;
             $page = 0;
-            $ids = $this->getProductList($view)->getProductList();
             while ($page <= $lastPageNumber) {
+                $ids = $this->getProductList($view)->getProductList();
                 Mage::log("Page: $page von $lastPageNumber");
                 $collection = $this->getProductCollection($ids, $page, $view->getId());
                 $lastPageNumber = $collection->getLastPageNumber();
@@ -173,7 +173,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
 
         $collection->addIdFilter($ids)
             ->addAttributeToSelect('*')
-            ->addAttributeToSort('type_id', Mage_Catalog_Model_Resource_Product_Collection::SORT_ORDER_DESC)
+            ->addAttributeToSort('entity_id')
             ->setFlag('require_stock_items')
             ->setPageSize(self::PAGE_SIZE)
             ->setCurPage($page);
