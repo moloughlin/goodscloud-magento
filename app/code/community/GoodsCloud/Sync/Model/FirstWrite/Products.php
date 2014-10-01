@@ -145,6 +145,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
                         if (!$this->apiHelper->getGcProductId($product, $view->getId())) {
                             $this->createGcProductAndUpdateProduct($view, $product);
                         }
+                        $this->getProductList($view)->removeProductId($product->getId());
                     } catch (Mage_Core_Exception $e) {
                         $collection->save();
                         // TODO handle exception
@@ -195,6 +196,5 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
         }
 
         $this->apiHelper->addGcProductId($product, $gcProduct->getId(), $view->getId());
-        $this->getProductList($view)->removeProductId($product->getId());
     }
 }
