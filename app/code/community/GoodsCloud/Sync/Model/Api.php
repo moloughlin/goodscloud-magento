@@ -678,6 +678,78 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('consumer', $data);
     }
 
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @param int                    $gcConsumerId
+     *
+     * @return GoodsCloud_Sync_Model_Api_Order
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws GoodsCloud_Sync_Model_Api_Exception_NoResultFound
+     * @throws Mage_Core_Exception
+     */
+    public function createOrder(Mage_Sales_Model_Order $order, $gcConsumerId)
+    {
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+        $apiOrderHelper = Mage::helper('goodscloud_sync/api_order');
+        $data = array(
+            //    id	column	Integer	not NULL Primary key.
+            //    billing_address	relationship	Single BillingAddress entry. Cascade delete, delete-orphan.
+            'billing_address'     => $apiOrderHelper->getBillingAddress($order),
+            //    billing_telephone	relationship	Single BillingTelephone entry. Cascade delete, delete-orphan.
+            'billing_telephone'   => '', // TODO
+            //    credit_notes	relationship	List of CreditNote entries.
+            //    invoices	relationship	List of Invoice entries.
+            //    order_items	relationship	List of OrderItem entries. Cascade delete, delete-orphan.
+            'order_items'         => $apiOrderHelper->getOrderItems($order),
+            //    replaced_order_return_items	relationship	List of OrderReturnItem entries.
+            //    returns	relationship	List of OrderReturn entries.
+            //    shipments	relationship	List of Shipment entries.
+            //    shipping_address	relationship	Single ShippingAddress entry. Cascade delete, delete-orphan.
+            'shipping_address'    => $apiOrderHelper->getShippingAddress($order),
+            //    shipping_telephone	relationship	Single ShippingTelephone entry. Cascade delete, delete-orphan.
+            'shipping_telephone'  => '', // TODO
+            //    sub_pay_ins	relationship	List of SubPayIn entries.
+            //    sub_pay_outs	relationship	List of SubPayOut entries.
+            //    awaits_routing	column	Boolean	not NULL	False Set this to True to trigger LogisticOrder creation. Afterwards, this attribute is automatically set back to False. Refer to OrderItem routing_status for info regarding the outcome of the LogisticOrder creation process.
+            'awaits_routing'      => true, // TODO what is it for?
+            //    currency_code	column	UppercaseEnum	not NULL The currency this object is denominated in. Must be ISO-4217 currency code
+            'currency_code'       => $order->getBaseCurrencyCode(),
+            //    external_identifier	column	String	not NULL 256 characters or less.
+            'external_identifier' => $order->getIncrementId(),
+            //    extra	column	JSON	not NULL	{}	A JSON object. For storing extra information.
+            //    pay_later	column	Boolean	not NULL	False Can this order be shipped before being paid? True for cash-on-delivery and bill-me-later orders.
+            //    placed	column	DateTime ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. the time the order was placed in the external channel.
+            'placed'              => $order->getCreatedAtStoreDate()->toString('c'), // c is ISO 8601
+            //    source	column	Enum	not NULL Allowed values: manual, return, dummy, magento, amazon, tradebyte, ebay, oxid, effi, pixi, kl_trend, orbis, adyen, dhl manual source is for orders created by staff via the GoodsCloud UI return source is for replacement orders created by staff via the GoodsCloud UI
+            'source'              => 'magento',
+            //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+            //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
+            //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
+            //    channel_id	column	Integer	not NULL ForeignKey('channel.id') ON DELETE RESTRICT
+            'channel_id'          => $apiHelper->getChannelId($order->getStore()),
+            //    channel	relationship	Single Channel entry.
+            //    consumer_id	column	Integer	not NULL ForeignKey('consumer.id') ON DELETE RESTRICT
+            'consumer_id'         => $gcConsumerId,
+            //    consumer	relationship	Single Consumer entry.
+            //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
+            //    delivery_status	hybrid_property If there are no logistic_order_items, or no shipments for any of the non-virtual order_items, this has the special value N/A. If all non-virtual logistic_order_items have shipments with the same delivery_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
+            //    packing_status	hybrid_property If there are no logistic_order_items for any of the non-virtual order_items, this has the special value N/A. If all non-virtual logistic_order_items have the same packing_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
+            //    pay_in_status	hybrid_property If there are no sub_pay_ins, this has the special value N/A. If all the sub_pay_ins have pay_ins with the same payment_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
+            //    pay_out_status	hybrid_property If there are no sub_pay_outs, this has the special value N/A. If all the sub_pay_outs have pay_outs with the same payment_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
+            //    progress	hybrid_property Deprecated, only exists for backwards compatibility. Do not use; Use routing_status instead.
+            //    routing_status	hybrid_property If there are no order_items, this has the special value N/A. If all order_items have the same routing_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
+            //    shippable	hybrid_property Is this order shippable? Orders are shippable if they are paid in full, or if pay_later is True. Read-only.
+            //    total_gross	hybrid_property The total gross price for all items. Read-only.
+            //    total_net	hybrid_property The total net price for all items. Read-only.
+            //    total_paid_in	hybrid_property The total of all amounts on sub_pay_ins with a payment_status of paid. Read-only.
+            //    total_paid_out	hybrid_property The total of all amounts on sub_pay_outs with a payment_status of paid. Read-only.
+            //    items	property	Read-only.
+            //    totals	property	Read-only.
+        );
+
+        return $this->putPost('order', $data);
+    }
+
     public function addDescriptionToCompanyProduct($descriptionId, $companyProductId)
     {
         $requestData = array(
