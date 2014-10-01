@@ -53,12 +53,13 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
      */
     private function isFinished()
     {
+        $oneUnfinished = true;
         foreach ($this->productLists as $lists) {
-            if ($lists->isFinished()) {
-                return true;
+            if (!$lists->isFinished()) {
+                $oneUnfinished = false;
             }
         }
-        return false;
+        return $oneUnfinished;
     }
 
     /**
