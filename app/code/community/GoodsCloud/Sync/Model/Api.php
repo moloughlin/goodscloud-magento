@@ -641,8 +641,10 @@ class GoodsCloud_Sync_Model_Api
             //    pay_outs	relationship	List of PayOut entries .
             //    email	column	String	not null		256 characters or less .
             'email'               => $this->sanitizeEmail($customer->getEmail()),
+
             //    external_identifier	column	String	256 characters or less .
-            'external_identifier' => $customer->getId(),
+            'external_identifier' => $customer->getId(), // this is empty for guest orders
+
             //    first_name	column	String			256 characters or less .
             'first_name'          => $this->sanitizeFirstname($customer->getFirstname()),
             //    language_code	column	LowercaseEnum	not null The language for this consumer . Must be {ISO - 639} codes
