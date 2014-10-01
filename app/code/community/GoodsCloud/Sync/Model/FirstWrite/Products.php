@@ -137,6 +137,9 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
             $page = 0;
             while ($page <= $lastPageNumber) {
                 $ids = $this->getProductList($view)->getProductList();
+                if (empty($ids)) {
+                    break;
+                }
                 Mage::log("Page: $page von $lastPageNumber");
                 $collection = $this->getProductCollection($ids, $page, $view->getId());
                 $lastPageNumber = $collection->getLastPageNumber();
@@ -156,6 +159,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
                 $collection->save();
                 $page++;
             }
+            $this->getProductList($view)->save();
         }
     }
 
