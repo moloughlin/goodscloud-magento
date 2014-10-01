@@ -2,12 +2,6 @@
 
 class GoodsCloud_Sync_Model_Export_Customer
 {
-    const MAX_EMAIL_LENGTH = 256;
-    const MAX_FIRSTNAME_LENGTH = 256;
-    const MAX_LASTNAME_LENGTH = 256;
-    const MAX_LENGTH_ORGA_NAME = 256;
-    const MAX_LENGTH_PREFIX = 256;
-    const MAX_LENGTH_SUFFIX = 256;
     /**
      * @var GoodsCloud_Sync_Model_Api
      */
@@ -95,35 +89,5 @@ class GoodsCloud_Sync_Model_Export_Customer
     private function createGcConsumer(Mage_Customer_Model_Customer $customer)
     {
         return $this->api->createConsumer($customer);
-    }
-
-    private function sanitizeEmail($email)
-    {
-        return substr($email, 0, self::MAX_EMAIL_LENGTH);
-    }
-
-    private function sanitizeFirstname($firstname)
-    {
-        return substr($firstname, 0, self::MAX_FIRSTNAME_LENGTH);
-    }
-
-    private function sanitizeLastname($lastname)
-    {
-        return substr($lastname, 0, self::MAX_LASTNAME_LENGTH);
-    }
-
-    private function sanitizeOrganisationName($orgaName)
-    {
-        return substr($orgaName, 0, self::MAX_LENGTH_ORGA_NAME);
-    }
-
-    private function sanitizePrefix($prefix)
-    {
-        return substr($prefix, 0, self::MAX_LENGTH_PREFIX);
-    }
-
-    private function sanitizeSuffix($suffix)
-    {
-        return substr($suffix, 0, self::MAX_LENGTH_SUFFIX);
     }
 }

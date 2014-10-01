@@ -6,6 +6,12 @@ class GoodsCloud_Sync_Model_Api
     const DEFAULT_OFFSET = 0;
     const DEFAULT_PAGE_SIZE = 0;
 
+    const CUSTOMER_MAX_EMAIL_LENGTH = 256;
+    const CUSTOMER_MAX_FIRSTNAME_LENGTH = 256;
+    const CUSTOMER_MAX_LASTNAME_LENGTH = 256;
+    const CUSTOMER_MAX_LENGTH_ORGA_NAME = 256;
+    const CUSTOMER_MAX_LENGTH_PREFIX = 256;
+    const CUSTOMER_MAX_LENGTH_SUFFIX = 256;
     /**
      * @var Goodscloud
      */
@@ -703,7 +709,7 @@ class GoodsCloud_Sync_Model_Api
             //    billing_address	relationship	Single BillingAddress entry. Cascade delete, delete-orphan.
             'billing_address'     => $apiOrderHelper->getBillingAddress($order),
             //    billing_telephone	relationship	Single BillingTelephone entry. Cascade delete, delete-orphan.
-            'billing_telephone'   => '', // TODO
+            'billing_telephone'   => null, // TODO
             //    credit_notes	relationship	List of CreditNote entries.
             //    invoices	relationship	List of Invoice entries.
             //    order_items	relationship	List of OrderItem entries. Cascade delete, delete-orphan.
@@ -714,7 +720,7 @@ class GoodsCloud_Sync_Model_Api
             //    shipping_address	relationship	Single ShippingAddress entry. Cascade delete, delete-orphan.
             'shipping_address'    => $apiOrderHelper->getShippingAddress($order),
             //    shipping_telephone	relationship	Single ShippingTelephone entry. Cascade delete, delete-orphan.
-            'shipping_telephone'  => '', // TODO
+            'shipping_telephone'  => null, // TODO
             //    sub_pay_ins	relationship	List of SubPayIn entries.
             //    sub_pay_outs	relationship	List of SubPayOut entries.
             //    awaits_routing	column	Boolean	not NULL	False Set this to True to trigger LogisticOrder creation. Afterwards, this attribute is automatically set back to False. Refer to OrderItem routing_status for info regarding the outcome of the LogisticOrder creation process.
@@ -861,6 +867,36 @@ class GoodsCloud_Sync_Model_Api
         }
 
         Mage::throwException('Unknown Error: ' . $msg);
+    }
+
+    private function sanitizeEmail($email)
+    {
+        return substr($email, 0, self::CUSTOMER_MAX_EMAIL_LENGTH);
+    }
+
+    private function sanitizeFirstname($firstname)
+    {
+        return substr($firstname, 0, self::CUSTOMER_MAX_FIRSTNAME_LENGTH);
+    }
+
+    private function sanitizeLastname($lastname)
+    {
+        return substr($lastname, 0, self::CUSTOMER_MAX_LASTNAME_LENGTH);
+    }
+
+    private function sanitizeOrganisationName($orgaName)
+    {
+        return substr($orgaName, 0, self::CUSTOMER_MAX_LENGTH_ORGA_NAME);
+    }
+
+    private function sanitizePrefix($prefix)
+    {
+        return substr($prefix, 0, self::CUSTOMER_MAX_LENGTH_PREFIX);
+    }
+
+    private function sanitizeSuffix($suffix)
+    {
+        return substr($suffix, 0, self::CUSTOMER_MAX_LENGTH_SUFFIX);
     }
 
 }
