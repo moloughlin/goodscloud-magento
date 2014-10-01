@@ -234,7 +234,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         if (!$this->isCorrectScope($product, $store)) {
             Mage::throwException('Description is from wrong scope.');
         }
-
+        $store = Mage::app()->getStore($store);
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
         $apiHelper = Mage::helper('goodscloud_sync/api');
         $descriptions
@@ -246,7 +246,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                 //    company_product_views	relationship	List of CompanyProductView entries.
                 //    company_products	relationship	List of CompanyProduct entries.
                 //    label	column	String 256 characters or less.
-                'label'             => $product->getStore()->getName(),
+                'label'             => $store->getName(),
                 //    language_code	column	LowercaseEnum	not NULL The language for this description. Must be ISO-639 codes
                 'language_code'     => $apiHelper->getLanguage($store),
                 //    long_description	column	Text Any length allowed.
