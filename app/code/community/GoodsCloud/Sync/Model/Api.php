@@ -229,10 +229,17 @@ class GoodsCloud_Sync_Model_Api
         return $params;
     }
 
-
+    /**
+     * @param string $model resource which is requested
+     * @param int    $id    if of the resource
+     *
+     * @return Varien_Object
+     */
     private function getById($model, $id)
     {
-        return $this->getOneBy($model, 'id', $id);
+        return $this->get(
+            $model . '/' . $id, array(), false, self::DEFAULT_PAGE_SIZE, self::DEFAULT_OFFSET, array(), true
+        );
     }
 
     public function getCompanyProductById($id)
