@@ -37,11 +37,8 @@ class GoodsCloud_Sync_Model_Export_Order
 
     private function export(Mage_Sales_Model_Order $order)
     {
-        $this->customerExporter = Mage::getModel('goodscloud_sync/export_customer');
-        $this->customerExporter->setApi($this->api);
-        $this->customerExporter->exportByOrder($order);
-
-
+        $gcConsumerId = $this->getConsumerId($order);
+        $this->api->createOrder($order, $gcConsumerId);
     }
 
     /**
@@ -50,5 +47,17 @@ class GoodsCloud_Sync_Model_Export_Order
     public function setApi(GoodsCloud_Sync_Model_Api $api)
     {
         $this->api = $api;
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return int
+     */
+    private function getConsumerId(Mage_Sales_Model_Order $order)
+    {
+        $this->customerExporter = Mage::getModel('goodscloud_sync/export_customer');
+        $this->customerExporter->setApi($this->api);
+        return $this->customerExporter->exportByOrder($order);
     }
 }
