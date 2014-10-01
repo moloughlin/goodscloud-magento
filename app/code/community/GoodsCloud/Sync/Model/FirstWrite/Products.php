@@ -183,7 +183,12 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
             ->setPageSize(self::PAGE_SIZE)
             ->setCurPage($page);
 
-        return Mage::helper('goodscloud_sync/product')->addMediaGalleryAttributeToCollection($collection, $storeId);
+        // only add images for admin store, because the collection is loaded, when the images are added
+        // and to have later up to date products, they have to be loaded AFTER all others are finished
+        if ($storeId == Mage_Core_Model_App::ADMIN_STORE_ID) {
+            return Mage::helper('goodscloud_sync/product')->addMediaGalleryAttributeToCollection($collection, $storeId);
+        }
+        return $collection;
     }
 
     /**
