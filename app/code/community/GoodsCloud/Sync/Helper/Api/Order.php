@@ -96,31 +96,36 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
         return array(
             //    id	column	Integer	not NULL Primary key.
             //    city	column	String 256 characters or less.
-            'city'              => $address->getCity(),
+            'city'              => $this->sanitize($address->getCity(), 256),
             //    country_code	column	UppercaseEnum	not NULL Country for this address. Must be ISO-3166-2 codes
             'country_code'      => $address->getCountry(),
             //    extra	column	JSON	not NULL	{} A JSON object.
             //    first_name	column	String 256 characters or less.
-            'first_name'        => $address->getFirstname(),
+            'first_name'        => $this->sanitize($address->getFirstname(),
+                256),
             //    last_name	column	String 256 characters or less.
-            'last_name'         => $address->getLastname(),
+            'last_name'         => $this->sanitize($address->getLastname(),
+                256),
             //    organization_name	column	String 256 characters or less.
-            'organization_name' => $address->getCompany(),
+            'organization_name' => $this->sanitize($address->getCompany(), 256),
             //    postcode	column	String 256 characters or less.
-            'postcode'          => $address->getPostcode(),
+            'postcode'          => $this->sanitize($address->getPostcode(),
+                256),
             //    prefix	column	String 256 characters or less.
-            'prefix'            => $address->getPrefix(),
+            'prefix'            => $this->sanitize($address->getPrefix(), 256),
             //    region_code	column	String 256 characters or less.
-            'region_code'       => $address->getRegionCode(),
+            'region_code'       => $this->sanitize($address->getRegionCode(),
+                256),
             //    State/province/region for this address.
             //    street_line_1	column	String	not NULL 256 characters or less.
-            'street_line_1'     => $address->getStreet1(),
+            'street_line_1'     => $this->sanitize($address->getStreet1(), 256),
             //    street_line_2	column	String 256 characters or less.
-            'street_line_2'     => $address->getStreet2(),
+            'street_line_2'     => $this->sanitize($address->getStreet2(), 256),
             //    street_line_3	column	String 256 characters or less.
-            'street_line_3'     => $address->getStreet3() . $address->getStreet4(),
+            'street_line_3'     => $this->sanitize($address->getStreet3()
+                . $address->getStreet4(), 256),
             //    suffix	column	String 256 characters or less.
-            'suffix'            => $address->getSuffix(),
+            'suffix'            => $this->sanitize($address->getSuffix(), 256),
             //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
             //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
@@ -144,31 +149,36 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
         return array(
             //    id	column	Integer	not NULL Primary key.
             //    city	column	String 256 characters or less.
-            'city'              => $address->getCity(),
+            'city'              => $this->sanitize($address->getCity(), 256),
             //    country_code	column	UppercaseEnum	not NULL Country for this address. Must be ISO-3166-2 codes
             'country_code'      => $address->getCountry(),
             //    extra	column	JSON	not NULL	{} A JSON object.
             //    first_name	column	String 256 characters or less.
-            'first_name'        => $address->getFirstname(),
+            'first_name'        => $this->sanitize($address->getFirstname(),
+                256),
             //    last_name	column	String 256 characters or less.
-            'last_name'         => $address->getLastname(),
+            'last_name'         => $this->sanitize($address->getLastname(),
+                256),
             //    organization_name	column	String 256 characters or less.
-            'organization_name' => $address->getCompany(),
+            'organization_name' => $this->sanitize($address->getCompany(), 256),
             //    postcode	column	String 256 characters or less.
-            'postcode'          => $address->getPostcode(),
+            'postcode'          => $this->sanitize($address->getPostcode(),
+                256),
             //    prefix	column	String 256 characters or less.
-            'prefix'            => $address->getPrefix(),
+            'prefix'            => $this->sanitize($address->getPrefix(), 256),
             //    region_code	column	String 256 characters or less.
-            'region_code'       => $address->getRegionCode(),
+            'region_code'       => $this->sanitize($address->getRegionCode(),
+                256),
             //    State/province/region for this address.
             //    street_line_1	column	String	not NULL 256 characters or less.
-            'street_line_1'     => $address->getStreet1(),
+            'street_line_1'     => $this->sanitize($address->getStreet1(), 256),
             //    street_line_2	column	String 256 characters or less.
-            'street_line_2'     => $address->getStreet2(),
+            'street_line_2'     => $this->sanitize($address->getStreet2(), 256),
             //    street_line_3	column	String 256 characters or less.
-            'street_line_3'     => $address->getStreet3() . $address->getStreet4(),
+            'street_line_3'     => $this->sanitize($address->getStreet3()
+                . $address->getStreet4(), 256),
             //    suffix	column	String 256 characters or less.
-            'suffix'            => $address->getSuffix(),
+            'suffix'            => $this->sanitize($address->getSuffix(), 256),
             //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
             //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
@@ -176,5 +186,16 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    order	relationship	Single Order entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
         );
+    }
+
+    /**
+     * @param string $string
+     * @param int    $length
+     *
+     * @return string
+     */
+    private function sanitize($string, $length)
+    {
+        return substr($string, 0, $length);
     }
 }
