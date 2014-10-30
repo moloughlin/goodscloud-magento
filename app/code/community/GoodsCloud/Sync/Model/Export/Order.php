@@ -17,7 +17,12 @@ class GoodsCloud_Sync_Model_Export_Order
         $orders = $this->getOrdersToExport();
         // TODO get all customer ids and load them in a collection instead of every single customer
         foreach ($orders as $order) {
-            $this->export($order);
+            try {
+                $this->export($order);
+            } catch (Mage_Core_Exception $e) {
+                Mage::logException($e);
+                // TODO handle exception
+            }
         }
     }
 
