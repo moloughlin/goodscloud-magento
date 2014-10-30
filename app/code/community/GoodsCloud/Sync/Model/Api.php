@@ -827,6 +827,10 @@ class GoodsCloud_Sync_Model_Api
             return $item;
 
         } catch (Exception $e) {
+            if(isset($response)) {
+                Mage::log('RESPONSE', Zend_Log::DEBUG, 'goodscloud.log');
+                Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
+            }
             throw $this->parseErrorMessage($e);
         }
     }

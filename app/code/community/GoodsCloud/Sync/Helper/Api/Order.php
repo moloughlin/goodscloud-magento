@@ -36,9 +36,9 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    gtin	column	String	not NULL 14 characters or less. GTIN-8, GTIN-12, GTIN-13 or GTIN-14, see Wikipedia. All GTINs will be converted to GTIN-14s before insertion, so reading this field will always return a GTIN-14. Alternatively, EAN or UPC can be provided. See these attributes for details.
             'gtin'                => $item->getProduct()->getDataUsingMethod($apiHelper->getIdentifierAttribute()),
             //    net	column	Numeric	not NULL 00000000.00 The original net price for quantity one of this item.
-            'net'                 => $item->getBasePrice(),
+            'net'                 => $this->sanitizePrice($item->getBasePrice()),
             //    quantity	column	Integer	not NULL
-            'quantity'            => $item->getQtyOrdered(),
+            'quantity'            => (int)$this->sanitizeInt($item->getQtyOrdered()),
             //    routing_status	column	Enum	not NULL	active Allowed values draft, active, on hold, low stock, backorder, canceled Allowed transitions:
             //      START → active, draft
             //          draft → a, c, t, i, v, e
@@ -52,11 +52,12 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //          low stock: this order item was not shippable from any inventory channel and paused by the inventory routing
             //          backorder: this order item was not found in any inventory channel; the sales channel is awaiting delivery of this order item
             //          canceled: this order item will not be shipped
-            'routing_status'      => self::ROUTING_STATUS_ACTIVE, // TODO is this correct?
+            'routing_status'      => self::ROUTING_STATUS_ACTIVE,
+            // TODO is this correct?
             //    total_net	column	Numeric	not NULL 00000000.00 The total net price for the total quantity of products in this item.
-            'total_net'           => $item->getBaseRowTotal(),
+            'total_net'           => $this->sanitizePrice($item->getBaseRowTotal()),
             //    total_vat_amount	column	Numeric 00000000.00 The total VAT amount for the total quantity of all products in this item.
-            'total_vat_amount'    => $item->getBaseTaxAmount(),
+            'total_vat_amount'    => $this->sanitizePrice($item->getBaseTaxAmount()),
             //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
             //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
@@ -68,11 +69,12 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    related_order_item_id	column	Integer ForeignKey('order_item.id') ON DELETE RESTRICT
             //    related_order_item	relationship	Single OrderItem entry.
             //    vat_rate_id	column	Integer	not NULL ForeignKey('vat_rate.id') ON DELETE RESTRICT The VAT rate that was originally used for calculating the total VAT amount. This is purely for record-keeping and will not be used for calculations.
-            'vat_rate_id'         => null, // TODO
+            'vat_rate_id'         => 48,
+            // TODO
             //    vat_rate	relationship	Single VatRate entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    currency_code	hybrid_property The currency code that this item is denominated in. Must be ISO-4217 currency code.
-            'currency_code'       => $item->getOrder()->getBaseCurrencyCode()
+            #'currency_code'       => $item->getOrder()->getBaseCurrencyCode()
             //    delivery_status	hybrid_property If there are no logistic_order_items or no shipments for any of those logistic_order_items, this has the special value N/A. If all logistic_order_items have shipments with the same delivery_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
             //    ean	hybrid_property The EAN representation of the underlying GTIN value. None if conversion is not possible. Supported formats: EAN-8, EAN-13
             //    packing_status	hybrid_property If there are no logistic_order_items, this has the special value N/A. If all logistic_order_items have the same packing_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
@@ -196,6 +198,21 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
      */
     private function sanitize($string, $length)
     {
-        return substr($string, 0, $length);
+        return (string)substr($string, 0, $length);
+    }
+
+    /**
+     * @param float $price
+     *
+     * @return string
+     */
+    private function sanitizePrice($price)
+    {
+        return sprintf('%.2f', $price);
+    }
+
+    private function sanitizeInt($int)
+    {
+        return sprintf('%d', $int);
     }
 }
