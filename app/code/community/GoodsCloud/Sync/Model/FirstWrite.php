@@ -48,11 +48,15 @@ class GoodsCloud_Sync_Model_FirstWrite
             $this->createPropertySetsFromAttributeSets();
 
             // Add every Attribute as PropertySchema to every PropertySet
-            Mage::log('Add every Attribute as PropertySchema to every PropertySet');
+            Mage::log(
+                'Add every Attribute as PropertySchema to every PropertySet'
+            );
             $this->createPropertySchemasFromAttributes();
 
             // Map all PropertySchemas to the corresponding PropertySets
-            Mage::log('Map all PropertySchemas to the corresponding PropertySets');
+            Mage::log(
+                'Map all PropertySchemas to the corresponding PropertySets'
+            );
             $this->mapPropertySchemasToPropertySets();
 
             // Copy the category tree to GoodsCloud
@@ -73,7 +77,7 @@ class GoodsCloud_Sync_Model_FirstWrite
             $this->createProducts();
 
         } catch (Mage_Core_Exception $e) {
-            if(isset($emulation) && isset($initialEnvironmentInfo)) {
+            if (isset($emulation) && isset($initialEnvironmentInfo)) {
                 $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
             }
             throw $e;
@@ -139,10 +143,13 @@ class GoodsCloud_Sync_Model_FirstWrite
     private function createPropertySetsFromAttributeSets()
     {
         $stores = Mage::app()->getStores();
-        $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        $productEntityId = Mage::getModel('eav/entity_type')
+            ->loadByCode('catalog_product')->getId();
 
         /* @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
-        $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
+        $attributeSets = Mage::getResourceModel(
+            'eav/entity_attribute_set_collection'
+        )
             ->addFieldToFilter('entity_type_id', $productEntityId);
 
         Mage::getModel('goodscloud_sync/firstWrite_propertySets')
@@ -152,10 +159,15 @@ class GoodsCloud_Sync_Model_FirstWrite
 
     private function createPropertySchemasFromAttributes()
     {
-        $ignoredAttributes = Mage::helper('goodscloud_sync/api')->getIgnoredAttributes();
+        $ignoredAttributes = Mage::helper('goodscloud_sync/api')
+            ->getIgnoredAttributes();
         /** @var $attributes Mage_Eav_Model_Resource_Entity_Attribute_Collection */
-        $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
-            ->addFieldToFilter('attribute_code', array('nin' => $ignoredAttributes));
+        $attributes = Mage::getResourceModel(
+            'catalog/product_attribute_collection'
+        )
+            ->addFieldToFilter(
+                'attribute_code', array('nin' => $ignoredAttributes)
+            );
 
         $stores = Mage::app()->getStores();
 
@@ -166,16 +178,23 @@ class GoodsCloud_Sync_Model_FirstWrite
 
     private function mapPropertySchemasToPropertySets()
     {
-        $propertySchemaMapper = Mage::getModel('goodscloud_sync/firstWrite_propertySchema2PropertySetMapper');
+        $propertySchemaMapper = Mage::getModel(
+            'goodscloud_sync/firstWrite_propertySchema2PropertySetMapper'
+        );
 
-        $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        $productEntityId = Mage::getModel('eav/entity_type')
+            ->loadByCode('catalog_product')->getId();
         /* @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
-        $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
+        $attributeSets = Mage::getResourceModel(
+            'eav/entity_attribute_set_collection'
+        )
             ->addFieldToFilter('entity_type_id', $productEntityId);
 
         $stores = Mage::app()->getStores();
 
-        $propertySchemaMapper->mapProperty2PropertySets($attributeSets, $stores);
+        $propertySchemaMapper->mapProperty2PropertySets(
+            $attributeSets, $stores
+        );
     }
 
     private function createGCCategoriesFromCategories()
@@ -210,7 +229,9 @@ class GoodsCloud_Sync_Model_FirstWrite
                 ->setApi($this->api)
                 ->getCompany();
 
-            Mage::helper('goodscloud_sync/api')->setCompanyId($company->getId());
+            Mage::helper('goodscloud_sync/api')->setCompanyId(
+                $company->getId()
+            );
         }
     }
 
@@ -219,7 +240,8 @@ class GoodsCloud_Sync_Model_FirstWrite
         $this->api = Mage::getModel('goodscloud_sync/api');
     }
 
-    private function saveUpdateDateTime() {
+    private function saveUpdateDateTime()
+    {
         $updateTime = Mage::getModel('goodscloud_sync/sync_updateDateTime')
             ->loadSelf();
 
