@@ -72,6 +72,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite extends EcomDev_PHPUnit_Test_Case
         $modelMock = $this->mockModel(
             'goodscloud_sync/firstWrite_categories', array('createCategories')
         );
+
         $modelMock->expects($this->once())
             ->method('createCategories');
 
@@ -79,6 +80,18 @@ class GoodsCloud_Sync_Test_Model_FirstWrite extends EcomDev_PHPUnit_Test_Case
             'model', 'goodscloud_sync/firstWrite_categories', $modelMock
         );
 
+        // replace not used api due to bad architecture
+        $modelMock = $this->getModelMock(
+            'goodscloud_sync/api',
+            array(),
+            false,
+            array(),
+            '',
+            false // don't call constructor
+        );
+        $this->replaceByMock(
+            'model', 'goodscloud_sync/api', $modelMock
+        );
 
         $firstWrite->writeMagentoToGoodscloud();
     }

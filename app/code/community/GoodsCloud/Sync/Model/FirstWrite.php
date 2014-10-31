@@ -24,6 +24,8 @@ class GoodsCloud_Sync_Model_FirstWrite
             $this->checkInstalled();
 
             Mage::log('Init API');
+
+            // TODO replace by setter
             $this->initApi();
 
             Mage::log('get and save company id');
