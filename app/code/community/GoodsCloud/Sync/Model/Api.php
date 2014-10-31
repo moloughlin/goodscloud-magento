@@ -73,11 +73,13 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @param array $filters
+     *
      * @return GoodsCloud_Sync_Model_Api_Company_Product_Collection
      */
-    public function getCompanyProducts()
+    public function getCompanyProducts($filters = array())
     {
-        return $this->get('company_product');
+        return $this->get('company_product', $filters);
     }
 
     /**
@@ -191,6 +193,7 @@ class GoodsCloud_Sync_Model_Api
             try {
                 throw $this->parseErrorMessage($e);
             } catch (GoodsCloud_Sync_Model_Api_Exception_NoResultFound $e) {
+                // when there is no result just return null
                 return null;
             }
         }
