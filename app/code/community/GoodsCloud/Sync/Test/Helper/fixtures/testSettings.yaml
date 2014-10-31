@@ -1,4 +1,4 @@
 config:
-  default/goodscloud/advanced/base_url: 'http://sandbox.goodscloud.com'
-  default/goodscloud/basic/email: 'api@goodscloud.com'
-  default/goodscloud/basic/password: '!"§g$&6%ZHTRasdB'
+  default/goodscloud_sync/advanced/base_url: http://sandbox.goodscloud.com
+  default/goodscloud_sync/basic/username: api@goodscloud.com
+  default/goodscloud_sync/basic/password: !"§g$&6%ZHTRasdB
