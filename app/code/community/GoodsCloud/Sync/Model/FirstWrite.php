@@ -28,6 +28,9 @@ class GoodsCloud_Sync_Model_FirstWrite
             // TODO replace by setter
             $this->initApi();
 
+            Mage::log('Writing current time for updates');
+            $this->saveUpdateDateTime();
+
             Mage::log('get and save company id');
             $this->getAndSaveCompanyId();
 
@@ -214,5 +217,15 @@ class GoodsCloud_Sync_Model_FirstWrite
     private function initApi()
     {
         $this->api = Mage::getModel('goodscloud_sync/api');
+    }
+
+    private function saveUpdateDateTime() {
+        $updateTime = Mage::getModel('goodscloud_sync/sync_updateDateTime')
+            ->loadSelf();
+
+        $updateTime->setFlagData(now());
+
+        $updateTime->save();
+
     }
 }
