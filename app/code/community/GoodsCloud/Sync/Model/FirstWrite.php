@@ -68,7 +68,9 @@ class GoodsCloud_Sync_Model_FirstWrite
             $this->createProducts();
 
         } catch (Mage_Core_Exception $e) {
-            $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
+            if(isset($emulation) && isset($initialEnvironmentInfo)) {
+                $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
+            }
             throw $e;
         }
         $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
