@@ -110,6 +110,18 @@ class GoodsCloud_Sync_Test_Model_FirstWrite extends EcomDev_PHPUnit_Test_Case
             'model', 'goodscloud_sync/firstWrite_categories', $modelMock
         );
 
+        // create products
+        $modelMock = $this->mockModel(
+            'goodscloud_sync/firstWrite_products', array('createProducts')
+        );
+
+        $modelMock->expects($this->once())
+            ->method('createProducts');
+
+        $this->replaceByMock(
+            'model', 'goodscloud_sync/firstWrite_products', $modelMock
+        );
+
         $firstWrite->writeMagentoToGoodscloud();
     }
 }
