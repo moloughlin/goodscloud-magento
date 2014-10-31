@@ -45,6 +45,23 @@ class GoodsCloud_Sync_Test_Model_FirstWrite extends EcomDev_PHPUnit_Test_Case
         $this->replaceByMock(
             'model', 'goodscloud_sync/api', $modelMock
         );
+
+        // get company
+        $modelMock = $this->mockModel(
+            'goodscloud_sync/firstWrite_company', array('getCompany')
+        );
+
+        $company = Mage::getModel('goodscloud_sync/api_company')
+            ->setId('1234');
+
+        $modelMock->expects($this->once())
+            ->method('getCompany')
+            ->will($this->returnValue($company));
+
+        $this->replaceByMock(
+            'model', 'goodscloud_sync/firstWrite_company', $modelMock
+        );
+
         // write channels
         $modelMock = $this->mockModel(
             'goodscloud_sync/firstWrite_channels',
