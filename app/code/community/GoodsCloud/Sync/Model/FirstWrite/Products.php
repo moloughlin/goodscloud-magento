@@ -1,6 +1,7 @@
 <?php
 
-class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_FirstWrite_Base
+class GoodsCloud_Sync_Model_FirstWrite_Products
+    extends GoodsCloud_Sync_Model_FirstWrite_Base
 {
     /**
      * number of products which are exported in one loop
@@ -34,8 +35,11 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
     public function createProducts($views)
     {
         foreach ($views as $view) {
-            $this->productLists[$view->getId()] = Mage::getModel('goodscloud_sync/firstWrite_productList')
-                ->setFlagCode('goodscloud_channel_product_list_' . $view->getId())
+            $this->productLists[$view->getId()] =
+                Mage::getModel('goodscloud_sync/firstWrite_productList')
+                ->setFlagCode(
+                    'goodscloud_channel_product_list_' . $view->getId()
+                )
                 ->loadSelf();
         }
         if (!$this->isFinished()) {
@@ -73,7 +77,8 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
     }
 
     /**
-     * save a list of all products to be exported to know which already are exported
+     * save a list of all products to be exported to know which already
+     * are exported
      */
     private function prepareProductLists()
     {
@@ -86,15 +91,21 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
                 'in' => array(
                     Mage_Catalog_Model_Product_Type::TYPE_SIMPLE,
                     Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL,
-                    //                    Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE,
-                    //                    Mage_Catalog_Model_Product_Type::TYPE_GROUPED,
-                    //                    Mage_Catalog_Model_Product_Type::TYPE_BUNDLE,
+                    // Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE,
+                    // Mage_Catalog_Model_Product_Type::TYPE_GROUPED,
+                    // Mage_Catalog_Model_Product_Type::TYPE_BUNDLE,
                 )
             )
         )->addAttributeToFilter(
             array(
-                array('attribute' => $apiHelper->getIdentifierAttribute(), array('notnull' => true)),
-                array('attribute' => $apiHelper->getIdentifierAttribute(), array('neq' => ''))
+                array(
+                    'attribute' => $apiHelper->getIdentifierAttribute(),
+                    array('notnull' => true)
+                ),
+                array(
+                    'attribute' => $apiHelper->getIdentifierAttribute(),
+                    array('neq' => '')
+                )
             )
         );
         $allIds = $collection->getAllIds();
@@ -102,7 +113,8 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
         foreach ($this->productLists as $list) {
             /* @var $list GoodsCloud_Sync_Model_FirstWrite_ProductList */
             if (!$list->isFilled()) {
-                $this->log('Added all IDs to the queue: ' . implode(', ', $allIds));
+                $implodedIds = implode(', ', $allIds);
+                $this->log('Added all IDs to the queue: ' . $implodedIds);
                 $list->setProductList($allIds);
             }
         }
@@ -113,7 +125,8 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
         return $this->getApi()->createCompanyProduct($product);
     }
 
-    private function createChannelProduct(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store)
+    private function createChannelProduct(Mage_Catalog_Model_Product $product,
+        Mage_Core_Model_Store $store)
     {
         return $this->getApi()->createChannelProduct($product, $store);
     }
@@ -127,11 +140,13 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
     private function createCompanyAndChannelProducts(array $views)
     {
         /** @see http://magento.stackexchange.com/a/25908/217 */
-        // It is intended to create two collections! Don't change this, because of a core bug!
+        // It is intended to create two collections! Don't change this,
+        // because of a core bug!
 
         foreach ($views as $view) {
             Mage::log('View: ' . $view->getCode() . '(' . $view->getId() . ')');
-            Mage::getResourceModel('catalog/product_collection')->setStore($view->getId());
+            Mage::getResourceModel('catalog/product_collection')
+                ->setStore($view->getId());
 
             $lastPageNumber = PHP_INT_MAX;
             $page = 0;
@@ -141,21 +156,15 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
                     break;
                 }
                 Mage::log("Page: $page von $lastPageNumber");
-                $collection = $this->getProductCollection($ids, $page, $view->getId());
+                $collection = $this->getProductCollection(
+                    $ids,
+                    $page,
+                    $view->getId()
+                );
+
                 $lastPageNumber = $collection->getLastPageNumber();
 
-                foreach ($collection as $product) {
-                    try {
-                        if (!$this->apiHelper->getGcProductId($product, $view->getId())) {
-                            $this->createGcProductAndUpdateProduct($view, $product);
-                        }
-                        $this->getProductList($view)->removeProductId($product->getId());
-                    } catch (Mage_Core_Exception $e) {
-                        $collection->save();
-                        // TODO handle exception
-                        throw $e;
-                    }
-                }
+                $this->exportProductCollectionPage($collection, $view);
                 $collection->save();
                 $page++;
             }
@@ -183,10 +192,12 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
             ->setPageSize(self::PAGE_SIZE)
             ->setCurPage($page);
 
-        // only add images for admin store, because the collection is loaded, when the images are added
-        // and to have later up to date products, they have to be loaded AFTER all others are finished
+        // only add images for admin store, because the collection is loaded,
+        // when the images are added and to have later up to date products, they
+        // have to be loaded AFTER all others are finished
         if ($storeId == Mage_Core_Model_App::ADMIN_STORE_ID) {
-            return Mage::helper('goodscloud_sync/product')->addMediaGalleryAttributeToCollection($collection, $storeId);
+            return Mage::helper('goodscloud_sync/product')
+                ->addMediaGalleryAttributeToCollection($collection, $storeId);
         }
         return $collection;
     }
@@ -195,8 +206,10 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
      * @param Mage_Core_Model_Store      $view
      * @param Mage_Catalog_Model_Product $product
      */
-    private function createGcProductAndUpdateProduct(Mage_Core_Model_Store $view, Mage_Catalog_Model_Product $product)
-    {
+    private function createGcProductAndUpdateProduct(
+        Mage_Core_Model_Store $view,
+        Mage_Catalog_Model_Product $product
+    ) {
         if ($view->getCode() == Mage_Core_Model_Store::ADMIN_CODE) {
             /** @var $product Mage_Catalog_Model_Product */
             $gcProduct = $this->createCompanyProduct($product);
@@ -205,6 +218,38 @@ class GoodsCloud_Sync_Model_FirstWrite_Products extends GoodsCloud_Sync_Model_Fi
             $gcProduct = $this->createChannelProduct($product, $view);
         }
 
-        $this->apiHelper->addGcProductId($product, $gcProduct->getId(), $view->getId());
+        $this->apiHelper->addGcProductId(
+            $product,
+            $gcProduct->getId(),
+            $view->getId()
+        );
+    }
+
+    /**
+     * @param $collection
+     * @param $view
+     *
+     * @throws Exception
+     * @throws Mage_Core_Exception
+     */
+    private function exportProductCollectionPage($collection, $view)
+    {
+        foreach ($collection as $product) {
+            try {
+                if (!$this->apiHelper->getGcProductId(
+                    $product, $view->getId()
+                )
+                ) {
+                    $this->createGcProductAndUpdateProduct($view, $product);
+                }
+                $this->getProductList($view)->removeProductId(
+                    $product->getId()
+                );
+            } catch (Mage_Core_Exception $e) {
+                $collection->save();
+                // TODO handle exception
+                throw $e;
+            }
+        }
     }
 }
