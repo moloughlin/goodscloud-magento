@@ -63,7 +63,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
             //    channel_product_id	column	Integer	not NULL ForeignKey('channel_product.id') ON DELETE RESTRICT
             //    channel_product	relationship	Single ChannelProduct entry.
-            'channel_product'     => $apiHelper->getGcProductId($item->getProduct(), $item->getStoreId()),
+            'channel_product_id'     => $apiHelper->getGcProductId($item->getProduct(), $item->getStoreId()),
             //    order_id	column	Integer	not NULL ForeignKey('order.id') ON DELETE CASCADE
             //    order	relationship	Single Order entry.
             //    related_order_item_id	column	Integer ForeignKey('order_item.id') ON DELETE RESTRICT
