@@ -14,10 +14,15 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_Channels extends EcomDev_PHPUnit_Tes
             ->will(
                 $this->returnCallback(
                     function ($view) {
-                        $channelData = new stdClass();
-                        // external identifier is not needed for the test (yet)
-                        $channelData->external_identifier = $view->getId();
-                        $channelData->id = mt_rand();
+                        $channelData = new Varien_Object();
+                        $channelData->setData(
+                            array(
+                                // external identifier is not needed for the test (yet)
+                                'external_identifier' => $view->getId(),
+                                'id'                  => mt_rand(),
+                            )
+                        );
+
                         return $channelData;
                     }
                 )

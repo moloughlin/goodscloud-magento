@@ -14,12 +14,17 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchemas extends EcomDev_PHPU
             ->will(
                 $this->returnCallback(
                     function (Mage_Eav_Model_Entity_Attribute $attribute) {
-                        $propertySchemaData = new stdClass();
-                        $propertySchemaData->channel_id = 126;
-                        $propertySchemaData->description = '';
-                        $propertySchemaData->external_identifier = $attribute->getId();
-                        $propertySchemaData->id = mt_rand();
-                        $propertySchemaData->label = $attribute->getName();
+                        $propertySchemaData = new Varien_Object();
+                        $propertySchemaData->setData(
+                            array(
+                                'channel_id'          => 126,
+                                'description'         => '',
+                                'external_identifier' => $attribute->getId(),
+                                'id'                  => mt_rand(),
+                                'label'               => $attribute->getName(),
+                            )
+                        );
+
                         return $propertySchemaData;
                     }
                 )

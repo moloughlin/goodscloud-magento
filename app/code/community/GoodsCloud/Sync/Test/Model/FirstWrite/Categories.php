@@ -15,12 +15,17 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_Categories extends EcomDev_PHPUnit_T
             ->will(
                 $this->returnCallback(
                     function (Mage_Catalog_Model_Category $category) {
-                        $categoryData = new stdClass();
-                        $categoryData->channel_id = 126;
-                        $categoryData->description = '';
-                        $categoryData->external_identifier = $category->getId();
-                        $categoryData->id = mt_rand();
-                        $categoryData->label = $category->getName();
+                        $categoryData = new Varien_Object();
+                        $categoryData->setData(
+                            array(
+                                'channel_id' => 126,
+                                'description' => '',
+                                'external_identifier' => $category->getId(),
+                                'id' => mt_rand(),
+                                'label' => $category->getName(),
+                            )
+                        );
+
                         return $categoryData;
                     }
                 )

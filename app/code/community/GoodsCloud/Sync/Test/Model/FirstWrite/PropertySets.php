@@ -15,12 +15,18 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySets extends EcomDev_PHPUnit
             ->will(
                 $this->returnCallback(
                     function ($attributeSet) {
-                        $propertySetData = new stdClass();
-                        $propertySetData->channel_id = 126;
-                        $propertySetData->description = '';
-                        $propertySetData->external_identifier = $attributeSet->getId();
-                        $propertySetData->id = mt_rand();
-                        $propertySetData->label = $attributeSet->getAttributeSetName();
+                        $propertySetData = new Varien_Object();
+                        $propertySetData->setData(
+                            array(
+                                'channel_id'          => 126,
+                                'description'         => '',
+                                'external_identifier' => $attributeSet->getId(),
+                                'id'                  => mt_rand(),
+                                'label'               => $attributeSet->getAttributeSetName(
+                                ),
+                            )
+                        );
+
                         return $propertySetData;
                     }
                 )
