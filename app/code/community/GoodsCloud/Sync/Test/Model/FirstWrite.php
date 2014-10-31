@@ -2,6 +2,16 @@
 
 class GoodsCloud_Sync_Test_Model_FirstWrite extends EcomDev_PHPUnit_Test_Case
 {
+    protected function setUp()
+    {
+        $query
+            = 'DELETE FROM `core_config_data`
+                WHERE path = "goodscloud_sync/api/company_id";';
+        Mage::getModel('core/resource')
+            ->getConnection('core_write')
+            ->query($query);
+    }
+
 
     /**
      * @loadFixture              configurationIdentifierType.yaml
@@ -32,6 +42,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite extends EcomDev_PHPUnit_Test_Case
     {
         $firstWrite = Mage::getModel('goodscloud_sync/firstWrite');
 
+        // TODO set API via setter
         // replace not used api due to bad architecture
         $modelMock = $this->getModelMock(
             'goodscloud_sync/api',
