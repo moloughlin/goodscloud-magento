@@ -9,7 +9,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchemas extends EcomDev_PHPU
     {
         $apiMock = $this->getModelMock('goodscloud_sync/api', array('createPropertySchema'), false, array(), '', false);
         // we'll have default + three storeviews in the fixtures, so we write three storeviews
-        $apiMock->expects($this->exactly(64)) // 16 attributes not ignored -> 16 * 4 storeviews = 64
+        $apiMock->expects($this->exactly(56)) // 14 attributes not ignored -> 14 * 4 storeviews = 56
         ->method('createPropertySchema')
             ->will(
                 $this->returnCallback(
