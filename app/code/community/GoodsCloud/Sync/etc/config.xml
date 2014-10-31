@@ -105,8 +105,8 @@
                     <updated_at/>
                     <!--<url_key/>-->
                     <url_path/>
-                    <visibility/>
-                    <weight/>
+                    <!--<visibility/>-->
+                    <!--<weight/>-->
                     <weight_type/>
                     <category_ids/>
                 </ignored_attributes>
