@@ -98,6 +98,14 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @return GoodsCloud_Sync_Model_Api_Order_Collection
+     */
+    public function getOrders()
+    {
+        return $this->get('order');
+    }
+
+    /**
      * @param int $id
      *
      * @return bool|string
@@ -135,6 +143,16 @@ class GoodsCloud_Sync_Model_Api
     public function deleteCategory($id)
     {
         return $this->delete('category', $id);
+    }
+
+    /**
+     * @param int $id order id to delete
+     *
+     * @return bool|string
+     */
+    public function deleteOrder($id)
+    {
+        return $this->delete('order', $id);
     }
 
     /**
