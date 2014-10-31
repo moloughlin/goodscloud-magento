@@ -2,6 +2,32 @@
 
 class GoodsCloud_Sync_Test_Model_FirstWrite extends EcomDev_PHPUnit_Test_Case
 {
+
+    /**
+     * @loadFixture              configurationIdentifierType.yaml
+     * @expectedException        GoodsCloud_Sync_Model_Exception_MissingConfigurationException
+     * @expectedExceptionMessage Please configure identifier attribute.
+     */
+    public function testIdentifierAttributeConfigured()
+    {
+        $firstWrite = Mage::getModel('goodscloud_sync/firstWrite');
+        $firstWrite->writeMagentoToGoodscloud();
+    }
+
+    /**
+     * @loadFixture              configurationIdentifierAttribute.yaml
+     * @expectedException        GoodsCloud_Sync_Model_Exception_MissingConfigurationException
+     * @expectedExceptionMessage Please configure identifier type.
+     */
+    public function testIdentifierTypeConfigured()
+    {
+        $firstWrite = Mage::getModel('goodscloud_sync/firstWrite');
+        $firstWrite->writeMagentoToGoodscloud();
+    }
+
+    /**
+     * @loadFixture configurationSettings.yaml
+     */
     public function testMagento2Goodscloud()
     {
         $firstWrite = Mage::getModel('goodscloud_sync/firstWrite');

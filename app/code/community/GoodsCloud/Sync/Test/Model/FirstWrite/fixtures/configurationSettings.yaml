@@ -1,0 +1,3 @@
+config:
+  default/goodscloud_sync/shop/identifier_attribute: gtin
+  default/goodscloud_sync/shop/identifier_type: gtin
