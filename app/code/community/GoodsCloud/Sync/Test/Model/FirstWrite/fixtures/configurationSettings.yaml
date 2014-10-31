@@ -3,3 +3,4 @@ config:
   default/goodscloud_sync/shop/identifier_type: gtin
   default/goodscloud_sync/api/default_vat_rate_id: 48
   default/goodscloud_sync/api/default_price_list_id: 99
+  default/goodscloud_sync/api/company_id: 1234
