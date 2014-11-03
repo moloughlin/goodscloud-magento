@@ -199,22 +199,7 @@ class GoodsCloud_Sync_Model_Api
         }
 
         Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
-        if ($single) {
-            /* @var $item Varien_Object */
-            $item = Mage::getModel('goodscloud_sync/api_' . $model);
-            $item->setData(get_object_vars($response));
-            return $item;
-        } else {
-            /* @var $collection Varien_Data_Collection */
-            $collection = Mage::getModel('goodscloud_sync/api_' . $model . '_collection');
-            foreach ($response->objects as $objects) {
-                /* @var $item Varien_Object */
-                $item = Mage::getModel('goodscloud_sync/api_' . $model);
-                $collection->addItem($item->setData(get_object_vars($objects)));
-            }
-        }
-
-        return $collection;
+        return $this->createObjects($model, $single, $response);
     }
 
     /**
@@ -922,6 +907,35 @@ class GoodsCloud_Sync_Model_Api
     private function sanitizeSuffix($suffix)
     {
         return substr($suffix, 0, self::CUSTOMER_MAX_LENGTH_SUFFIX);
+    }
+
+    /**
+     * @param $model
+     * @param $single
+     * @param $response
+     *
+     * @return Varien_Data_Collection|Varien_Object
+     * @throws Exception
+     */
+    private function createObjects($model, $single, $response)
+    {
+        if ($single) {
+            /* @var $item Varien_Object */
+            $item = Mage::getModel('goodscloud_sync/api_' . $model);
+            $item->setData(get_object_vars($response));
+            return $item;
+        } else {
+            /* @var $collection Varien_Data_Collection */
+            $collection = Mage::getModel('goodscloud_sync/api_' . $model
+                . '_collection');
+            foreach ($response->objects as $objects) {
+                /* @var $item Varien_Object */
+                $item = Mage::getModel('goodscloud_sync/api_' . $model);
+                $collection->addItem($item->setData(get_object_vars($objects)));
+            }
+        }
+
+        return $collection;
     }
 
 }
