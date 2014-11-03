@@ -38,6 +38,10 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
     private function getOrderItem(Mage_Sales_Model_Order_Item $item)
     {
         $apiHelper = Mage::helper('goodscloud_sync/api');
+        $itemStoreId = $item->getStoreId();
+        if (!$itemStoreId) {
+            $itemStoreId = Mage::app()->getAnyStoreView()->getId();
+        }
         return array(
             //    id	column	Integer	not NULL	 Primary key.
             //    credit_note_items	relationship	List of CreditNoteItem entries.
@@ -80,8 +84,11 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
             //    channel_product_id	column	Integer	not NULL ForeignKey('channel_product.id') ON DELETE RESTRICT
             //    channel_product	relationship	Single ChannelProduct entry.
-            'channel_product_id'  => $apiHelper->getGcProductId($item->getProduct(),
-                $item->getStoreId()),
+            'channel_product_id'  => $apiHelper->getGcProductId(
+                $item->getProduct(),
+                $itemStoreId ? $itemStoreId
+                    : Mage::app()->getAnyStoreView()->getId()
+            ),
             //    order_id	column	Integer	not NULL ForeignKey('order.id') ON DELETE CASCADE
             //    order	relationship	Single Order entry.
             //    related_order_item_id	column	Integer ForeignKey('order_item.id') ON DELETE RESTRICT
