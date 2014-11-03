@@ -5,6 +5,15 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
     const ROUTING_STATUS_ACTIVE = 'active';
 
     /**
+     * @var array
+     */
+    private $exportableTypes
+        = array(
+            'virtual',
+            'simple',
+        );
+
+    /**
      * @param Mage_Sales_Model_Order $order
      *
      * @return array
@@ -13,15 +22,21 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
     {
         $itemsForApiCall = array();
         foreach ($order->getAllItems() as $item) {
-            $itemsForApiCall[] = $this->getOrderItem($item);
+            if ($this->isExportable($item)) {
+                $itemsForApiCall[] = $this->getOrderItem($item);
+            }
         }
 
         return $itemsForApiCall;
     }
 
+    /**
+     * @param Mage_Sales_Model_Order_Item $item
+     *
+     * @return array|bool
+     */
     private function getOrderItem(Mage_Sales_Model_Order_Item $item)
     {
-
         $apiHelper = Mage::helper('goodscloud_sync/api');
         return array(
             //    id	column	Integer	not NULL	 Primary key.
@@ -34,7 +49,8 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             'external_identifier' => $item->getId(),
             //    extra	column	JSON	not NULL	{} A JSON object. For storing extra information.
             //    gtin	column	String	not NULL 14 characters or less. GTIN-8, GTIN-12, GTIN-13 or GTIN-14, see Wikipedia. All GTINs will be converted to GTIN-14s before insertion, so reading this field will always return a GTIN-14. Alternatively, EAN or UPC can be provided. See these attributes for details.
-            'gtin'                => $item->getProduct()->getDataUsingMethod($apiHelper->getIdentifierAttribute()),
+            'gtin'                => $item->getProduct()
+                ->getDataUsingMethod($apiHelper->getIdentifierAttribute()),
             # TODO calcualte gtin or just omit it if not present?
             //    net	column	Numeric	not NULL 00000000.00 The original net price for quantity one of this item.
             'net'                 => $this->sanitizePrice($item->getBasePrice()),
@@ -64,7 +80,8 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
             //    channel_product_id	column	Integer	not NULL ForeignKey('channel_product.id') ON DELETE RESTRICT
             //    channel_product	relationship	Single ChannelProduct entry.
-            'channel_product_id'     => $apiHelper->getGcProductId($item->getProduct(), $item->getStoreId()),
+            'channel_product_id'  => $apiHelper->getGcProductId($item->getProduct(),
+                $item->getStoreId()),
             //    order_id	column	Integer	not NULL ForeignKey('order.id') ON DELETE CASCADE
             //    order	relationship	Single Order entry.
             //    related_order_item_id	column	Integer ForeignKey('order_item.id') ON DELETE RESTRICT
@@ -212,8 +229,26 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
         return sprintf('%.2f', $price);
     }
 
+    /**
+     * @param $int
+     *
+     * @return string
+     */
     private function sanitizeInt($int)
     {
         return sprintf('%d', $int);
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order_Item $item
+     *
+     * @return bool
+     */
+    private function isExportable(Mage_Sales_Model_Order_Item $item)
+    {
+        if (!in_array($item->getProductType(), $this->exportableTypes)) {
+            return false;
+        }
+        return true;
     }
 }
