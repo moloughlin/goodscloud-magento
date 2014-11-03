@@ -35,8 +35,8 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     public function createProducts($views)
     {
         foreach ($views as $view) {
-            $this->productLists[$view->getId()] =
-                Mage::getModel('goodscloud_sync/firstWrite_productList')
+            $this->productLists[$view->getId()]
+                = Mage::getModel('goodscloud_sync/firstWrite_productList')
                 ->setFlagCode(
                     'goodscloud_channel_product_list_' . $view->getId()
                 )
@@ -125,9 +125,10 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
         return $this->getApi()->createCompanyProduct($product);
     }
 
-    private function createChannelProduct(Mage_Catalog_Model_Product $product,
-        Mage_Core_Model_Store $store)
-    {
+    private function createChannelProduct(
+        Mage_Catalog_Model_Product $product,
+        Mage_Core_Model_Store $store
+    ) {
         return $this->getApi()->createChannelProduct($product, $store);
     }
 
@@ -139,12 +140,19 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
      */
     private function createCompanyAndChannelProducts(array $views)
     {
-        /** @see http://magento.stackexchange.com/a/25908/217 */
-        // It is intended to create two collections! Don't change this,
-        // because of a core bug!
+
 
         foreach ($views as $view) {
+            // make sure to export channel products after _ALL_ company products are created
+            if (!$this->allCompanyProductsAreCreated()) {
+                throw new RuntimeException('Not all company products created yet');
+            }
+
             Mage::log('View: ' . $view->getCode() . '(' . $view->getId() . ')');
+
+            /** @see http://magento.stackexchange.com/a/25908/217 */
+            // It is intended to create two collections! Don't change this,
+            // because of a core bug!
             Mage::getResourceModel('catalog/product_collection')
                 ->setStore($view->getId());
 
@@ -247,9 +255,14 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
                 );
             } catch (Mage_Core_Exception $e) {
                 $collection->save();
-                // TODO handle exception
                 throw $e;
             }
         }
+    }
+
+    private function allCompanyProductsAreCreated()
+    {
+        $adminStoreId = Mage_Core_Model_App::ADMIN_STORE_ID;
+        return (bool)count($this->productLists[$adminStoreId]);
     }
 }
