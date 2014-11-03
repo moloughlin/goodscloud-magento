@@ -35,6 +35,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    extra	column	JSON	not NULL	{} A JSON object. For storing extra information.
             //    gtin	column	String	not NULL 14 characters or less. GTIN-8, GTIN-12, GTIN-13 or GTIN-14, see Wikipedia. All GTINs will be converted to GTIN-14s before insertion, so reading this field will always return a GTIN-14. Alternatively, EAN or UPC can be provided. See these attributes for details.
             'gtin'                => $item->getProduct()->getDataUsingMethod($apiHelper->getIdentifierAttribute()),
+            # TODO calcualte gtin or just omit it if not present?
             //    net	column	Numeric	not NULL 00000000.00 The original net price for quantity one of this item.
             'net'                 => $this->sanitizePrice($item->getBasePrice()),
             //    quantity	column	Integer	not NULL
