@@ -28,7 +28,11 @@ class Goodscloud
      */
     private function login($email, $password)
     {
-        $ch = curl_init();
+        static $ch;
+
+        if($ch === null) {
+            $ch = curl_init();
+        }
         $url = $this->uri . '/session';
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -45,7 +49,6 @@ class Goodscloud
 
         $response = curl_exec($ch);
         $this->session = json_decode($response);
-        curl_close($ch);
         if (!isset($this->session) || $this->session->email != $email) {
             throw new Exception(
                 "API credentials incorrect or server unreachable",
@@ -89,7 +92,10 @@ class Goodscloud
      */
     private static function http($method, $uri, $path, $params, $data)
     {
-        $ch = curl_init();
+        static $ch;
+        if($ch === null) {
+            $ch = curl_init();
+        }
         curl_setopt(
             $ch, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
@@ -102,6 +108,7 @@ class Goodscloud
         } else {
             curl_setopt($ch, CURLOPT_URL, $uri . $path);
         }
+        curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1:8888');
 
         if ($method == 'POST') {
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -123,7 +130,6 @@ class Goodscloud
         // Get the response and close the channel.
         $result = curl_exec($ch);
         $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
         $decodedResult = json_decode($result);
         if ($status_code >= 200 and $status_code < 300) {
             return $decodedResult;
