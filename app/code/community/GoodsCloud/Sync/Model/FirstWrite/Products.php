@@ -157,7 +157,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
                 ->setStore($view->getId());
 
             $lastPageNumber = PHP_INT_MAX;
-            $page = 0;
+            $page = 1;
             while ($page <= $lastPageNumber) {
                 $ids = $this->getProductList($view)->getProductList();
                 if (empty($ids)) {
