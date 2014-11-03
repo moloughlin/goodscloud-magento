@@ -201,7 +201,9 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         try {
             $values = array();
             foreach ($attribute->getSource()->getAllOptions() as $option) {
-                $values[] = $option['value'];
+                if($option['value']) {
+                    $values[] = $option['value'];
+                }
             }
             return $values;
         } catch (Mage_Core_Exception $e) {
