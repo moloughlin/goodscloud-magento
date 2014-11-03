@@ -166,7 +166,7 @@ class GoodsCloud_Sync_Model_Api
     private function delete($resource, $id)
     {
         Mage::log("DELETE $resource with ID $id", Zend_Log::DEBUG, 'goodscloud.log');
-        return $this->api->delete("api/internal/$resource/$id");
+        return $this->api->delete("/api/internal/$resource/$id");
     }
 
     /**
@@ -183,7 +183,7 @@ class GoodsCloud_Sync_Model_Api
     ) {
         $params = $this->buildGetParamsArray($filters, $disjunction, $limit, $offset, $orderBy, $single);
 
-        $requestPath = "api/internal/$model";
+        $requestPath = "/api/internal/$model";
         Mage::log("GET $requestPath", Zend_Log::DEBUG, 'goodscloud.log');
         Mage::log("Parameter:");
         Mage::log($params);
@@ -816,13 +816,13 @@ class GoodsCloud_Sync_Model_Api
             if (isset($data['id'])) {
                 Mage::log("PUT . $resource", Zend_Log::DEBUG, 'goodscloud.log');
                 Mage::log($data, Zend_Log::DEBUG, 'goodscloud.log');
-                $url = "api/internal/$resource/{$data['id']}";
+                $url = "/api/internal/$resource/{$data['id']}";
                 unset($data['id']);
                 $response = $this->api->put($url, array(), $data);
             } else {
                 Mage::log("POST . $resource", Zend_Log::DEBUG, 'goodscloud.log');
                 Mage::log($data, Zend_Log::DEBUG, 'goodscloud.log');
-                $response = $this->api->post('api/internal/' . $resource, array(), $data);
+                $response = $this->api->post('/api/internal/' . $resource, array(), $data);
             }
             Mage::log('RESPONSE', Zend_Log::DEBUG, 'goodscloud.log');
             Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
