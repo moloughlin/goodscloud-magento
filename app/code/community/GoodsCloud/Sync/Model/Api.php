@@ -429,6 +429,9 @@ class GoodsCloud_Sync_Model_Api
         $apiHelper = Mage::helper('goodscloud_sync/api');
         $descriptions = $apiHelper->getDescriptionData($product, $store, true);
         $description = $this->createDescription(array_pop($descriptions));
+        if(!$apiHelper->getCompanyProductId($product)) {
+            throw new RuntimeException(sprintf('Company product not created for Product %s', $product->getSku()));
+        }
         $this->addDescriptionToCompanyProduct($description->getId(), $apiHelper->getCompanyProductId($product));
         $data = array(
             //    id	column	Integer	not NULL Primary key.
