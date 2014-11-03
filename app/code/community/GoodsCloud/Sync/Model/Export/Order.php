@@ -12,16 +12,20 @@ class GoodsCloud_Sync_Model_Export_Order
 
     private $api;
 
+    /**
+     *
+     */
     public function exportOrders()
     {
+        // TODO get all customer ids and load them in a collection to have them
+        // by hand instead of loading every single customer
         $orders = $this->getOrdersToExport();
-        // TODO get all customer ids and load them in a collection instead of every single customer
         foreach ($orders as $order) {
             try {
-                $this->export($order);
+                $gcOrder = $this->export($order);
+                $order->setGcExported($gcOrder->getId())->save();
             } catch (Mage_Core_Exception $e) {
                 Mage::logException($e);
-                // TODO handle exception
             }
         }
     }
@@ -43,7 +47,7 @@ class GoodsCloud_Sync_Model_Export_Order
     private function export(Mage_Sales_Model_Order $order)
     {
         $gcConsumerId = $this->getConsumerId($order);
-        $this->api->createOrder($order, $gcConsumerId);
+        return $this->api->createOrder($order, $gcConsumerId);
     }
 
     /**
