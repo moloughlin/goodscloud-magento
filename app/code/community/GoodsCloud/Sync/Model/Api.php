@@ -85,9 +85,9 @@ class GoodsCloud_Sync_Model_Api
     /**
      * @return GoodsCloud_Sync_Model_Api_Channel_Product_Collection
      */
-    public function getChannelProducts()
+    public function getChannelProducts($filters = array())
     {
-        return $this->get('channel_product');
+        return $this->get('channel_product', $filters);
     }
 
     /**
