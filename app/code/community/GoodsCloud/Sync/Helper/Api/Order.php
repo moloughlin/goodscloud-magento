@@ -173,6 +173,10 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
     public function getShippingAddress(Mage_Sales_Model_Order $order)
     {
         $address = $order->getShippingAddress();
+        if($order->getIsVirtual()) {
+            // shipping address is null for virtual orders
+            return array();
+        }
         return array(
             //    id	column	Integer	not NULL Primary key.
             //    city	column	String 256 characters or less.
