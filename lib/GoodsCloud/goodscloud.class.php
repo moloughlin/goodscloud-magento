@@ -110,7 +110,13 @@ class Goodscloud
         }
         curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1:8888');
 
+        // reset before request (due to keepalive)
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '');
+        curl_setopt($ch, CURLOPT_POST, 0);
+
         if ($method == 'POST') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         } elseif ($method == 'PUT') {
