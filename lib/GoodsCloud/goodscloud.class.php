@@ -138,7 +138,7 @@ class Goodscloud
                 $message = $decodedResult->message;
                 throw new Exception("API request failed (status code $status_code): $message");
             }
-            throw new Exception("API request failed (status code $status_code): Unknown error");
+            throw new Exception("API request failed (status code $status_code): Unknown error\n$result");
         }
     }
 
