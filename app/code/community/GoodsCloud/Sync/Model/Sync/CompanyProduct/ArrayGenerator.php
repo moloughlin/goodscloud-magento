@@ -2,10 +2,6 @@
 
 class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
 {
-    /**
-     * @var array
-     */
-    private $importArray;
 
     /**
      * @var Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection
@@ -13,14 +9,24 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     private $attributeSetCache;
 
     /**
-     * @param array $products
+     * @var Mage_Core_Model_Store[]
      */
-    public function construct(array $products)
-    {
+    private $storeViewCache;
+
+    /**
+     * @param GoodsCloud_Sync_Model_Api_Company_Product_Collection $products
+     *
+     * @return array
+     */
+    public function construct(
+        GoodsCloud_Sync_Model_Api_Company_Product_Collection $products
+    ) {
         foreach ($products as $product) {
-            $this->importArray[$product->getSku()][]
+            $importArray[$product->getSku()][]
                 = $this->buildProductArray($product);
         }
+
+        return $importArray;
 
     }
 
@@ -51,6 +57,8 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
         GoodsCloud_Sync_Model_Api_Company_Product $product
     ) {
 
+        $helper = Mage::helper('goodscloud_sync/api_import');
+
         // "special" things
         $importArray = array(
             'sku'  => $product->getSku(),
@@ -63,11 +71,11 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
 
         return array(
 
-            'name'              => $product->getName(),
-            'price'             => $product->getPrice(),
-            'description'       => current($product->getAvailableDescriptions())
+            'name'              => $product->getLabel(),
+            'price'             => $helper->getPriceForCompanyProduct($product),
+            'description'       => reset($product->getAvailableDescriptions())
                 ->getLongDescription(),
-            'short_description' => current($product->getAvailableDescriptions())
+            'short_description' => reset($product->getAvailableDescriptions())
                 ->getShortDescription(),
             'weight'            => 0, // TODO write and get from goodscloud
             'status'            => (int)$product->getActive(),
@@ -89,13 +97,15 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
         return array(
             '_type'             => 'simple',
             '_attribute_set'    => $this->getAttributeSetForProduct($product),
-            '_product_websites' => 'base', // TODO not yet implemented
+            '_product_websites' => $this->getWebsites($product),
+            // TODO not yet implemented
             '_category',
             '_media_image',
             '_media_attribute_id',
             '_media_is_disabled',
             '_media_position',
-            '_media_lable', // TYPO in magento core, don't fix!
+            '_media_lable',
+            // TYPO in magento core, don't fix!
             '_store',
         );
     }
@@ -112,11 +122,9 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
             // Upsell
             '_links_upsell_sku',
             '_links_upsell_position',
-
             // Crossell
             '_links_crosssell_sku',
             '_links_crosssell_position',
-
             // Related
             '_links_related_sku',
             '_links_related_position',
@@ -124,9 +132,87 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
 
     }
 
+    /**
+     * @param Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection $attributeSetCollection
+     *
+     * @return $this
+     */
     public function setAttributeSetCache(
         Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection $attributeSetCollection
     ) {
         $this->attributeSetCache = $attributeSetCollection;
+        return $this;
     }
+
+    /**
+     * @param Mage_Core_Model_Store[] $storeViews
+     *
+     * @return $this
+     */
+    public function setStoreViewCache(array $storeViews)
+    {
+        foreach ($storeViews as $view) {
+            $this->storeViewCache[$view->getGcChannelId()] = $view;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     *
+     * @return string
+     */
+    private function getAttributeSetForProduct(
+        GoodsCloud_Sync_Model_Api_Company_Product $product
+    ) {
+        $channelProduct = reset($product->getChannelProducts());
+        if ($channelProduct) {
+            return $this->getAttributeSetNameFromId(
+                $channelProduct['property_set']['external_identifier']
+            );
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Product "%s" can not be imported due to missing Channel Product',
+                $product->getGtin()
+            )
+        );
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return string
+     */
+    private function getAttributeSetNameFromId($id)
+    {
+        /** @var $attributeSet Mage_Eav_Model_Entity_Attribute_Set */
+        $attributeSet = $this->attributeSetCache->getItemById($id);
+        return $attributeSet->getAttributeSetName();
+    }
+
+    private function getWebsites(
+        GoodsCloud_Sync_Model_Api_Company_Product $product
+    ) {
+        $websiteCodes = array();
+        foreach ($product->getChannelProducts() as $channelProduct) {
+            $websiteCodes[]
+                = $this->getWebsiteByChannelId($channelProduct['channel_id']);
+        }
+
+        return array_unique($websiteCodes);
+    }
+
+    /**
+     * @param $channelId
+     *
+     * @return string
+     */
+    private function getWebsiteByChannelId($channelId)
+    {
+        return $this->storeViewCache[$channelId]->getWebsite()->getCode();
+    }
+
+
 }
