@@ -97,6 +97,7 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
                 return trim($value);
                 break;
             case 'datetime':
+                return $value;
                 break;
             case 'free':
                 return trim($value);
