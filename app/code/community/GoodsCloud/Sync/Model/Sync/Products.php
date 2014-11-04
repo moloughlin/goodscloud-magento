@@ -136,7 +136,9 @@ class GoodsCloud_Sync_Model_Sync_Products
     }
 
     /**
+     * @param $lastUpdateTime
      *
+     * @return array
      */
     private function getChangedChannelProducts($lastUpdateTime)
     {
@@ -189,6 +191,25 @@ class GoodsCloud_Sync_Model_Sync_Products
             }
         }
         return $import;
+
+    }
+
+    /**
+     * @param array $products
+     */
+    private function import($products)
+    {
+        if (empty($products)) {
+            return;
+        }
+
+        /** @var $import AvS_FastSimpleImport_Model_Import */
+        $import = Mage::getModel('fastsimpleimport/import');
+        try {
+            $import->processProductImport($products);
+        } catch (Exception $e) {
+            Mage::log($import->getErrorMessages());
+        }
     }
 
     /**
@@ -200,29 +221,24 @@ class GoodsCloud_Sync_Model_Sync_Products
             $productAttributeEntity = Mage::getModel('eav/entity_type')
                 ->loadByCode('catalog_product');
 
-            $this->attributeSetCache
-                = Mage::getResourceModel('eav/entity_attribute_set_collection');
+            $attributeSetCollection = Mage::getResourceModel(
+                'eav/entity_attribute_set_collection'
+            );
 
-            $this->attributeSetCache->addFieldToFilter(
+            $attributeSetCollection->addFieldToFilter(
                 'entity_type_id',
                 $productAttributeEntity->getId()
             );
+
+            foreach ($attributeSetCollection as $attributeSet) {
+                $propertySetIds
+                    = json_decode($attributeSet->getGcPropertySetIds());
+                foreach ($propertySetIds as $id) {
+                    $this->attributeSetCache[$id] = $attributeSet;
+                }
+            }
         }
         return $this->attributeSetCache;
-    }
-
-    /**
-     * @param array $products
-     */
-    private function import($products)
-    {
-        /** @var $import AvS_FastSimpleImport_Model_Import */
-        $import = Mage::getModel('fastsimpleimport/import');
-        try {
-            $import->processProductImport($products);
-        } catch (Exception $e) {
-            Mage::log($import->getErrorMessages());
-        }
     }
 
     /**
@@ -233,9 +249,17 @@ class GoodsCloud_Sync_Model_Sync_Products
         if ($this->attributeCache === null) {
             $productAttributeEntity = Mage::getModel('eav/entity_type')
                 ->loadByCode('catalog_product');
-            $this->attributeCache
-                = Mage::getResourceModel('eav/entity_attribute_collection');
-            $this->attributeCache->setEntityTypeFilter($productAttributeEntity);
+
+            $attributes = Mage::getResourceModel(
+                'catalog/product_attribute_collection'
+            );
+
+            $this->attributeCache = array();
+            foreach ($attributes as $attribute) {
+                /* @var Mage_Catalog_Model_Entity_Attribute */
+                $attributeCode = $attribute->getAttributeCode();
+                $this->attributeCache[$attributeCode] = $attribute;
+            }
         }
         return $this->attributeCache;
     }

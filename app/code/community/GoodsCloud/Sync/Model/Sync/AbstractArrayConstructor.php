@@ -101,14 +101,13 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
             case 'free':
                 return trim($value);
                 break;
-            default:
-                throw new LogicException(
-                    sprintf(
-                        'New type "%s", not implemented yet',
-                        $gcPropertyType
-                    )
-                );
         }
+        throw new LogicException(
+            sprintf(
+                'New type "%s", not implemented yet',
+                $gcPropertyType
+            )
+        );
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 
-class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag implements Iterator
+class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag implements Iterator, Countable
 {
     protected $_flagCode;
 
@@ -134,5 +134,8 @@ class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag 
         $this->save();
     }
 
-
+    public function count()
+    {
+        return count($this->indexedProductList);
+    }
 }

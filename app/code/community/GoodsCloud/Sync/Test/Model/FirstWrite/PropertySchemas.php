@@ -34,7 +34,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchemas extends EcomDev_PHPU
 
         $ignoredAttributes = Mage::helper('goodscloud_sync/api')->getIgnoredAttributes();
 
-        /** @var $attributes Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
+        /** @var $attributes Mage_Catalog_Model_Resource_Product_Attribute_Collection */
         $attributes = Mage::getResourceModel('catalog/product_attribute_collection');
         $attributes->addFieldToFilter('attribute_code', array('nin' => $ignoredAttributes));
 
@@ -63,7 +63,7 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchemas extends EcomDev_PHPU
 
         $ignoredAttributes = Mage::helper('goodscloud_sync/api')->getIgnoredAttributes();
 
-        /** @var $attributes Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
+        /** @var $attributes Mage_Catalog_Model_Resource_Product_Attribute_Collection */
         $attributes = Mage::getResourceModel('catalog/product_attribute_collection');
         $attributes->addFieldToFilter('attribute_code', array('nin' => $ignoredAttributes));
 

@@ -83,6 +83,8 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @param array $filters
+     *
      * @return GoodsCloud_Sync_Model_Api_Channel_Product_Collection
      */
     public function getChannelProducts($filters = array())
@@ -173,14 +175,22 @@ class GoodsCloud_Sync_Model_Api
      * @param string $model   name of the resource which is requested
      * @param array  $filters query to filter by
      *
+     * @param bool   $disjunction
+     * @param null   $limit
+     * @param int    $offset
+     * @param array  $orderBy
+     * @param bool   $single
+     *
+     * @throws Mage_Core_Exception
      * @return Varien_Data_Collection|Varien_Object collection with items from api or single item
      *
-     * @throws Exception
      */
     private function get(
         $model, array $filters = array(), $disjunction = false, $limit = null, $offset = 0, $orderBy = array(),
         $single = false
     ) {
+        $limit = 2;
+
         $params = $this->buildGetParamsArray($filters, $disjunction, $limit, $offset, $orderBy, $single);
 
         $requestPath = "/api/internal/$model";
@@ -674,6 +684,9 @@ class GoodsCloud_Sync_Model_Api
             //    last_name	column	String 256 characters or less .
             'last_name'           => $this->sanitizeLastname($customer->getLastname()),
             //    organization_name	column	String 256 characters or less .
+            'organization_name' => $this->sanitizeOrganisationName(
+                $customer->getPrimaryAddress('company')
+            ),
             //    prefix	column	String			256 characters or less .
             'prefix'              => $this->sanitizePrefix($customer->getPrefix()),
             //    properties	column	JSON	not null	{} A JSON object . customer group, gender, date of birth, list of IP addresses, etc .
@@ -832,7 +845,7 @@ class GoodsCloud_Sync_Model_Api
 
             /** @var $item Varien_Object */
             $item = Mage::getModel('goodscloud_sync/api_' . $resource);
-            $item->setData(get_object_vars($response));
+            $item->setData($response);
             return $item;
 
         } catch (Exception $e) {
@@ -847,6 +860,7 @@ class GoodsCloud_Sync_Model_Api
     /**
      * @param Exception $exception
      *
+     * @throws Mage_Core_Exception
      * @return GoodsCloud_Sync_Model_Api_Exception_IntegrityError|GoodsCloud_Sync_Model_Api_Exception_NoResultFound|Mage_Core_Exception
      */
     private function parseErrorMessage(Exception $exception)
@@ -879,7 +893,7 @@ class GoodsCloud_Sync_Model_Api
             }
         }
 
-        Mage::throwException('Unknown Error: ' . $msg);
+        throw new Mage_Core_Exception('Unknown Error: ' . $msg);
     }
 
     private function sanitizeEmail($email)

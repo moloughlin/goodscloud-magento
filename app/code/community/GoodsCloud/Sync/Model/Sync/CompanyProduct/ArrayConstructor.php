@@ -173,6 +173,9 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
         if ($channelProduct) {
             return $channelProduct['sku'];
         }
+        throw new RuntimeException(
+            'No channel product found, import not possible'
+        );
     }
 
     /**
@@ -188,7 +191,7 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
         return $channelProduct;
     }
 
-    
+
     /**
      * @param GoodsCloud_Sync_Model_Api_Company_Product $product
      *

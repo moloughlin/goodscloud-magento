@@ -36,15 +36,19 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
     private function initAttributeSetMapping()
     {
-        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode(Mage_Catalog_Model_Product::ENTITY);
+        $productEntityType = Mage::getModel('eav/entity_type')
+            ->loadByCode(Mage_Catalog_Model_Product::ENTITY);
 
-        $attributeSetCollection = Mage::getResourceModel('eav/entity_attribute_set_collection');
+        $attributeSetCollection
+            = Mage::getResourceModel('eav/entity_attribute_set_collection');
         $attributeSetCollection->setEntityTypeFilter($productEntityType->getId());
         foreach ($attributeSetCollection as $attrSet) {
-            $propertySetIds = json_decode($attrSet->getGcPropertySetIds(), true);
+            $propertySetIds = json_decode($attrSet->getGcPropertySetIds(),
+                true);
             foreach (Mage::app()->getStores() as $store) {
                 if (isset($propertySetIds[$store->getGcChannelId()])) {
-                    $this->attr2PropSet[$attrSet->getId()][$store->getId()] = $propertySetIds[$store->getGcChannelId()];
+                    $this->attr2PropSet[$attrSet->getId()][$store->getId()]
+                        = $propertySetIds[$store->getGcChannelId()];
                 }
             }
         }
@@ -55,7 +59,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     private function initAttributesToAttributeSetMapping()
     {
-        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode(Mage_Catalog_Model_Product::ENTITY);
+        $productEntityType = Mage::getModel('eav/entity_type')
+            ->loadByCode(Mage_Catalog_Model_Product::ENTITY);
 
         $attributes = Mage::getResourceModel('eav/entity_attribute_collection')
             ->setEntityTypeFilter($productEntityType->getId())
@@ -65,8 +70,11 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
         foreach ($attributes as $attribute) {
             /** @var $attribute Mage_Eav_Model_Entity_Attribute */
-            foreach (array_keys($attribute['attribute_set_info']) as $attributeSetId) {
-                $this->attributesInSet[$attributeSetId][] = $attribute['attribute_code'];
+            foreach (
+                array_keys($attribute['attribute_set_info']) as $attributeSetId
+            ) {
+                $this->attributesInSet[$attributeSetId][]
+                    = $attribute['attribute_code'];
             }
         }
     }
@@ -96,17 +104,16 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      * @return string
      */
     public function getPropertiesWithValues(
-        Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null
+        Mage_Catalog_Model_Product $product,
+        Mage_Core_Model_Store $store = null
     ) {
-        if (!$this->isCorrectScope($product, $store)) {
-            Mage::throwException('Product was loaded in wrong scope. It would export wrong data.');
-        }
         $properties = array();
         foreach ($this->getAttributes($product) as $attributeCode) {
             $ignoredAttributes = $this->getIgnoredAttributes();
             if (!in_array($attributeCode, $ignoredAttributes)) {
                 $attrValue = $product->getAttributeText($attributeCode);
-                $properties[$attributeCode] = $attrValue ? $attrValue : $product->getDataUsingMethod($attributeCode);
+                $properties[$attributeCode] = $attrValue ? $attrValue
+                    : $product->getDataUsingMethod($attributeCode);
             }
         }
         return $properties;
@@ -171,11 +178,14 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function getPropertySchemaTypeForAttribute(Mage_Eav_Model_Entity_Attribute $attribute)
-    {
-        if (in_array($attribute->getFrontendInput(), array('select', 'multiselect'))) {
+    public function getPropertySchemaTypeForAttribute(
+        Mage_Eav_Model_Entity_Attribute $attribute
+    ) {
+        if (in_array($attribute->getFrontendInput(),
+            array('select', 'multiselect'))) {
             // it is enum or bool
-            if (in_array($attribute->getSourceModel(), array('eav/entity_attribute_source_boolean'))) {
+            if (in_array($attribute->getSourceModel(),
+                array('eav/entity_attribute_source_boolean'))) {
                 return 'bool';
             } else {
                 return 'enum';
@@ -190,18 +200,17 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
     /**
      * @param Mage_Eav_Model_Entity_Attribute $attribute attribute to get options for
-     * @param Mage_Core_Model_Store           $view      view to get translated options for
      *
      * @return array options for attribute
      * @throws Mage_Core_Exception
      */
     public function getPropertySchemaValuesForAttribute(
-        Mage_Eav_Model_Entity_Attribute $attribute, Mage_Core_Model_Store $view
+        Mage_Eav_Model_Entity_Attribute $attribute
     ) {
         try {
             $values = array();
             foreach ($attribute->getSource()->getAllOptions() as $option) {
-                if($option['value']) {
+                if ($option['value']) {
                     $values[] = $option['value'];
                 }
             }
@@ -216,8 +225,9 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         }
     }
 
-    public function isAttributeMultiValue(Mage_Eav_Model_Entity_Attribute $attribute)
-    {
+    public function isAttributeMultiValue(
+        Mage_Eav_Model_Entity_Attribute $attribute
+    ) {
         return $attribute->getFrontendInput() == 'multiselect';
     }
 
@@ -231,8 +241,10 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig(self::XML_CONFIG_IDENTIFIER_ATTRIBUTE);
     }
 
-    public function getDescriptionData(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null)
-    {
+    public function getDescriptionData(
+        Mage_Catalog_Model_Product $product,
+        Mage_Core_Model_Store $store = null
+    ) {
         if (!$this->isCorrectScope($product, $store)) {
             Mage::throwException('Description is from wrong scope.');
         }
@@ -275,9 +287,12 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
         $images = array();
         $mediaGalleryImages = $product->getMediaGallery();
-        if (is_array($mediaGalleryImages) && is_array($mediaGalleryImages['images'])) {
+        if (is_array($mediaGalleryImages)
+            && is_array($mediaGalleryImages['images'])
+        ) {
             foreach ($mediaGalleryImages['images'] as $image) {
-                $imageInfo = getimagesize($product->getMediaConfig()->getMediaPath($image['file']));
+                $imageInfo = getimagesize($product->getMediaConfig()
+                        ->getMediaPath($image['file']));
 
                 $images[] = array(
                     //            id	column	Integer	not NULL Primary key.
@@ -286,7 +301,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                     //            alt_text	column	Text Any length allowed. alt attribute text
                     'alt_text'            => $image['label'],
                     //            external_identifier	column	String 512 characters or less. If this is a valid http:// or https:// URL, the image is processed and uploaded to Amazon S3 on PUT and PATCH requests. If you have multiple image sizes available, please submit the largest version.
-                    'external_identifier' => $product->getMediaConfig()->getMediaUrl($image['file']),
+                    'external_identifier' => $product->getMediaConfig()
+                        ->getMediaUrl($image['file']),
                     //            height	column	Integer
                     'height'              => $imageInfo[1],
                     //            mimetype	column	String 32 characters or less.
@@ -322,7 +338,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             //minimum_quantity	column	Integer	not NULL	1
             'minimum_quantity' => 1,
             //net	column	Numeric	not NULL 00000000.00 Net monetary price
-            'net'              => $product->getPriceModel()->getFinalPrice(1, $product),
+            'net'              => $product->getPriceModel()
+                ->getFinalPrice(1, $product),
             //updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00.The time when this row was last updated. Read-only.
             //vat_amount	column	Numeric 00000000.00 VAT amount for this net price
             //version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
@@ -375,7 +392,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     public function setDefaultPriceListId($priceListId)
     {
         $config = Mage::app()->getConfig();
-        $config->saveConfig(self::XML_CONFIG_DEFAULT_PRICE_LIST_ID, $priceListId);
+        $config->saveConfig(self::XML_CONFIG_DEFAULT_PRICE_LIST_ID,
+            $priceListId);
         $config->reinit();
         $config->saveCache();
     }
@@ -413,8 +431,10 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      *
      * @return int
      */
-    public function getGcProductId(Mage_Catalog_Model_Product $product, $storeId)
-    {
+    public function getGcProductId(
+        Mage_Catalog_Model_Product $product,
+        $storeId
+    ) {
         $json = json_decode($product->getGcProductIds(), true);
         if (isset($json[$storeId])) {
             return $json[$storeId];
@@ -429,8 +449,11 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      * @param int                        $id
      * @param int                        $storeId
      */
-    public function addGcProductId(Mage_Catalog_Model_Product $product, $id, $storeId)
-    {
+    public function addGcProductId(
+        Mage_Catalog_Model_Product $product,
+        $id,
+        $storeId
+    ) {
         $json = json_decode($product->getGcProductIds(), true);
         $json[$storeId] = $id;
         $product->setGcProductIds(json_encode($json, JSON_FORCE_OBJECT));
@@ -445,8 +468,10 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      *
      * @return int
      */
-    public function getPropertySetId(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store)
-    {
+    public function getPropertySetId(
+        Mage_Catalog_Model_Product $product,
+        Mage_Core_Model_Store $store
+    ) {
 
         if (empty($this->attr2PropSet)) {
             $this->initAttributeSetMapping();
@@ -464,7 +489,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getCompanyProductId(Mage_Catalog_Model_Product $product)
     {
-        return $this->getGcProductId($product, Mage_Core_Model_App::ADMIN_STORE_ID);
+        return $this->getGcProductId($product,
+            Mage_Core_Model_App::ADMIN_STORE_ID);
     }
 
     /**
@@ -493,7 +519,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getSourceOfTruth(Mage_Core_Model_Store $store = null)
     {
-        return Mage::getStoreConfig('tax/calculation/price_includes_tax', $store) ? 'net' : 'gross';
+        return Mage::getStoreConfig('tax/calculation/price_includes_tax',
+            $store) ? 'net' : 'gross';
     }
 
     /**
@@ -506,7 +533,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     public function getLanguage($store = null)
     {
         $store = Mage::app()->getStore($store);
-        return substr(Mage::getStoreConfig('general/locale/code', $store), 0, 2);
+        return substr(Mage::getStoreConfig('general/locale/code', $store), 0,
+            2);
     }
 
     public function getPackagingUnit(Mage_Catalog_Model_Product $product)
@@ -514,26 +542,12 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         /* @var $stockItem Mage_CatalogInventory_Model_Stock_Item */
         $stockItem = $product->getStockItem();
         if ($stockItem) {
-            if ($stockItem->getEnableQtyIncrements() && is_numeric($stockItem->getQtyIncrements())) {
+            if ($stockItem->getEnableQtyIncrements()
+                && is_numeric($stockItem->getQtyIncrements())
+            ) {
                 return $stockItem->getQtyIncrements();
             }
         }
         return 1;
     }
-
-    /**
-     * @param Mage_Catalog_Model_Product $product
-     * @param Mage_Core_Model_Store      $store
-     *
-     * @return bool
-     */
-    private function isCorrectScope(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store = null)
-    {
-        // we can't check this, because the store id is sadly not written into the product, when loaded via collection
-        // TODO think about this method, if not possible just delete.
-        return true;
-        $storeId = Mage::app()->getStore($store)->getId();
-        return $storeId == $product->getStoreId();
-    }
-
 }

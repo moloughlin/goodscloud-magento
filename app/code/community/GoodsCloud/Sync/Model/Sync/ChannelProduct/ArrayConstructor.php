@@ -49,8 +49,6 @@ class GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor
         GoodsCloud_Sync_Model_Api_Channel_Product $product
     ) {
 
-        $helper = Mage::helper('goodscloud_sync/api_import');
-
         // "special" things
         $importArray = array(
             'sku'  => $this->getSku($product),
@@ -150,43 +148,9 @@ class GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor
         );
     }
 
-    /**
-     * @param GoodsCloud_Sync_Model_Api_Channel_Product $product
-     *
-     * @return string[]
-     */
-    private function getWebsites(
-        GoodsCloud_Sync_Model_Api_Channel_Product $product
-    ) {
-        $websiteCodes = array();
-        foreach ($product->getChannelProducts() as $channelProduct) {
-            $websiteCodes[]
-                = $this->getWebsiteByChannelId($channelProduct['channel_id']);
-        }
-
-        return array_unique($websiteCodes);
-    }
-
-
     private function getSku(GoodsCloud_Sync_Model_Api_Channel_Product $product)
     {
-        $channelProduct = $this->getAnyChannelProduct($product);
-        if ($channelProduct) {
-            return $channelProduct['sku'];
-        }
-    }
-
-    /**
-     * @param GoodsCloud_Sync_Model_Api_Channel_Product $product
-     *
-     * @return mixed
-     */
-    private function getAnyChannelProduct(
-        GoodsCloud_Sync_Model_Api_Channel_Product $product
-    ) {
-        $channelProducts = $product->getChannelProducts();
-        $channelProduct = reset($channelProducts);
-        return $channelProduct;
+        return $product->getSku();
     }
 
     /**
