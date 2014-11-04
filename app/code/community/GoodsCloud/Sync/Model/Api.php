@@ -189,8 +189,6 @@ class GoodsCloud_Sync_Model_Api
         $model, array $filters = array(), $disjunction = false, $limit = null, $offset = 0, $orderBy = array(),
         $single = false
     ) {
-        $limit = 2;
-
         $params = $this->buildGetParamsArray($filters, $disjunction, $limit, $offset, $orderBy, $single);
 
         $requestPath = "/api/internal/$model";
