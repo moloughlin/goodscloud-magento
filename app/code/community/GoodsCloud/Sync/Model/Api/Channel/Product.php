@@ -13,7 +13,7 @@
  * @method int getNotifyQuantity()  not NULL    0
  * @method int getPackagingUnit()
  * @method int getPhysicalQuantity()  not NULL
- * @method string getProperties()  not NULL
+ * @method array getProperties()  not NULL
  * @method int getReservedQuantity()  not NULL
  * @method int getSafetyQuantity()  not NULL    0
  * @method string getSku()
