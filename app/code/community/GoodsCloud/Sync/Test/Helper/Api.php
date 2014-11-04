@@ -84,11 +84,13 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
 
         $values = array();
         foreach ($sourceModel->getAllOptions() as $option) {
-            $values[] = $option['value'];
+            if($option['value']) {
+                $values[] = $option['value'];
+            }
         }
 
         $this->assertEquals(
-            $values,
+            $values, // only use "real" values
             $helper->getPropertySchemaValuesForAttribute($attribute, $view)
         );
     }
