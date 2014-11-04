@@ -263,6 +263,6 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     private function allCompanyProductsAreCreated()
     {
         $adminStoreId = Mage_Core_Model_App::ADMIN_STORE_ID;
-        return (bool)count($this->productLists[$adminStoreId]);
+        return !((bool)count($this->productLists[$adminStoreId]));
     }
 }
