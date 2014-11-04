@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-
+        "avstudnitz/fast-simple-import": "0.6.2"
     },
     "require-dev": {
         "ivanchepurnyi/ecomdev_phpunit": "dev-dev"
@@ -20,8 +20,5 @@
             "type": "composer",
             "url": "http://packages.firegento.com"
         }
-    ],
-    "extra": {
-        "magento-root-dir": "root"
-    }
+    ]
 }
