@@ -23,7 +23,7 @@
  * @method string getManufacturerName()
  * @method bool getPhysical()
  * @method int getPhysicalQuantity()
- * @method string getProperties()
+ * @method array getProperties()
  * @method bool getStocked()
  * @method int getStockedQuantity()
  * @method string getUpdated()
