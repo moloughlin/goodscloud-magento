@@ -142,8 +142,6 @@ class GoodsCloud_Sync_Model_Sync_Products
      */
     private function getChangedChannelProducts($lastUpdateTime)
     {
-        // TODO
-        return array();
         $filters = array();
         if ($lastUpdateTime) {
             $filters = array(
