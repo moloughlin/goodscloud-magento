@@ -1,16 +1,16 @@
 <?php
 
-class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
-    extends GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
+class GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor
+    extends AbstractArrayConstructor
 {
 
     /**
-     * @param GoodsCloud_Sync_Model_Api_Company_Product_Collection $products
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product_Collection $products
      *
      * @return array
      */
     public function construct(
-        GoodsCloud_Sync_Model_Api_Company_Product_Collection $products
+        GoodsCloud_Sync_Model_Api_Channel_Product_Collection $products
     ) {
         $importArray = array();
         foreach ($products as $product) {
@@ -23,12 +23,12 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     }
 
     /**
-     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product $product
      *
      * @return array
      */
     private function buildProductArray(
-        GoodsCloud_Sync_Model_Api_Company_Product $product
+        GoodsCloud_Sync_Model_Api_Channel_Product $product
     ) {
 
         $importArray = array_merge(
@@ -41,12 +41,12 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     }
 
     /**
-     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product $product
      *
      * @return array
      */
     private function buildPropertyKeys(
-        GoodsCloud_Sync_Model_Api_Company_Product $product
+        GoodsCloud_Sync_Model_Api_Channel_Product $product
     ) {
 
         $helper = Mage::helper('goodscloud_sync/api_import');
@@ -62,35 +62,37 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
                 $propertyValue);
         }
 
-        $availableDescription = $product->getAvailableDescriptions();
-        $firstDescription = reset($availableDescription);
+        $description = $product->getChosenDescription();
+        $companyProduct = $product->getCompanyProduct();
+
         return $importArray + array(
 
-            'name'              => $product->getLabel(),
-            'price'             => $helper->getPriceForCompanyProduct($product),
-            'description'       => $firstDescription['long_description'],
-            'short_description' => $firstDescription['short_description'],
-            'weight'            => 0, // TODO write and get from goodscloud
+            'name'              => $description['label'],
+            // TODO implement if price is ot defined global
+            //'price'             => $helper->getPriceForCompanyProduct($product),
+            'description'       => $description['long_description'],
+            'short_description' => $description['short_description'],
+            // TODO write and get from goodscloud
+            'weight'            => 0,
             'status'            => $this->getProductStatus($product),
             'visibility'        => 4,
             'tax_class_id'      => 2,
-            'manage_stock'      => $product->getStocked(),
+            'manage_stock'      => $companyProduct['stocked'],
             'qty'               => $product->getStockedQuantity(),
         );
     }
 
     /**
-     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product $product
      *
      * @return array
      */
     private function buildSpecialKeys(
-        GoodsCloud_Sync_Model_Api_Company_Product $product
+        GoodsCloud_Sync_Model_Api_Channel_Product $product
     ) {
         return array(
-            '_type'             => 'simple',
-            '_attribute_set'    => $this->getAttributeSetForProduct($product),
-            '_product_websites' => $this->getWebsites($product),
+            '_type'          => 'simple',
+            '_attribute_set' => $this->getAttributeSetForProduct($product),
             // TODO not yet implemented
             '_category',
             '_media_image',
@@ -104,12 +106,12 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     }
 
     /**
-     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product $product
      *
      * @return array
      */
     public function buildRelations(
-        GoodsCloud_Sync_Model_Api_Company_Product $product
+        GoodsCloud_Sync_Model_Api_Channel_Product $product
     ) {
         // TODO supported by API but not yet used
         return array();
@@ -128,14 +130,13 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     }
 
     /**
-     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product $channelProduct
      *
      * @return string
      */
     private function getAttributeSetForProduct(
-        GoodsCloud_Sync_Model_Api_Company_Product $product
+        GoodsCloud_Sync_Model_Api_Channel_Product $channelProduct
     ) {
-        $channelProduct = $this->getAnyChannelProduct($product);
         if ($channelProduct) {
             return $this->getAttributeSetNameFromPropertySetId(
                 $channelProduct['property_set_id']
@@ -144,19 +145,18 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
         throw new RuntimeException(
             sprintf(
                 'Product "%s" can not be imported due to missing Channel Product',
-                $product->getGtin()
+                $channelProduct->getSku()
             )
         );
     }
 
-
     /**
-     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product $product
      *
      * @return string[]
      */
     private function getWebsites(
-        GoodsCloud_Sync_Model_Api_Company_Product $product
+        GoodsCloud_Sync_Model_Api_Channel_Product $product
     ) {
         $websiteCodes = array();
         foreach ($product->getChannelProducts() as $channelProduct) {
@@ -167,7 +167,8 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
         return array_unique($websiteCodes);
     }
 
-    private function getSku(GoodsCloud_Sync_Model_Api_Company_Product $product)
+
+    private function getSku(GoodsCloud_Sync_Model_Api_Channel_Product $product)
     {
         $channelProduct = $this->getAnyChannelProduct($product);
         if ($channelProduct) {
@@ -176,26 +177,25 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     }
 
     /**
-     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product $product
      *
      * @return mixed
      */
     private function getAnyChannelProduct(
-        GoodsCloud_Sync_Model_Api_Company_Product $product
+        GoodsCloud_Sync_Model_Api_Channel_Product $product
     ) {
         $channelProducts = $product->getChannelProducts();
         $channelProduct = reset($channelProducts);
         return $channelProduct;
     }
 
-    
     /**
-     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product $product
      *
      * @return int
      */
     private function getProductStatus(
-        GoodsCloud_Sync_Model_Api_Company_Product $product
+        GoodsCloud_Sync_Model_Api_Channel_Product $product
     ) {
         if ($product->getActive()) {
             return Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
