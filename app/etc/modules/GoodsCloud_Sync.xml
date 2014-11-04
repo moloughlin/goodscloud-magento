@@ -4,6 +4,9 @@
         <GoodsCloud_Sync>
             <active>true</active>
             <codePool>community</codePool>
+            <depends>
+                <AvS_FastSimpleImport />
+            </depends>
         </GoodsCloud_Sync>
     </modules>
 </config>
