@@ -1,7 +1,7 @@
 <?php
 
 class GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor
-    extends AbstractArrayConstructor
+    extends GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
 {
 
     /**
@@ -97,9 +97,9 @@ class GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor
             '_media_attribute_id',
             '_media_is_disabled',
             '_media_position',
-            '_media_lable',
             // TYPO in magento core, don't fix!
-            '_store',
+            '_media_lable',
+            '_store'         => $this->getStoreForProduct($product),
         );
     }
 
@@ -165,5 +165,11 @@ class GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor
             return Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
         }
         return Mage_Catalog_Model_Product_Status::STATUS_DISABLED;
+    }
+
+    private function getStoreForProduct(
+        GoodsCloud_Sync_Model_Api_Channel_Product $product
+    ) {
+        return $this->storeViewCache[$product->getChannelId()]->getCode();
     }
 }
