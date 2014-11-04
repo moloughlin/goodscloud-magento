@@ -18,6 +18,11 @@ class GoodsCloud_Sync_Model_Sync_Products
     private $attributeSetCache;
 
     /**
+     * @var Mage_Eav_Model_Resource_Entity_Attribute_Collection
+     */
+    private $attributeCache;
+
+    /**
      * @param GoodsCloud_Sync_Model_Api $api
      */
     public function setApi(GoodsCloud_Sync_Model_Api $api)
@@ -34,9 +39,11 @@ class GoodsCloud_Sync_Model_Sync_Products
         // get last update datetime
         $lastUpdateTime = $this->retrieveUpdateTime();
 
+        // TODO REMOVE!!!
+        $lastUpdateTime = '2007-12-12 12:12:12Z';
 
         // merge into big array
-        $this->getProductArrayForImport(
+        $arrayToImport = $this->getProductArrayForImport(
         // get changed company products
             $this->getChangedCompanyProducts($lastUpdateTime),
             // get changed channel products
@@ -44,6 +51,7 @@ class GoodsCloud_Sync_Model_Sync_Products
         );
 
         // import via AvS
+        $this->import($arrayToImport);
         // set new update datetime
         $this->saveUpdateTime($timeBeforeUpdate);
     }
@@ -123,27 +131,64 @@ class GoodsCloud_Sync_Model_Sync_Products
         return $companyProductArrayGenerator
             ->setAttributeSetCache($this->getAttributeSetCache())
             ->setStoreViewCache(Mage::app()->getStores())
+            ->setAttributeCache($this->getAttributeCache())
             ->construct($products);
     }
 
     /**
      *
      */
-    private function getChangedChannelProducts()
+    private function getChangedChannelProducts($lastUpdateTime)
     {
-        // TODO implement
+        // TODO
         return array();
+        $filters = array();
+        if ($lastUpdateTime) {
+            $filters = array(
+                array(
+                    'name' => 'updated',
+                    'op'   => '>=',
+                    'val'  => $lastUpdateTime
+                )
+            );
+        }
+
+        $products = $this->api->getChannelProducts($filters);
+        /** @var $channelProductArrayGenerator GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor */
+        $channelProductArrayGenerator = Mage::getModel(
+            'goodscloud_sync/sync_channelProduct_arrayConstructor'
+        );
+
+        return $channelProductArrayGenerator
+            ->setAttributeSetCache($this->getAttributeSetCache())
+            ->setStoreViewCache(Mage::app()->getStores())
+            ->construct($products);
     }
 
     /**
      * @param array $companyProducts
      * @param array $channelProducts
+     *
+     * @return array
      */
     private function getProductArrayForImport(
         array $companyProducts,
         array $channelProducts
     ) {
+        $import = array();
 
+        foreach ($companyProducts as $line) {
+            foreach ($line as $entry) {
+                $import[] = $entry;
+            }
+        }
+
+        foreach ($channelProducts as $line) {
+            foreach ($line as $entry) {
+                $import[] = $entry;
+            }
+        }
+        return $import;
     }
 
     /**
@@ -164,5 +209,34 @@ class GoodsCloud_Sync_Model_Sync_Products
             );
         }
         return $this->attributeSetCache;
+    }
+
+    /**
+     * @param array $products
+     */
+    private function import($products)
+    {
+        /** @var $import AvS_FastSimpleImport_Model_Import */
+        $import = Mage::getModel('fastsimpleimport/import');
+        try {
+            $import->processProductImport($products);
+        } catch (Exception $e) {
+            Mage::log($import->getErrorMessages());
+        }
+    }
+
+    /**
+     *
+     */
+    private function getAttributeCache()
+    {
+        if ($this->attributeCache === null) {
+            $productAttributeEntity = Mage::getModel('eav/entity_type')
+                ->loadByCode('catalog_product');
+            $this->attributeCache
+                = Mage::getResourceModel('eav/entity_attribute_collection');
+            $this->attributeCache->setEntityTypeFilter($productAttributeEntity);
+        }
+        return $this->attributeCache;
     }
 }
