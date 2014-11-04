@@ -69,14 +69,14 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
             $importArray[$propertyName] = $propertyValue;
         }
 
+        $availableDescription = $product->getAvailableDescriptions();
+        $firstDescription = reset($availableDescription);
         return array(
 
             'name'              => $product->getLabel(),
             'price'             => $helper->getPriceForCompanyProduct($product),
-            'description'       => reset($product->getAvailableDescriptions())
-                ->getLongDescription(),
-            'short_description' => reset($product->getAvailableDescriptions())
-                ->getShortDescription(),
+            'description'       => $firstDescription['long_description'],
+            'short_description' => $firstDescription['short_description'],
             'weight'            => 0, // TODO write and get from goodscloud
             'status'            => (int)$product->getActive(),
             'visibility'        => 4,
@@ -140,7 +140,13 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     public function setAttributeSetCache(
         Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection $attributeSetCollection
     ) {
-        $this->attributeSetCache = $attributeSetCollection;
+        foreach($attributeSetCollection as $attributeSet) {
+            $propertySetIds = json_decode($attributeSet->getGcPropertySetIds());
+            foreach($propertySetIds as $id) {
+                $this->attributeSetCache[$id] = $attributeSet;
+            }
+        }
+
         return $this;
     }
 
@@ -166,10 +172,11 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     private function getAttributeSetForProduct(
         GoodsCloud_Sync_Model_Api_Company_Product $product
     ) {
-        $channelProduct = reset($product->getChannelProducts());
+        $channelProducts = $product->getChannelProducts();
+        $channelProduct = reset($channelProducts);
         if ($channelProduct) {
-            return $this->getAttributeSetNameFromId(
-                $channelProduct['property_set']['external_identifier']
+            return $this->getAttributeSetNameFromPropertySetId(
+                $channelProduct['property_set_id']
             );
         }
         throw new RuntimeException(
@@ -181,14 +188,14 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     }
 
     /**
-     * @param int $id
+     * @param int $propertySetId
      *
      * @return string
      */
-    private function getAttributeSetNameFromId($id)
+    private function getAttributeSetNameFromPropertySetId($propertySetId)
     {
         /** @var $attributeSet Mage_Eav_Model_Entity_Attribute_Set */
-        $attributeSet = $this->attributeSetCache->getItemById($id);
+        $attributeSet = $this->attributeSetCache[$propertySetId];
         return $attributeSet->getAttributeSetName();
     }
 

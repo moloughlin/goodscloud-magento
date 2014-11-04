@@ -97,6 +97,8 @@ class GoodsCloud_Sync_Model_Sync_Products
 
     /**
      * @param $lastUpdateTime
+     *
+     * @return array
      */
     private function getChangedCompanyProducts($lastUpdateTime)
     {
@@ -134,7 +136,8 @@ class GoodsCloud_Sync_Model_Sync_Products
     }
 
     /**
-     *
+     * @param array $companyProducts
+     * @param array $channelProducts
      */
     private function getProductArrayForImport(
         array $companyProducts,
@@ -155,7 +158,7 @@ class GoodsCloud_Sync_Model_Sync_Products
             $this->attributeSetCache
                 = Mage::getResourceModel('eav/entity_attribute_set_collection');
 
-            $this->attributeSetCache->addFieldToSelect(
+            $this->attributeSetCache->addFieldToFilter(
                 'entity_type_id',
                 $productAttributeEntity->getId()
             );

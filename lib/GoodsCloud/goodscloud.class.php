@@ -136,12 +136,12 @@ class Goodscloud
         // Get the response and close the channel.
         $result = curl_exec($ch);
         $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $decodedResult = json_decode($result);
+        $decodedResult = json_decode($result, true);
         if ($status_code >= 200 and $status_code < 300) {
             return $decodedResult;
         } else {
-            if (isset($decodedResult->message)) {
-                $message = $decodedResult->message;
+            if (isset($decodedResult['message'])) {
+                $message = $decodedResult['message'];
                 throw new Exception("API request failed (status code $status_code): $message");
             }
             throw new Exception("API request failed (status code $status_code): Unknown error\n$result");

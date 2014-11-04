@@ -931,10 +931,10 @@ class GoodsCloud_Sync_Model_Api
             /* @var $collection Varien_Data_Collection */
             $collection = Mage::getModel('goodscloud_sync/api_' . $model
                 . '_collection');
-            foreach ($response->objects as $objects) {
+            foreach ($response['objects'] as $objects) {
                 /* @var $item Varien_Object */
                 $item = Mage::getModel('goodscloud_sync/api_' . $model);
-                $collection->addItem($item->setData(get_object_vars($objects)));
+                $collection->addItem($item->setData($objects));
             }
         }
 
