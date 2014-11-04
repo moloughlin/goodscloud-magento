@@ -164,6 +164,7 @@ class GoodsCloud_Sync_Model_Sync_Products
         return $channelProductArrayGenerator
             ->setAttributeSetCache($this->getAttributeSetCache())
             ->setStoreViewCache(Mage::app()->getStores())
+            ->setAttributeCache($this->getAttributeCache())
             ->construct($products);
     }
 
@@ -179,19 +180,26 @@ class GoodsCloud_Sync_Model_Sync_Products
     ) {
         $import = array();
 
-        foreach ($companyProducts as $line) {
+        $mergedArrays = array_merge_recursive(
+            $companyProducts,
+            $channelProducts
+        );
+        foreach ($mergedArrays as $sku => $line) {
+            $first = true;
             foreach ($line as $entry) {
+                if (!$first) {
+                    unset($entry['sku']);
+                }
                 $import[] = $entry;
+                $first = false;
             }
+
+            // only import every row once
+            unset($companyProducts[$sku]);
+            unset($companyProducts[$sku]);
         }
 
-        foreach ($channelProducts as $line) {
-            foreach ($line as $entry) {
-                $import[] = $entry;
-            }
-        }
         return $import;
-
     }
 
     /**
@@ -208,12 +216,13 @@ class GoodsCloud_Sync_Model_Sync_Products
         try {
             $import->processProductImport($products);
         } catch (Exception $e) {
+            Mage::logException($e);
             Mage::log($import->getErrorMessages());
         }
     }
 
     /**
-     * @return Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection
+     * @return Mage_Eav_Model_Resource_Entity_Attribute_Set[]
      */
     private function getAttributeSetCache()
     {
