@@ -198,7 +198,6 @@ class GoodsCloud_Sync_Model_Api
         $orderBy = array(),
         $single = false
     ) {
-        $limit = 10;
         $params = $this->buildGetParamsArray(
             $filters,
             $disjunction,

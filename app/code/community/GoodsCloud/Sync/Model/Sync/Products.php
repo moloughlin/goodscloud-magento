@@ -254,9 +254,6 @@ class GoodsCloud_Sync_Model_Sync_Products
     private function getAttributeCache()
     {
         if ($this->attributeCache === null) {
-            $productAttributeEntity = Mage::getModel('eav/entity_type')
-                ->loadByCode('catalog_product');
-
             $attributes = Mage::getResourceModel(
                 'catalog/product_attribute_collection'
             );

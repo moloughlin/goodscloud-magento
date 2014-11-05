@@ -18,6 +18,9 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
      */
     private $apiHelper;
 
+    /**
+     * 
+     */
     function __construct()
     {
         $this->apiHelper = Mage::helper('goodscloud_sync/api');
@@ -120,11 +123,22 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
         }
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return GoodsCloud_Sync_Model_Api_Company_Product
+     */
     private function createCompanyProduct(Mage_Catalog_Model_Product $product)
     {
         return $this->getApi()->createCompanyProduct($product);
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     * @param Mage_Core_Model_Store      $store
+     *
+     * @return GoodsCloud_Sync_Model_Api_Channel_Product
+     */
     private function createChannelProduct(
         Mage_Catalog_Model_Product $product,
         Mage_Core_Model_Store $store
@@ -234,8 +248,8 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     }
 
     /**
-     * @param $collection
-     * @param $view
+     * @param Mage_Catalog_Model_Resource_Product_Collection $collection
+     * @param Mage_Core_Model_Store $view
      *
      * @throws Exception
      * @throws Mage_Core_Exception
@@ -260,6 +274,9 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
         }
     }
 
+    /**
+     * @return bool
+     */
     private function allCompanyProductsAreCreated()
     {
         $adminStoreId = Mage_Core_Model_App::ADMIN_STORE_ID;
