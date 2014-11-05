@@ -158,7 +158,9 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
 
         foreach ($views as $view) {
             // make sure to export channel products after _ALL_ company products are created
-            if (!$this->allCompanyProductsAreCreated()) {
+            if ($view->getId() != Mage_Core_Model_App::ADMIN_STORE_ID
+                && !$this->allCompanyProductsAreCreated()
+            ) {
                 throw new RuntimeException('Not all company products created yet');
             }
 
