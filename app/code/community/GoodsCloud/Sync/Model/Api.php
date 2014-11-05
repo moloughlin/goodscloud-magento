@@ -110,6 +110,82 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @return GoodsCloud_Sync_Model_Api_Vat_Rate
+     */
+    public function getVatRates()
+    {
+        return $this->get('vat_rate');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Price_List_Collection
+     */
+    public function getPriceLists()
+    {
+        return $this->get('price_list');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Consumer_Collection
+     */
+    public function getConsumers()
+    {
+        return $this->get('consumer');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Price
+     */
+    public function getPrices()
+    {
+        return $this->get('price');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Order_Item_Collection
+     */
+    public function getOrderItem()
+    {
+        return $this->get('order_item');
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool|string
+     */
+    public function deleteOrderItem($id)
+    {
+        return $this->delete('order_item', $id);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool|string
+     */
+    public function deletePrice($id)
+    {
+        return $this->delete('price', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deletePropertySet($id)
+    {
+        $this->delete('property_set', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deletePropertySchemas($id)
+    {
+        $this->delete('property_schema', $id);
+    }
+
+    /**
      * @param int $id
      *
      * @return bool|string
@@ -120,7 +196,7 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return bool|string
      */
@@ -137,6 +213,16 @@ class GoodsCloud_Sync_Model_Api
     public function deleteCompanyProduct($id)
     {
         return $this->delete('company_product', $id);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool|string
+     */
+    public function deleteConsumer($id)
+    {
+        return $this->delete('consumer', $id);
     }
 
     /**
@@ -157,6 +243,36 @@ class GoodsCloud_Sync_Model_Api
     public function deleteOrder($id)
     {
         return $this->delete('order', $id);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool|string
+     */
+    public function deleteVatRate($id)
+    {
+        return $this->delete('vat_rate', $id);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool|string
+     */
+    public function deletePriceList($id)
+    {
+        return $this->delete('price_list', $id);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return bool|string
+     */
+    public function deleteChannel($id)
+    {
+        return $this->delete('channel', $id);
     }
 
     /**
