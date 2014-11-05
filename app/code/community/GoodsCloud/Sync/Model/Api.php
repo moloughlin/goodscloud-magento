@@ -110,7 +110,7 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
-     * @return GoodsCloud_Sync_Model_Api_Vat_Rate
+     * @return GoodsCloud_Sync_Model_Api_Vat_Rate_Collection
      */
     public function getVatRates()
     {

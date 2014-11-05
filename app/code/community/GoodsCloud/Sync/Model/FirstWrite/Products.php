@@ -19,7 +19,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     private $apiHelper;
 
     /**
-     * 
+     *
      */
     function __construct()
     {
@@ -147,7 +147,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     }
 
     /**
-     * @param array $views
+     * @param Mage_Core_Model_Store[] $views
      *
      * @throws Exception
      * @throws Mage_Core_Exception
@@ -225,7 +225,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     }
 
     /**
-     * @param Mage_Core_Model_Store      $view
+     * @param Mage_Core_Model_Store $view
      * @param Mage_Catalog_Model_Product $product
      */
     private function createGcProductAndUpdateProduct(
@@ -249,7 +249,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
 
     /**
      * @param Mage_Catalog_Model_Resource_Product_Collection $collection
-     * @param Mage_Core_Model_Store $view
+     * @param Mage_Core_Model_Store                          $view
      *
      * @throws Exception
      * @throws Mage_Core_Exception

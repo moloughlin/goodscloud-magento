@@ -34,6 +34,9 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     private $attributesInSet;
 
+    /**
+     *
+     */
     private function initAttributeSetMapping()
     {
         $productEntityType = Mage::getModel('eav/entity_type')
@@ -149,16 +152,25 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig(self::XML_CONFIG_PASSWORD);
     }
 
+    /**
+     * @return array
+     */
     public function getIgnoredAttributes()
     {
         return array_keys(Mage::getStoreConfig(self::XML_CONFIG_IGNORED_ATTRIBUTES));
     }
 
+    /**
+     * @return array
+     */
     public function getBooleanSourceModels()
     {
         return Mage::getStoreConfig(self::XML_CONFIG_BOOLEAN_SOURCE_MODELS);
     }
 
+    /**
+     * @return array
+     */
     public function getEnumTypes()
     {
         return array_keys(Mage::getStoreConfig(self::XML_CONFIG_ENUM_TYPES));
@@ -225,29 +237,43 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * @param Mage_Eav_Model_Entity_Attribute $attribute
+     *
+     * @return bool
+     */
     public function isAttributeMultiValue(
         Mage_Eav_Model_Entity_Attribute $attribute
     ) {
         return $attribute->getFrontendInput() == 'multiselect';
     }
 
+    /**
+     * @return string
+     */
     public function getIdentifierType()
     {
         return Mage::getStoreConfig(self::XML_CONFIG_IDENTIFIER_TYPE);
     }
 
+    /**
+     * @return string
+     */
     public function getIdentifierAttribute()
     {
         return Mage::getStoreConfig(self::XML_CONFIG_IDENTIFIER_ATTRIBUTE);
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     * @param Mage_Core_Model_Store      $store
+     *
+     * @return array
+     */
     public function getDescriptionData(
         Mage_Catalog_Model_Product $product,
         Mage_Core_Model_Store $store = null
     ) {
-        if (!$this->isCorrectScope($product, $store)) {
-            Mage::throwException('Description is from wrong scope.');
-        }
         $store = Mage::app()->getStore($store);
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
         $apiHelper = Mage::helper('goodscloud_sync/api');
@@ -280,6 +306,11 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return $descriptions;
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return array
+     */
     public function createImages(Mage_Catalog_Model_Product $product)
     {
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
@@ -292,7 +323,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         ) {
             foreach ($mediaGalleryImages['images'] as $image) {
                 $imageInfo = getimagesize($product->getMediaConfig()
-                        ->getMediaPath($image['file']));
+                    ->getMediaPath($image['file']));
 
                 $images[] = array(
                     //            id	column	Integer	not NULL Primary key.
@@ -326,6 +357,11 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return $images;
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return array
+     */
     public function createPrices(Mage_Catalog_Model_Product $product)
     {
         $prices = array();
@@ -384,11 +420,17 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         $config->saveCache();
     }
 
+    /**
+     * @return string
+     */
     public function getDefaultPriceListId()
     {
         return Mage::getStoreConfig(self::XML_CONFIG_DEFAULT_PRICE_LIST_ID);
     }
 
+    /**
+     * @param int $priceListId
+     */
     public function setDefaultPriceListId($priceListId)
     {
         $config = Mage::app()->getConfig();
@@ -398,11 +440,17 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         $config->saveCache();
     }
 
+    /**
+     * @return int
+     */
     public function getDefaultVatRate()
     {
         return Mage::getStoreConfig(self::XML_CONFIG_DEFAULT_VAT_RATE_ID);
     }
 
+    /**
+     * @param int $vatRate
+     */
     public function setDefaultVatRate($vatRate)
     {
         $config = Mage::app()->getConfig();
@@ -537,6 +585,11 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             2);
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return int
+     */
     public function getPackagingUnit(Mage_Catalog_Model_Product $product)
     {
         /* @var $stockItem Mage_CatalogInventory_Model_Stock_Item */
