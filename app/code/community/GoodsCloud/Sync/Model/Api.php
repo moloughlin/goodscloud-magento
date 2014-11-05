@@ -167,7 +167,11 @@ class GoodsCloud_Sync_Model_Api
      */
     private function delete($resource, $id)
     {
-        Mage::log("DELETE $resource with ID $id", Zend_Log::DEBUG, 'goodscloud.log');
+        Mage::log(
+            "DELETE $resource with ID $id",
+            Zend_Log::DEBUG,
+            'goodscloud.log'
+        );
         return $this->api->delete("/api/internal/$resource/$id");
     }
 
@@ -186,17 +190,31 @@ class GoodsCloud_Sync_Model_Api
      *
      */
     private function get(
-        $model, array $filters = array(), $disjunction = false, $limit = null, $offset = 0, $orderBy = array(),
+        $model,
+        array $filters = array(),
+        $disjunction = false,
+        $limit = null,
+        $offset = 0,
+        $orderBy = array(),
         $single = false
     ) {
-        $params = $this->buildGetParamsArray($filters, $disjunction, $limit, $offset, $orderBy, $single);
+        $limit = 10;
+        $params = $this->buildGetParamsArray(
+            $filters,
+            $disjunction,
+            $limit,
+            $offset,
+            $orderBy,
+            $single
+        );
 
         $requestPath = "/api/internal/$model";
         Mage::log("GET $requestPath", Zend_Log::DEBUG, 'goodscloud.log');
-        Mage::log("Parameter:");
-        Mage::log($params);
+        Mage::log("Parameter:", Zend_Log::DEBUG, 'goodscloud.log');
+        Mage::log($params, Zend_Log::DEBUG, 'goodscloud.log');
         try {
             $response = $this->api->get($requestPath, $params);
+            Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
         } catch (Exception $e) {
             try {
                 throw $this->parseErrorMessage($e);
@@ -220,8 +238,14 @@ class GoodsCloud_Sync_Model_Api
      *
      * @return array
      */
-    private function buildGetParamsArray(array $filters, $disjunction, $limit, $offset, $orderBy, $single)
-    {
+    private function buildGetParamsArray(
+        array $filters,
+        $disjunction,
+        $limit,
+        $offset,
+        $orderBy,
+        $single
+    ) {
         $params = array();
         if (!empty($filters)) {
             $params['filters'] = $filters;
@@ -258,7 +282,8 @@ class GoodsCloud_Sync_Model_Api
     private function getById($model, $id)
     {
         return $this->get(
-            $model . '/' . $id, array(), false, self::DEFAULT_PAGE_SIZE, self::DEFAULT_OFFSET, array(), true
+            $model . '/' . $id, array(), false, self::DEFAULT_PAGE_SIZE,
+            self::DEFAULT_OFFSET, array(), true
         );
     }
 
@@ -277,7 +302,8 @@ class GoodsCloud_Sync_Model_Api
             )
         );
 
-        return $this->get($model, $filters, false, self::DEFAULT_PAGE_SIZE, self::DEFAULT_OFFSET, array(), true);
+        return $this->get($model, $filters, false, self::DEFAULT_PAGE_SIZE,
+            self::DEFAULT_OFFSET, array(), true);
     }
 
     public function getConsumerByEmail($email)
@@ -307,7 +333,8 @@ class GoodsCloud_Sync_Model_Api
             //    source_channels	relationship	List of Channel entries.
             //    target_channels	relationship	List of Channel entries.
             //    currency_code	column	UppercaseEnum The currency this price is denominated in. Must be ISO-3166 codes
-            'currency_code'            => Mage::app()->getStore($store)->getCurrentCurrencyCode(),
+            'currency_code'            => Mage::app()->getStore($store)
+                ->getCurrentCurrencyCode(),
             //    direction	column	Enum	not NULL	outgoing Allowed values incoming, outgoing
             'direction'                => 'outgoing',
             //    end_date	column	DateTime ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this price list becomes inactive.
@@ -386,7 +413,8 @@ class GoodsCloud_Sync_Model_Api
             'prices'                 => $apiHelper->createPrices($product),
             //    sales_agreements	relationship	List of SourceAgreement entries. Cascade delete, delete-orphan.
             //    active	column	Boolean	not NULL	True Whether or not this company product is currently active
-            'active'                 => $product->getStatus() === Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
+            'active'                 => $product->getStatus()
+                === Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
             //    atp	column	Integer	not NULL The quantity of this product that is "available to promise". Sum of atp_internal and atp_external. Read-only.
             //    atp_external	column	Integer	not NULL The quantity of this product from external companies that is "available to promise". Read-only.
             //    atp_internal	column	Integer	not NULL The quantity of this product in this company that is "available to promise". Read-only.
@@ -405,7 +433,8 @@ class GoodsCloud_Sync_Model_Api
             'properties'             => $apiHelper->getPropertiesWithValues($product),
             //    customer group, gender, date of birth, list of IP addresses, etc.
             //    stocked	column	Boolean		True False means never out of stock: manufactured on demand or virtual
-            'stocked'                => (bool)$product->getStockItem()->getManageStock(),
+            'stocked'                => (bool)$product->getStockItem()
+                ->getManageStock(),
             //    stocked_quantity	column	Integer	not NULL The total physical quantity of this product in this company that is stocked in storage cells. Read-only.
             //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
@@ -418,7 +447,8 @@ class GoodsCloud_Sync_Model_Api
         );
 
         // depending on what identifier exists we set different keys
-        $data[$apiHelper->getIdentifierType()] = $product->getData($apiHelper->getIdentifierAttribute());
+        $data[$apiHelper->getIdentifierType()]
+            = $product->getData($apiHelper->getIdentifierAttribute());
 
         return $this->putPost('company_product', $data);
     }
@@ -430,17 +460,21 @@ class GoodsCloud_Sync_Model_Api
      * @return GoodsCloud_Sync_Model_Api_Channel_Product
      * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
      */
-    public function createChannelProduct(Mage_Catalog_Model_Product $product, Mage_Core_Model_Store $store)
-    {
+    public function createChannelProduct(
+        Mage_Catalog_Model_Product $product,
+        Mage_Core_Model_Store $store
+    ) {
 
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
         $apiHelper = Mage::helper('goodscloud_sync/api');
         $descriptions = $apiHelper->getDescriptionData($product, $store, true);
         $description = $this->createDescription(array_pop($descriptions));
-        if(!$apiHelper->getCompanyProductId($product)) {
-            throw new RuntimeException(sprintf('Company product not created for Product %s', $product->getSku()));
+        if (!$apiHelper->getCompanyProductId($product)) {
+            throw new RuntimeException(sprintf('Company product not created for Product %s',
+                $product->getSku()));
         }
-        $this->addDescriptionToCompanyProduct($description->getId(), $apiHelper->getCompanyProductId($product));
+        $this->addDescriptionToCompanyProduct($description->getId(),
+            $apiHelper->getCompanyProductId($product));
         $data = array(
             //    id	column	Integer	not NULL Primary key.
             //    logistic_order_items	relationship	List of LogisticOrderItem entries. Write-only, value not returned in API responses.
@@ -448,14 +482,16 @@ class GoodsCloud_Sync_Model_Api
             //    order_items	relationship	List of OrderItem entries. Write-only, value not returned in API responses.
             //    storage_cell_inventories	relationship	List of StorageCellInventory entries. Cascade delete, delete-orphan.
             //    active	column	Boolean	not NULL	True Whether or not this channel product is currently active
-            'active'                => $product->getStatus() === Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
+            'active'                => $product->getStatus()
+                === Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
             //    atp	column	Integer	not NULL The quantity of this product in this channel that is "available to promise". Read-only.
             //    notify_quantity	column	Integer	not NULL	0 The quantity at which to send a notification about low inventory.
             //    packaging_unit	column	Integer			 Smallest number of this article that is sold by this channel
             'packaging_unit'        => $apiHelper->getPackagingUnit($product),
             // physical_quantity	column	Integer	not NULL The total physical quantity of this product in this channel. Read-only.
             //    properties	column	JSON	not NULL	{} A JSON object.
-            'properties'            => $apiHelper->getPropertiesWithValues($product, $store),
+            'properties'            => $apiHelper->getPropertiesWithValues($product,
+                $store),
             //    reserved_quantity	column	Integer	not NUL The quantity of the product in this channel that is reserved for presales or replacements Read-only.
             //    safety_quantity	column	Integer	not NULL	0 The quantity of this product that must always be kept in stock, e.g. for photos to be taken, or as a buffer.
             //    sku	column	String 256 characters or less. The SKU (stock-keeping unit) used to track this product in this channel.
@@ -480,7 +516,8 @@ class GoodsCloud_Sync_Model_Api
             'price_list_id'         => $apiHelper->getDefaultPriceListId(),
             //    price_list	relationship	Single PriceList entry.
             //    property_set_id	column	Integer ForeignKey('property_set.id') ON DELETE SET NULL
-            'property_set_id'       => $apiHelper->getPropertySetId($product, $store),
+            'property_set_id'       => $apiHelper->getPropertySetId($product,
+                $store),
             //    property_set	relationship	Single PropertySet entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    chosen_images	relationship	List of ProductImage entries.
@@ -507,18 +544,16 @@ class GoodsCloud_Sync_Model_Api
         $data = array(
             // 'id'	// column	Integer	not NULL Primary key.
             'currency_code'       => $helper->getCurrencyByStoreView($view),
-
             // column	UppercaseEnum	not NULL The default currency for this channel. Must be ISO-4217 currency code
-            'external_identifier' => $view->getId(), // column	String 256 characters or less .
+            'external_identifier' => $view->getId(),
+            // column	String 256 characters or less .
 
             // 'is_inventory'	// column	Boolean	not null	false Is this channel an inventory channel ? Read - only, except when creating new objects .
 
             // column	Boolean	not null	false Is this channel a sales channel ? Read - only, except when creating new objects .
             'is_sales'            => true,
-
             // column	String	not null 256 characters or less .
             'label'               => $helper->getChannelNameByStoreView($view),
-
             //	column	LowercaseEnum	not null The default language for this channel . Must be {ISO - 639} codes
             'language_code'       => $helper->getLanguageByStoreView($view)
 
@@ -582,8 +617,10 @@ class GoodsCloud_Sync_Model_Api
      * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
      * @throws Mage_Core_Exception
      */
-    public function createPropertySchema(Mage_Eav_Model_Entity_Attribute $attribute, Mage_Core_Model_Store $view)
-    {
+    public function createPropertySchema(
+        Mage_Eav_Model_Entity_Attribute $attribute,
+        Mage_Core_Model_Store $view
+    ) {
         if (!$view->getGcChannelId()) {
             Mage::throwException('StoreView has no associated channel!');
         }
@@ -601,19 +638,22 @@ class GoodsCloud_Sync_Model_Api
             // external_identifier	column	String 256 characters or less.
             'external_identifier' => $attribute->getId(),
             // filterable	column	Boolean		False label	column	String	not NULL 256 characters or less.
-            'filterable'          => $attribute->getIsFilterable() || $attribute->getIsFilterableInSearch(),
+            'filterable'          => $attribute->getIsFilterable()
+                || $attribute->getIsFilterableInSearch(),
             // max	column	Numeric 0000000000000000.0000000000000000 min	column	Numeric 0000000000000000.0000000000000000
             // label	column	String	not NULL 256 characters or less.
             'label'               => $attribute->getName(),
             // multivalue	column	Boolean	not NULL	False
-            'multivalue'          => $helper->isAttributeMultiValue($attribute), // TODO
+            'multivalue'          => $helper->isAttributeMultiValue($attribute),
+            // TODO
             // searchable	column	Boolean		True
             'searchable'          => $attribute->getIsSearchable(),
             // type	column	Enum	not NULL	free Allowed values free, enum, range, bool, datetime
             'type'                => $helper->getPropertySchemaTypeForAttribute($attribute),
             // units	column	String 16 characters or less.
             // values	column	ARRAY of String 256 characters or less.
-            'values'              => $helper->getPropertySchemaValuesForAttribute($attribute, $view),
+            'values'              => $helper->getPropertySchemaValuesForAttribute($attribute,
+                $view),
             // visible	column	Boolean		True
             'visible'             => $attribute->getIsVisibleOnFront(),
             // channel_id	column	Integer	not NULL ForeignKey('channel.id') ON DELETE CASCADE
@@ -631,8 +671,11 @@ class GoodsCloud_Sync_Model_Api
      *
      * @return GoodsCloud_Sync_Model_Api_Category
      */
-    public function createCategory(Mage_Catalog_Model_Category $category, Mage_Core_Model_Store $store, $gcParentId)
-    {
+    public function createCategory(
+        Mage_Catalog_Model_Category $category,
+        Mage_Core_Model_Store $store,
+        $gcParentId
+    ) {
         $data = array(
             //        id	column	Integer	not NULL Primary key.
             //        children	relationship	List of Category entries. Cascade delete, delete-orphan.
@@ -671,9 +714,9 @@ class GoodsCloud_Sync_Model_Api
             //    pay_outs	relationship	List of PayOut entries .
             //    email	column	String	not null		256 characters or less .
             'email'               => $this->sanitizeEmail($customer->getEmail()),
-
             //    external_identifier	column	String	256 characters or less .
-            'external_identifier' => $customer->getId(), // this is empty for guest orders
+            'external_identifier' => $customer->getId(),
+            // this is empty for guest orders
 
             //    first_name	column	String			256 characters or less .
             'first_name'          => $this->sanitizeFirstname($customer->getFirstname()),
@@ -682,7 +725,7 @@ class GoodsCloud_Sync_Model_Api
             //    last_name	column	String 256 characters or less .
             'last_name'           => $this->sanitizeLastname($customer->getLastname()),
             //    organization_name	column	String 256 characters or less .
-            'organization_name' => $this->sanitizeOrganisationName(
+            'organization_name'   => $this->sanitizeOrganisationName(
                 $customer->getPrimaryAddress('company')
             ),
             //    prefix	column	String			256 characters or less .
@@ -729,7 +772,8 @@ class GoodsCloud_Sync_Model_Api
             //    billing_address	relationship	Single BillingAddress entry. Cascade delete, delete-orphan.
             'billing_address'     => $apiOrderHelper->getBillingAddress($order),
             //    billing_telephone	relationship	Single BillingTelephone entry. Cascade delete, delete-orphan.
-            'billing_telephone'   => null, // TODO
+            'billing_telephone'   => null,
+            // TODO
             //    credit_notes	relationship	List of CreditNote entries.
             //    invoices	relationship	List of Invoice entries.
             //    order_items	relationship	List of OrderItem entries. Cascade delete, delete-orphan.
@@ -740,11 +784,13 @@ class GoodsCloud_Sync_Model_Api
             //    shipping_address	relationship	Single ShippingAddress entry. Cascade delete, delete-orphan.
             'shipping_address'    => $apiOrderHelper->getShippingAddress($order),
             //    shipping_telephone	relationship	Single ShippingTelephone entry. Cascade delete, delete-orphan.
-            'shipping_telephone'  => null, // TODO
+            'shipping_telephone'  => null,
+            // TODO
             //    sub_pay_ins	relationship	List of SubPayIn entries.
             //    sub_pay_outs	relationship	List of SubPayOut entries.
             //    awaits_routing	column	Boolean	not NULL	False Set this to True to trigger LogisticOrder creation. Afterwards, this attribute is automatically set back to False. Refer to OrderItem routing_status for info regarding the outcome of the LogisticOrder creation process.
-            'awaits_routing'      => true, // TODO what is it for?
+            'awaits_routing'      => true,
+            // TODO what is it for?
             //    currency_code	column	UppercaseEnum	not NULL The currency this object is denominated in. Must be ISO-4217 currency code
             'currency_code'       => $order->getBaseCurrencyCode(),
             //    external_identifier	column	String	not NULL 256 characters or less.
@@ -752,7 +798,9 @@ class GoodsCloud_Sync_Model_Api
             //    extra	column	JSON	not NULL	{}	A JSON object. For storing extra information.
             //    pay_later	column	Boolean	not NULL	False Can this order be shipped before being paid? True for cash-on-delivery and bill-me-later orders.
             //    placed	column	DateTime ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. the time the order was placed in the external channel.
-            'placed'              => $order->getCreatedAtStoreDate()->toString('c'), // c is ISO 8601
+            'placed'              => $order->getCreatedAtStoreDate()
+                ->toString('c'),
+            // c is ISO 8601
             //    source	column	Enum	not NULL Allowed values: manual, return, dummy, magento, amazon, tradebyte, ebay, oxid, effi, pixi, kl_trend, orbis, adyen, dhl manual source is for orders created by staff via the GoodsCloud UI return source is for replacement orders created by staff via the GoodsCloud UI
             'source'              => 'magento',
             //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
@@ -783,8 +831,10 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('order', $data);
     }
 
-    public function addDescriptionToCompanyProduct($descriptionId, $companyProductId)
-    {
+    public function addDescriptionToCompanyProduct(
+        $descriptionId,
+        $companyProductId
+    ) {
         $requestData = array(
             'id'                     => $companyProductId,
             'available_descriptions' => array(
@@ -805,7 +855,9 @@ class GoodsCloud_Sync_Model_Api
      * @internal param int[] $propertySchemaIds
      */
     public function mapPropertySchema2PropertySet(
-        array $requiredPropertySchemaIds, array $optionalPropertySchemaIds, $propertySetId
+        array $requiredPropertySchemaIds,
+        array $optionalPropertySchemaIds,
+        $propertySetId
     ) {
         $data = array(
             'id'                  => $propertySetId,
@@ -834,9 +886,11 @@ class GoodsCloud_Sync_Model_Api
                 unset($data['id']);
                 $response = $this->api->put($url, array(), $data);
             } else {
-                Mage::log("POST . $resource", Zend_Log::DEBUG, 'goodscloud.log');
+                Mage::log("POST . $resource", Zend_Log::DEBUG,
+                    'goodscloud.log');
                 Mage::log($data, Zend_Log::DEBUG, 'goodscloud.log');
-                $response = $this->api->post('/api/internal/' . $resource, array(), $data);
+                $response = $this->api->post('/api/internal/' . $resource,
+                    array(), $data);
             }
             Mage::log('RESPONSE', Zend_Log::DEBUG, 'goodscloud.log');
             Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
@@ -847,7 +901,7 @@ class GoodsCloud_Sync_Model_Api
             return $item;
 
         } catch (Exception $e) {
-            if(isset($response)) {
+            if (isset($response)) {
                 Mage::log('RESPONSE', Zend_Log::DEBUG, 'goodscloud.log');
                 Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
             }
@@ -867,23 +921,27 @@ class GoodsCloud_Sync_Model_Api
 
         if (strpos($msg, 'status code 404') !== false) {
             return new GoodsCloud_Sync_Model_Api_Exception_NoResultFound();
-        } elseif (preg_match('#API .* \(status code (\d*)\): \((.*)\) (.*)\nDETAIL:  (.*)\n(.*)#', $msg, $matches)) {
+        } elseif (preg_match('#API .* \(status code (\d*)\): \((.*)\) (.*)\nDETAIL:  (.*)\n(.*)#',
+            $msg, $matches)) {
             // IntegrityError:
             //        API request failed (status code 400): (IntegrityError) duplicate key value violates unique constraint "channel_label_company_id_key"
             //DETAIL:  Key (label, company_id)=(Default Store Viewasd, 24) already exists.
             //    'INSERT INTO channel (quality_score, label, external_identifier, is_sales, is_inventory, currency_code, language_code, company_id, email_config_id, return_reasons, cancellation_reasons, notification_emails, version) VALUES (%(quality_score)s, %(label)s, %(external_identifier)s, %(is_sales)s, %(is_inventory)s, %(currency_code)s, %(language_code)s, %(company_id)s, %(email_config_id)s, %(return_reasons)s, %(cancellation_reasons)s, %(notification_emails)s, %(version)s) RETURNING channel.id' {'email_config_id': None, 'is_inventory': False, 'external_identifier': u'1', 'company_id': 24, 'quality_score': 0, 'return_reasons': ['other'], 'version': 1, 'is_sales': True, 'language_code': u'en', 'notification_emails': [], 'label': u'Default Store Viewasd', 'currency_code': u'EUR', 'cancellation_reasons': ['consumer', 'test order', 'stock error']}
             if ($matches[2] == 'IntegrityError') {
-                $exception = new GoodsCloud_Sync_Model_Api_Exception_IntegrityError(
+                $exception
+                    = new GoodsCloud_Sync_Model_Api_Exception_IntegrityError(
                     $matches[3] . "\n" . $matches[4], $matches[1], $exception
                 );
                 $exception->setDetails($matches[4]);
                 $exception->setLongDetails($matches[5]);
                 return $exception;
             }
-        } elseif (preg_match('#API .* \(status code (\d*)\): \((.*?)\) (.*)#', $msg, $matches)) {
+        } elseif (preg_match('#API .* \(status code (\d*)\): \((.*?)\) (.*)#',
+            $msg, $matches)) {
             // API request failed (status code 400): (ProgrammingError) can't adapt type 'dict' 'INSERT INTO property_schema (label, external_identifier, description, channel_id, type, values, multivalue, "default", units, min, max, visible, searchable, filterable, comparable) VALUES (%(label)s, %(external_identifier)s, %(description)s, %(channel_id)s, %(type)s, %(values)s, %(multivalue)s, %(default)s, %(units)s, %(min)s, %(max)s, %(visible)s, %(searchable)s, %(filterable)s, %(comparable)s) RETURNING property_schema.id' {'comparable': u'1', 'description': u'', 'searchable': u'1', 'min': None, 'default': None, 'max': None, 'external_identifier': u'92', 'visible': u'0', 'label': u'color', 'channel_id': u'126', 'multivalue': False, 'units': None, 'values': [{u'value': u'', u'label': u''}], 'type': u'enum', 'filterable': True}
             if ($matches[2] == 'ProgrammingError') {
-                $exception = new GoodsCloud_Sync_Model_Api_Exception_ProgrammingError(
+                $exception
+                    = new GoodsCloud_Sync_Model_Api_Exception_ProgrammingError(
                     $matches[2] . "\n" . $matches[3], $matches[1], $exception
                 );
                 $exception->setDetails($matches[3]);

@@ -110,5 +110,4 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
             )
         );
     }
-
 }
