@@ -1,6 +1,6 @@
 <?php
 
-class GoodsCloud_Sync_Model_FirstWrite_Products
+class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
     extends GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
 {
     /**
@@ -27,13 +27,57 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     }
 
     /**
+     * create a list of all products and export them to goodscloud
+     *
+     * @param Mage_Core_Model_Store[] $views
+     *
+     * @return bool
+     * @throws Exception
+     * @throws Mage_Core_Exception
+     */
+    public function createProducts($views)
+    {
+        foreach ($views as $view) {
+            $this->productLists[$view->getId()]
+                = Mage::getModel('goodscloud_sync/firstWrite_productList')
+                ->setFlagCode(
+                    'goodscloud_channel_product_list_' . $view->getId()
+                )
+                ->loadSelf();
+        }
+        if (!$this->isFinished()) {
+            $this->prepareProductLists();
+            $this->createCompanyAndChannelProducts($views);
+        }
+
+        return true;
+    }
+
+    /**
+     * check whether all products were exported
+     *
+     * @return bool
+     */
+    private function isFinished()
+    {
+        $oneUnfinished = true;
+        foreach ($this->productLists as $lists) {
+            if (!$lists->isFinished()) {
+                $oneUnfinished = false;
+            }
+        }
+        return $oneUnfinished;
+    }
+
+    /**
      * @param Mage_Catalog_Model_Product $product
      *
      * @return GoodsCloud_Sync_Model_Api_Company_Product
      */
-    private function createCompanyProduct(Mage_Catalog_Model_Product $product)
-    {
-        return $this->getApi()->createCompanyProduct($product);
+    private function createCompanyProductView(
+        Mage_Catalog_Model_Product $product
+    ) {
+        return $this->getApi()->createCompanyProductView($product);
     }
 
     /**
@@ -42,11 +86,11 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
      *
      * @return GoodsCloud_Sync_Model_Api_Channel_Product
      */
-    private function createChannelProduct(
+    private function createChannelProductView(
         Mage_Catalog_Model_Product $product,
         Mage_Core_Model_Store $store
     ) {
-        return $this->getApi()->createChannelProduct($product, $store);
+        return $this->getApi()->createChannelProductView($product, $store);
     }
 
     /**
@@ -57,6 +101,8 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
      */
     protected function createCompanyAndChannelProducts(array $views)
     {
+
+
         foreach ($views as $view) {
             // make sure to export channel products after _ALL_ company products are created
             if ($view->getId() != Mage_Core_Model_App::ADMIN_STORE_ID
@@ -118,10 +164,10 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     ) {
         if ($view->getCode() == Mage_Core_Model_Store::ADMIN_CODE) {
             /** @var $product Mage_Catalog_Model_Product */
-            $gcProduct = $this->createCompanyProduct($product);
+            $gcProduct = $this->createCompanyProductView($product);
         } else {
             /** @var $product Mage_Catalog_Model_Product */
-            $gcProduct = $this->createChannelProduct($product, $view);
+            $gcProduct = $this->createChannelProductView($product, $view);
         }
 
         $this->apiHelper->addGcProductId(
@@ -132,49 +178,12 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     }
 
     /**
-     * @param Mage_Catalog_Model_Resource_Product_Collection $collection
-     * @param Mage_Core_Model_Store                          $view
-     *
-     * @throws Exception
-     * @throws Mage_Core_Exception
-     */
-    protected function exportProductCollectionPage($collection, $view)
-    {
-        foreach ($collection as $product) {
-            try {
-                if (!$this->apiHelper->getGcProductId(
-                    $product, $view->getId()
-                )
-                ) {
-                    $this->createGcProductAndUpdateProduct($view, $product);
-                }
-                $this->getProductList($view)->removeProductId(
-                    $product->getId()
-                );
-            } catch (Mage_Core_Exception $e) {
-                $collection->save();
-                throw $e;
-            }
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    protected function allCompanyProductsAreCreated()
-    {
-        $adminStoreId = Mage_Core_Model_App::ADMIN_STORE_ID;
-        return !((bool)count($this->productLists[$adminStoreId]));
-    }
-
-    /**
      * @return array
      */
-    protected function getExportedTypes()
+    function getExportedTypes()
     {
         return array(
-            Mage_Catalog_Model_Product_Type::TYPE_SIMPLE,
-            Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL,
+            Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE,
         );
     }
 }
