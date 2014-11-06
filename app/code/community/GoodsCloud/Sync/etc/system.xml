@@ -89,43 +89,5 @@
                 </advanced>
             </groups>
         </goodscloud_sync>
-        <fastsimpleimport module="fastsimpleimport">
-            <class>separator-top</class>
-            <label>Fast Simple Import</label>
-            <tab>service</tab>
-            <frontend_type>text</frontend_type>
-            <sort_order>40</sort_order>
-            <show_in_default>1</show_in_default>
-            <show_in_website>0</show_in_website>
-            <show_in_store>0</show_in_store>
-            <groups>
-                <general>
-                    <fields>
-                        <import_behavior>
-                            <show_in_default>0</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </import_behavior>
-                        <support_nested_arrays>
-                            <show_in_default>0</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </support_nested_arrays>
-                        <clear_field_on_empty_string>
-                            <show_in_default>0</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </clear_field_on_empty_string>
-                        <goodscloud_note>
-                            <label>Goodscloud Information</label>
-                            <frontend_type>hidden</frontend_type>
-                            <comment>Settings partially disabled by Goodscloud Sync Extension.</comment>
-                            <show_in_default>1</show_in_default>
-                            <sort_order>500</sort_order>
-                        </goodscloud_note>
-                    </fields>
-                </general>
-            </groups>
-        </fastsimpleimport>
     </sections>
 </config>

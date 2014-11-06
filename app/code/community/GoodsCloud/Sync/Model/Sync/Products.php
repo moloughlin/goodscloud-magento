@@ -211,6 +211,11 @@ class GoodsCloud_Sync_Model_Sync_Products
 
         /** @var $import AvS_FastSimpleImport_Model_Import */
         $import = Mage::getModel('fastsimpleimport/import');
+        $import->setBehavior(Mage_ImportExport_Model_Import::BEHAVIOR_REPLACE);
+        $import->setUseNestedArrays(true);
+        $import->setIgnoreDuplicates(false);
+        $import->setUnsetEmptyFields(true);
+
         try {
             $import->processProductImport($products);
         } catch (Exception $e) {

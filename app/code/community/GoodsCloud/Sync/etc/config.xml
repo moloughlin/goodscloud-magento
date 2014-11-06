@@ -119,14 +119,6 @@
                 </enum_types>
             </api>
         </goodscloud_sync>
-        <fastsimpleimport>
-            <general>
-                <import_behavior>replace</import_behavior>
-                <partial_indexing>1</partial_indexing>
-                <support_nested_arrays>1</support_nested_arrays>
-                <clear_field_on_empty_string>1</clear_field_on_empty_string>
-            </general>
-        </fastsimpleimport>
     </default>
     <phpunit>
         <suite>
