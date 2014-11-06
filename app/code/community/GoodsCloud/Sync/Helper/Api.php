@@ -366,9 +366,6 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     {
         $prices = array();
 
-        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
-        $apiHelper = Mage::helper('goodscloud_sync/api');
-
         $prices[] = array(
             //id	column	Integer	not NULL Primary key.
             //minimum_quantity	column	Integer	not NULL	1
@@ -382,7 +379,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             //company_product_id	column	Integer	not NULL ForeignKey('company_product.id') ON DELETE CASCADE
             //company_product	relationship	Single CompanyProduct entry.
             //price_list_id	column	Integer	not NULL ForeignKey('price_list.id') ON DELETE CASCADE
-            'price_list_id'    => $apiHelper->getDefaultPriceListId(),
+            'price_list_id'    => $this->getDefaultPriceListId(),
             //price_list	relationship	Single PriceList entry.
             'vat_rate_id'      => $apiHelper->getDefaultVatRate(),
             //vat_rate_id	column	Integer	not NULL ForeignKey('vat_rate.id') ON DELETE RESTRICT The VAT rate originally used for calculating VAT amount.
