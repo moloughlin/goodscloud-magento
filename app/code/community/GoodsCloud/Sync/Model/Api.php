@@ -150,6 +150,35 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @return GoodsCloud_Sync_Model_Api_Invoice_Collection
+     */
+    public function getInvoices()
+    {
+        return $this->get('invoice');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Product_Image_Collection
+     */
+    public function getProductImages()
+    {
+        return $this->get('product_image');
+    }
+
+    public function deleteProductImage($id)
+    {
+        return $this->delete('product_image', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteInvoice($id)
+    {
+        $this->delete('invoice', $id);
+    }
+
+    /**
      * @param int $id
      *
      * @return bool|string
