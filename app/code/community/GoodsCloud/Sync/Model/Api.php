@@ -134,7 +134,7 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
-     * @return GoodsCloud_Sync_Model_Api_Price
+     * @return GoodsCloud_Sync_Model_Api_Price_Collection
      */
     public function getPrices()
     {
@@ -163,6 +163,29 @@ class GoodsCloud_Sync_Model_Api
     public function getProductImages()
     {
         return $this->get('product_image');
+    }
+
+    /**
+     * @return Varien_Data_Collection|Varien_Object
+     */
+    public function getChannelProductViews()
+    {
+        return $this->get('channel_product_view');
+    }
+
+    public function getCompanyProductViews()
+    {
+        return $this->get('company_product_view');
+    }
+
+    public function deleteCompanyProductView($id)
+    {
+        $this->delete('company_product_view', $id);
+    }
+
+    public function deleteChannelProductView($id)
+    {
+        return $this->delete('channel_product_view', $id);
     }
 
     public function deleteProductImage($id)
