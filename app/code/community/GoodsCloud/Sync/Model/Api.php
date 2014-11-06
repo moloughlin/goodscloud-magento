@@ -12,6 +12,7 @@ class GoodsCloud_Sync_Model_Api
     const CUSTOMER_MAX_LENGTH_ORGA_NAME = 256;
     const CUSTOMER_MAX_LENGTH_PREFIX = 256;
     const CUSTOMER_MAX_LENGTH_SUFFIX = 256;
+
     /**
      * @var Goodscloud
      */
@@ -533,7 +534,7 @@ class GoodsCloud_Sync_Model_Api
      * @return GoodsCloud_Sync_Model_Api_Vat_Rate
      * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
      */
-    public function createVatRate()
+    public function createVatRate($data)
     {
 
         /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
@@ -543,8 +544,9 @@ class GoodsCloud_Sync_Model_Api
             //id	column	Integer	not NULL Primary key.
             //channel_vat_rates	relationship	List of ChannelVatRate entries. Cascade delete, delete-orphan.
             //label	column	String	not NULL 256 characters or less.
-            'label'      => 'Magento VAT Rate',
+            'label'      => $data['label'],
             //rate	column	Numeric			 00.00000000
+            'rate'       => $data['rate'],
             //updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //version	column	Integer	not NULL	1	Current version number of this entry, incremented each time it is changed. Read-only.
             //audit_user_id	column	Integer			ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
@@ -577,7 +579,7 @@ class GoodsCloud_Sync_Model_Api
             //    company_product_views	relationship	List of CompanyProductView entries.
             //    inventory_agreements	relationship	List of SourceAgreement entries. Cascade delete, delete-orphan.
             //    prices	relationship	List of Price entries. Cascade delete, delete-orphan.
-            'prices'                 => $apiHelper->createPrices($product),
+            'prices'                 => $apiHelper->createPrices($product, $this),
             //    sales_agreements	relationship	List of SourceAgreement entries. Cascade delete, delete-orphan.
             //    active	column	Boolean	not NULL	True Whether or not this company product is currently active
             'active'                 => $product->getStatus()

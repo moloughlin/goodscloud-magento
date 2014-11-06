@@ -11,6 +11,8 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     const XML_CONFIG_BOOLEAN_SOURCE_MODELS = 'goodscloud_sync/api/boolean_source_models';
     const XML_CONFIG_ENUM_TYPES = 'goodscloud_sync/api/enum_types';
 
+    const XML_CONFIG_VAT_RATES = 'goodscloud_sync/api/vat_rate';
+
     const XML_CONFIG_COMPANY_ID = 'goodscloud_sync/api/company_id';
     const XML_CONFIG_DEFAULT_PRICE_LIST_ID = 'goodscloud_sync/api/default_price_list_id';
     const XML_CONFIG_DEFAULT_VAT_RATE_ID = 'goodscloud_sync/api/default_vat_rate_id';
@@ -362,8 +364,10 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      *
      * @return array
      */
-    public function createPrices(Mage_Catalog_Model_Product $product)
-    {
+    public function createPrices(
+        Mage_Catalog_Model_Product $product,
+        GoodsCloud_Sync_Model_Api $api
+    ) {
         $prices = array();
 
         $prices[] = array(
@@ -381,7 +385,10 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             //price_list_id	column	Integer	not NULL ForeignKey('price_list.id') ON DELETE CASCADE
             'price_list_id'    => $this->getDefaultPriceListId(),
             //price_list	relationship	Single PriceList entry.
-            'vat_rate_id'      => $apiHelper->getDefaultVatRate(),
+            'vat_rate_id'      => $this->createIfNeededAndGetVatRateId(
+                $product,
+                $api
+            ),
             //vat_rate_id	column	Integer	not NULL ForeignKey('vat_rate.id') ON DELETE RESTRICT The VAT rate originally used for calculating VAT amount.
             //vat_rate	relationship	Single VatRate entry.
             //created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
@@ -389,6 +396,58 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         );
 
         return $prices;
+    }
+
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return int
+     */
+    private function createIfNeededAndGetVatRateId(
+        Mage_Catalog_Model_Product $product,
+        GoodsCloud_Sync_Model_Api $api
+    ) {
+        $calc = Mage::getSingleton('tax/calculation');
+        $rates = $calc->getRatesForAllProductTaxClasses(
+            $calc->getDefaultRateRequest()
+        );
+
+        $rate = $rates[$product->getTaxClassId()];
+        $taxClass = Mage::getModel('tax/class')
+            ->load($product->getTaxClassId());
+
+        $label = $taxClass->getClassName() . ' ' . $rate;
+
+        if (!$this->getVateRateId($label)) {
+            $rate = $api->createVatRate(
+                array(
+                    'label' => $label,
+                    'rate'  => $rate,
+                )
+            );
+            $this->setVatRateId($label, $rate->getId());
+        }
+        return $this->getVateRateId($label);
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return int
+     */
+    private function getVateRateId($label)
+    {
+        $cleanLabel = preg_replace('#[^a-zA-Z0-9]#', '_', $label);
+        return Mage::getStoreConfig(self::XML_CONFIG_VAT_RATES . $cleanLabel);
+    }
+
+    private function setVatRateId($label, $id)
+    {
+        $cleanLabel = preg_replace('#[^a-zA-Z0-9]#', '_', $label);
+        $config = Mage::app()->getConfig();
+        $config->saveConfig(self::XML_CONFIG_VAT_RATES . $cleanLabel, $id);
+        $config->reinit();
+        $config->saveCache();
     }
 
     /**
