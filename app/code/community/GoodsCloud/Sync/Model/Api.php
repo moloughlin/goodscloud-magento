@@ -1113,13 +1113,17 @@ class GoodsCloud_Sync_Model_Api
             $item->setData(get_object_vars($response));
             return $item;
         } else {
-            /* @var $collection Varien_Data_Collection */
+            /* @var $collection GoodsCloud_Sync_Model_Api_AbstractCollection */
             $collection = Mage::getModel('goodscloud_sync/api_' . $model
                 . '_collection');
             foreach ($response['objects'] as $objects) {
                 /* @var $item Varien_Object */
                 $item = Mage::getModel('goodscloud_sync/api_' . $model);
                 $collection->addItem($item->setData($objects));
+                $collection->setCurPage($response['page']);
+                // TODO make generic
+                $collection->setPageSize(self::DEFAULT_PAGE_SIZE);
+                $collection->setLastPageNumber($response['total_pages']);
             }
         }
 
