@@ -172,28 +172,35 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
             Mage::getResourceModel('catalog/product_collection')
                 ->setStore($view->getId());
 
-            $lastPageNumber = PHP_INT_MAX;
-            $page = 1;
-            while ($page <= $lastPageNumber) {
+            $numberOfPages = $this->getNumberOfPages(
+                $this->getProductList($view)->getProductList()
+            );
+
+            for ($page = 1; $page <= $numberOfPages; $page++) {
+
                 $ids = $this->getProductList($view)->getProductList();
                 if (empty($ids)) {
                     break;
                 }
-                Mage::log("Page: $page von $lastPageNumber");
+                Mage::log("Page: $page von $numberOfPages");
                 $collection = $this->getProductCollection(
                     $ids,
                     $page,
                     $view->getId()
                 );
 
-                $lastPageNumber = $collection->getLastPageNumber();
-
                 $this->exportProductCollectionPage($collection, $view);
                 $collection->save();
-                $page++;
             }
-            $this->getProductList($view)->save();
         }
+        $this->getProductList($view)->save();
+    }
+
+    private function getNumberOfPages(
+        GoodsCloud_Sync_Model_FirstWrite_ProductList $collection
+    ) {
+        $entries = count($collection);
+        return ceil($entries / self::PAGE_SIZE);
     }
 
     /**
@@ -227,7 +234,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     }
 
     /**
-     * @param Mage_Core_Model_Store $view
+     * @param Mage_Core_Model_Store      $view
      * @param Mage_Catalog_Model_Product $product
      */
     private function createGcProductAndUpdateProduct(
