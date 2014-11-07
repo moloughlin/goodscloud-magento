@@ -592,7 +592,9 @@ class GoodsCloud_Sync_Model_Api
             //    dimensions	column	JSON	not NULL	{} A JSON object.    Indisputable facts about this product like length, weight, and intrastat codes.
             //    gtin	column	String	not NULL 14 characters or less. GTIN-8, GTIN-12, GTIN-13 or GTIN-14, see Wikipedia. All GTINs will be converted to GTIN-14s before insertion, so reading this field will always return a GTIN-14. Alternatively, EAN or UPC can be provided. See these attributes for details.
             //    label	column	String	not NULL 256 characters or less. A short name for this company product.
-            'label'                  => substr($product->getId() . ': ' . $product->getName(), 0, 256),
+            'label'                  => substr(
+                $product->getId() . ': ' . $product->getName(), 0, 256
+            ),
             //    manufacturer_code	column	String 256 characters or less. Unique code used by the manufacturer for this product.
             //    manufacturer_name	column	String 256 characters or less. Name of the manufacturer.
             'manufacturer_name'      => $product->getAttributeText('manufacturer'),
@@ -709,7 +711,9 @@ class GoodsCloud_Sync_Model_Api
             //        company_products	relationship	List of CompanyProduct entries.
             'company_products'       => $apiHelper->getAssociatedGcProducts($product),
             //        label	column	String	256 characters or less. A short name for this product view.
-            'label'                  => substr($product->getId() . ': ' . $product->getName(), 0, 256),
+            'label'                  => substr(
+                $product->getId() . ': ' . $product->getName(), 0, 256
+            ),
             //        preview_image_fragment	column	String 512 characters or less.
             //        updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //        version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
