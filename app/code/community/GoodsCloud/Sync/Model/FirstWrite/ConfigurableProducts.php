@@ -4,11 +4,6 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
     extends GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
 {
     /**
-     * number of products which are exported in one loop
-     */
-    const PAGE_SIZE = 100;
-
-    /**
      * @var GoodsCloud_Sync_Helper_Api
      */
     private $apiHelper;
@@ -46,22 +41,6 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
         }
 
         return true;
-    }
-
-    /**
-     * check whether all products were exported
-     *
-     * @return bool
-     */
-    private function isFinished()
-    {
-        $oneUnfinished = true;
-        foreach ($this->productLists as $lists) {
-            if (!$lists->isFinished()) {
-                $oneUnfinished = false;
-            }
-        }
-        return $oneUnfinished;
     }
 
     /**
@@ -115,7 +94,7 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
                 ->setStore($view->getId());
 
             $numberOfPages = $this->getNumberOfPages(
-                $this->getProductList($view)->getProductList()
+                $this->getProductList($view)
             );
 
             for ($page = 1; $page <= $numberOfPages; $page++) {
@@ -138,13 +117,6 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
         if (isset($view)) {
             $this->getProductList($view)->save();
         }
-    }
-
-    private function getNumberOfPages(
-        GoodsCloud_Sync_Model_FirstWrite_ProductList $collection
-    ) {
-        $entries = count($collection);
-        return ceil($entries / self::PAGE_SIZE);
     }
 
     /**

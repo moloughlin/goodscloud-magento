@@ -210,4 +210,17 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
         $adminStoreId = Mage_Core_Model_App::ADMIN_STORE_ID;
         return !((bool)count($this->productLists[$adminStoreId]));
     }
+
+    /**
+     * @param GoodsCloud_Sync_Model_FirstWrite_ProductList $collection
+     *
+     * @return float
+     */
+    protected function getNumberOfPages(
+        GoodsCloud_Sync_Model_FirstWrite_ProductList $collection
+    ) {
+        $entries = count($collection);
+        return ceil($entries / self::PAGE_SIZE);
+    }
+
 }

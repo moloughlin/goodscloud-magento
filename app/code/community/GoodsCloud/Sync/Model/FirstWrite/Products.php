@@ -4,11 +4,6 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
     extends GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
 {
     /**
-     * number of products which are exported in one loop
-     */
-    const PAGE_SIZE = 100;
-
-    /**
      * @var GoodsCloud_Sync_Helper_Api
      */
     private $apiHelper;
@@ -92,13 +87,6 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
         if (isset($view)) {
             $this->getProductList($view)->save();
         }
-    }
-
-    private function getNumberOfPages(
-        GoodsCloud_Sync_Model_FirstWrite_ProductList $collection
-    ) {
-        $entries = count($collection);
-        return ceil($entries / self::PAGE_SIZE);
     }
 
     /**
