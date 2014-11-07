@@ -76,6 +76,9 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
      */
     protected function getProductList(Mage_Core_Model_Store $view)
     {
+        if (!isset($this->productLists[$view->getId()])) {
+            throw new LogicException('Product list not created yet.');
+        }
         return $this->productLists[$view->getId()];
     }
 
