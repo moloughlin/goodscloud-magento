@@ -41,7 +41,7 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
             $this->productLists[$view->getId()]
                 = Mage::getModel('goodscloud_sync/firstWrite_productList')
                 ->setFlagCode(
-                    'goodscloud_channel_product_list_' . $view->getId()
+                    'goodscloud_channel_product_view_list_' . $view->getId()
                 )
                 ->loadSelf();
         }
