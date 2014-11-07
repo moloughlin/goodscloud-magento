@@ -67,6 +67,10 @@ class GoodsCloud_Sync_Model_FirstWrite
             Mage::log('create products');
             $this->createProducts();
 
+            // create company product views for all configurable products
+            // create channel product view for all store views
+            $this->createProductViews();
+
         } catch (Mage_Core_Exception $e) {
             if (isset($emulation) && isset($initialEnvironmentInfo)) {
                 $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
@@ -74,6 +78,19 @@ class GoodsCloud_Sync_Model_FirstWrite
             throw $e;
         }
         $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
+    }
+
+    private function createProductViews()
+    {
+        /* @var $stores Mage_Core_Model_Store[] */
+        $stores = Mage::app()->getStores(true);
+
+        // make sure admin store is first
+        ksort($stores);
+
+        return Mage::getModel('goodscloud_sync/firstWrite_configurableProducts')
+            ->setApi($this->api)
+            ->createProducts($stores);
     }
 
     /**
