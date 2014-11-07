@@ -18,6 +18,11 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     const XML_CONFIG_DEFAULT_VAT_RATE_ID = 'goodscloud_sync/api/default_vat_rate_id';
 
     /**
+     * @var Mage_Catalog_Model_Entity_Attribute
+     */
+    private $gcProductIdAttribute;
+
+    /**
      * array to map attributesets for the different stores on the property sets
      *
      * format:
@@ -711,5 +716,47 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             }
         }
         return 1;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssociatedGcProducts(Mage_Catalog_Model_Product $product)
+    {
+        if (!($product->getTypeInstance() instanceof
+            Mage_Catalog_Model_Product_Type_Configurable)
+        ) {
+            throw new LogicException('Product is not of type configurable.');
+        }
+
+        /** @var $typeConfig Mage_Catalog_Model_Product_Type_Configurable */
+        $typeConfig = $product->getTypeInstance();
+        $products = $typeConfig->getUsedProducts(
+            array($this->getGcProductIdAttributeId())
+        );
+
+        $gcProductIds = array();
+        foreach ($products as $product) {
+            $ids = json_decode($product->getGcProductIds(), true);
+            $gcProductIds[] = array('id' => $ids[0]);
+        }
+        return $gcProductIds;
+    }
+
+    private function getGcProductIdAttributeId()
+    {
+        $this->initGcProductIdAttribute();
+        return $this->gcProductIdAttribute->getId();
+    }
+
+    private function initGcProductIdAttribute()
+    {
+        if ($this->gcProductIdAttribute === null) {
+            $this->gcProductIdAttribute
+                = Mage::getModel('catalog/entity_attribute');
+            $this->gcProductIdAttribute->loadByCode(
+                'catalog_product', 'gc_product_ids'
+            );
+        }
     }
 }

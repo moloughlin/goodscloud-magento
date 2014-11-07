@@ -67,6 +67,7 @@ class GoodsCloud_Sync_Model_FirstWrite
             Mage::log('create products');
             $products = $this->createProducts();
 
+            // make sure all simple products are written before building views
             if ($products->isFinished()) {
                 $this->createProductViews();
             } else {
