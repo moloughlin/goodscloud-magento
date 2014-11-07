@@ -74,7 +74,7 @@ class GoodsCloud_Sync_Model_FirstWrite_Products
                 ->setStore($view->getId());
 
             $numberOfPages = $this->getNumberOfPages(
-                $this->getProductList($view)->getProductList()
+                $this->getProductList($view)
             );
 
             for ($page = 1; $page <= $numberOfPages; $page++) {
