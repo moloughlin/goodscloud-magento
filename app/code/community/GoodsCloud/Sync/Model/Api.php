@@ -382,7 +382,6 @@ class GoodsCloud_Sync_Model_Api
         Mage::log($params, Zend_Log::DEBUG, 'goodscloud.log');
         try {
             $response = $this->api->get($requestPath, $params);
-            Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
         } catch (Exception $e) {
             try {
                 throw $this->parseErrorMessage($e);
@@ -476,7 +475,7 @@ class GoodsCloud_Sync_Model_Api
 
     public function getConsumerByEmail($email)
     {
-        return $this->getOneBy('consumer', 'email', $email);
+        return $this->getOneBy('consumer', 'email', trim($email));
     }
 
     /**
@@ -1164,7 +1163,7 @@ class GoodsCloud_Sync_Model_Api
         if ($single) {
             /* @var $item Varien_Object */
             $item = Mage::getModel('goodscloud_sync/api_' . $model);
-            $item->setData(get_object_vars($response));
+            $item->setData($response);
             return $item;
         } else {
             /* @var $collection GoodsCloud_Sync_Model_Api_AbstractCollection */
