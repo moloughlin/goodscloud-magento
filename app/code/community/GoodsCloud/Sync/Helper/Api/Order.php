@@ -18,12 +18,14 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
      *
      * @return array
      */
-    public function getOrderItems(Mage_Sales_Model_Order $order)
-    {
+    public function getOrderItems(
+        Mage_Sales_Model_Order $order,
+        GoodsCloud_Sync_Model_Api $api
+    ) {
         $itemsForApiCall = array();
         foreach ($order->getAllItems() as $item) {
             if ($this->isExportable($item)) {
-                $itemsForApiCall[] = $this->getOrderItem($item);
+                $itemsForApiCall[] = $this->getOrderItem($item, $api);
             }
         }
 
@@ -33,10 +35,12 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
     /**
      * @param Mage_Sales_Model_Order_Item $item
      *
-     * @return array|bool
+     * @return array
      */
-    private function getOrderItem(Mage_Sales_Model_Order_Item $item)
-    {
+    private function getOrderItem(
+        Mage_Sales_Model_Order_Item $item,
+        GoodsCloud_Sync_Model_Api $api
+    ) {
         $apiHelper = Mage::helper('goodscloud_sync/api');
         $itemStoreId = $item->getStoreId();
         if (!$itemStoreId) {
@@ -94,7 +98,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    related_order_item_id	column	Integer ForeignKey('order_item.id') ON DELETE RESTRICT
             //    related_order_item	relationship	Single OrderItem entry.
             //    vat_rate_id	column	Integer	not NULL ForeignKey('vat_rate.id') ON DELETE RESTRICT The VAT rate that was originally used for calculating the total VAT amount. This is purely for record-keeping and will not be used for calculations.
-            'vat_rate_id'         => $apiHelper->getRateIdForItem($item, $this),
+            'vat_rate_id'         => $apiHelper->getRateIdForItem($item, $api),
             // TODO check whether vat rate already exists, if not, create it.
             //    vat_rate	relationship	Single VatRate entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.

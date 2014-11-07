@@ -465,9 +465,20 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         Mage_Sales_Model_Order_Item $item,
         GoodsCloud_Sync_Model_Api $api
     ) {
+
+        $taxClass = Mage::getModel('tax/class');
+
+        // special case, tax class with id doesn't exist
+
+        if ($item->getProduct()->getTaxClassId() == 0) {
+            $taxClass->setClassName('None');
+        } else {
+            $taxClass->load($item->getProduct()->getTaxClassId());
+        }
+
         return $this->createVatRateIfNeeded(
             $api,
-            $item->getProduct()->getTaxClassId(),
+            $taxClass,
             $item->getTaxPercent()
         );
     }
