@@ -94,8 +94,8 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    related_order_item_id	column	Integer ForeignKey('order_item.id') ON DELETE RESTRICT
             //    related_order_item	relationship	Single OrderItem entry.
             //    vat_rate_id	column	Integer	not NULL ForeignKey('vat_rate.id') ON DELETE RESTRICT The VAT rate that was originally used for calculating the total VAT amount. This is purely for record-keeping and will not be used for calculations.
-            'vat_rate_id'         => 48,
-            // TODO
+            'vat_rate_id'         => $apiHelper->getRateIdForItem($item, $this),
+            // TODO check whether vat rate already exists, if not, create it.
             //    vat_rate	relationship	Single VatRate entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    currency_code	hybrid_property The currency code that this item is denominated in. Must be ISO-4217 currency code.
@@ -173,7 +173,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
     public function getShippingAddress(Mage_Sales_Model_Order $order)
     {
         $address = $order->getShippingAddress();
-        if($order->getIsVirtual()) {
+        if ($order->getIsVirtual()) {
             // shipping address is null for virtual orders
             return array();
         }

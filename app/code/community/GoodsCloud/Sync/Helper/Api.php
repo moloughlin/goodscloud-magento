@@ -405,17 +405,43 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     private function createIfNeededAndGetVatRateId(
         Mage_Catalog_Model_Product $product,
-        GoodsCloud_Sync_Model_Api $api
+        GoodsCloud_Sync_Model_Api $api,
+        Mage_Core_Model_Store $store = null
     ) {
         $calc = Mage::getSingleton('tax/calculation');
         $rates = $calc->getRatesForAllProductTaxClasses(
-            $calc->getDefaultRateRequest()
+            $calc->getDefaultRateRequest($store)
         );
 
-        $rate = $rates[$product->getTaxClassId()];
-        $taxClass = Mage::getModel('tax/class')
-            ->load($product->getTaxClassId());
+        $taxClass = Mage::getModel('tax/class');
 
+        // special case, tax class with id doesn't exist
+
+        if ($product->getTaxClassId() == 0) {
+            $rate = 0;
+            $taxClass->setClassName('None');
+        } else {
+            $rate = $rates[$product->getTaxClassId()];
+
+            $taxClass->load($product->getTaxClassId());
+        }
+
+
+        return $this->createVatRateIfNeeded($api, $taxClass, $rate);
+    }
+
+    /**
+     * @param GoodsCloud_Sync_Model_Api $api
+     * @param Mage_Tax_Model_Class      $taxClass
+     * @param float                     $rate
+     *
+     * @return int
+     */
+    private function createVatRateIfNeeded(
+        GoodsCloud_Sync_Model_Api $api,
+        Mage_Tax_Model_Class $taxClass,
+        $rate
+    ) {
         $label = $taxClass->getClassName() . ' ' . $rate;
 
         if (!$this->getVateRateId($label)) {
@@ -428,6 +454,22 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             $this->setVatRateId($label, $rate->getId());
         }
         return $this->getVateRateId($label);
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order_Item $item
+     *
+     * @return float
+     */
+    public function getRateIdForItem(
+        Mage_Sales_Model_Order_Item $item,
+        GoodsCloud_Sync_Model_Api $api
+    ) {
+        return $this->createVatRateIfNeeded(
+            $api,
+            $item->getProduct()->getTaxClassId(),
+            $item->getTaxPercent()
+        );
     }
 
     /**
