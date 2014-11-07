@@ -65,11 +65,18 @@ class GoodsCloud_Sync_Model_FirstWrite
             // create company products (if needed) for all products
             // create channel products for all store views
             Mage::log('create products');
-            $this->createProducts();
+            $products = $this->createProducts();
 
+            if ($products->isFinished()) {
+                $this->createProductViews();
+            } else {
+                throw new RuntimeException(
+                    'Not all simple/virtual products exported, but eport aborted?'
+                );
+            }
             // create company product views for all configurable products
             // create channel product view for all store views
-            $this->createProductViews();
+
 
         } catch (Mage_Core_Exception $e) {
             if (isset($emulation) && isset($initialEnvironmentInfo)) {
@@ -94,7 +101,7 @@ class GoodsCloud_Sync_Model_FirstWrite
     }
 
     /**
-     * @return boolean
+     * @return GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
      */
     private function createProducts()
     {

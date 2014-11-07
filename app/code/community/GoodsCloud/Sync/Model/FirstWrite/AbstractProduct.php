@@ -31,7 +31,7 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
      *
      * @param Mage_Core_Model_Store[] $views
      *
-     * @return bool
+     * @return GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
      * @throws Exception
      * @throws Mage_Core_Exception
      */
@@ -50,7 +50,7 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
             $this->createCompanyAndChannelProducts($views);
         }
 
-        return true;
+        return $this;
     }
 
     /**
@@ -58,7 +58,7 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
      *
      * @return bool
      */
-    private function isFinished()
+    public function isFinished()
     {
         $oneUnfinished = true;
         foreach ($this->productLists as $lists) {
