@@ -3,18 +3,6 @@
 class GoodsCloud_Sync_Model_FirstWrite_Products
     extends GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
 {
-    /**
-     * @var GoodsCloud_Sync_Helper_Api
-     */
-    private $apiHelper;
-
-    /**
-     *
-     */
-    function __construct()
-    {
-        $this->apiHelper = Mage::helper('goodscloud_sync/api');
-    }
 
     /**
      * @param Mage_Catalog_Model_Product $product

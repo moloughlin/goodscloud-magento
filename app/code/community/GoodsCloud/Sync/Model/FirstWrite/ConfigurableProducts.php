@@ -4,19 +4,6 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
     extends GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
 {
     /**
-     * @var GoodsCloud_Sync_Helper_Api
-     */
-    private $apiHelper;
-
-    /**
-     *
-     */
-    function __construct()
-    {
-        $this->apiHelper = Mage::helper('goodscloud_sync/api');
-    }
-
-    /**
      * create a list of all products and export them to goodscloud
      *
      * @param Mage_Core_Model_Store[] $views

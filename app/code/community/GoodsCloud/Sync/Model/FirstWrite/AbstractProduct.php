@@ -16,12 +16,12 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
     /**
      * @var GoodsCloud_Sync_Helper_Api
      */
-    private $apiHelper;
+    protected $apiHelper;
 
     /**
      *
      */
-    function __construct()
+    public function __construct()
     {
         $this->apiHelper = Mage::helper('goodscloud_sync/api');
     }
