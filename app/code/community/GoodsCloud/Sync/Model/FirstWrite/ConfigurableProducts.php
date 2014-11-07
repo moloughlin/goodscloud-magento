@@ -9,11 +9,6 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
     const PAGE_SIZE = 100;
 
     /**
-     * @var GoodsCloud_Sync_Model_FirstWrite_ProductList[]
-     */
-    private $productLists = array();
-
-    /**
      * @var GoodsCloud_Sync_Helper_Api
      */
     private $apiHelper;

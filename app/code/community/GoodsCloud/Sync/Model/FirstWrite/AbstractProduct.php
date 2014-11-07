@@ -11,7 +11,7 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
     /**
      * @var GoodsCloud_Sync_Model_FirstWrite_ProductList[]
      */
-    private $productLists = array();
+    protected $productLists = array();
 
     /**
      * @var GoodsCloud_Sync_Helper_Api
