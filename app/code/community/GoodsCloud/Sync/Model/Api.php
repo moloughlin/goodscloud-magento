@@ -578,7 +578,9 @@ class GoodsCloud_Sync_Model_Api
             //    company_product_views	relationship	List of CompanyProductView entries.
             //    inventory_agreements	relationship	List of SourceAgreement entries. Cascade delete, delete-orphan.
             //    prices	relationship	List of Price entries. Cascade delete, delete-orphan.
-            'prices'                 => $apiHelper->createPrices($product, $this),
+            'prices'                 => $apiHelper->createPrices(
+                $product, $this
+            ),
             //    sales_agreements	relationship	List of SourceAgreement entries. Cascade delete, delete-orphan.
             //    active	column	Boolean	not NULL	True Whether or not this company product is currently active
             'active'                 => $product->getStatus()
@@ -945,7 +947,9 @@ class GoodsCloud_Sync_Model_Api
             //    credit_notes	relationship	List of CreditNote entries.
             //    invoices	relationship	List of Invoice entries.
             //    order_items	relationship	List of OrderItem entries. Cascade delete, delete-orphan.
-            'order_items'         => $apiOrderHelper->getOrderItems($order, $this),
+            'order_items'         => $apiOrderHelper->getOrderItems(
+                $order, $this
+            ),
             //    replaced_order_return_items	relationship	List of OrderReturnItem entries.
             //    returns	relationship	List of OrderReturn entries.
             //    shipments	relationship	List of Shipment entries.
