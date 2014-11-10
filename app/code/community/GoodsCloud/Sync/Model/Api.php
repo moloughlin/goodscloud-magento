@@ -753,7 +753,7 @@ class GoodsCloud_Sync_Model_Api
             //    property_set	relationship	Single PropertySet entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    chosen_images	relationship	List of ProductImage entries.
-            'chosen_images',
+            #'chosen_images',
             // TODO
 
         );
