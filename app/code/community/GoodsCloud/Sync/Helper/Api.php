@@ -743,12 +743,18 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         return $gcProductIds;
     }
 
+    /**
+     * @return Mage_Catalog_Model_Entity_Attribute
+     */
     private function getGcProductIdAttributeId()
     {
         $this->initGcProductIdAttribute();
         return $this->gcProductIdAttribute->getId();
     }
 
+    /**
+     * @throws Mage_Core_Exception
+     */
     private function initGcProductIdAttribute()
     {
         if ($this->gcProductIdAttribute === null) {
@@ -758,5 +764,54 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                 'catalog_product', 'gc_product_ids'
             );
         }
+    }
+
+    public function getSeoData(Mage_Catalog_Model_Product $product)
+    {
+        // TODO implement
+        return null;
+    }
+
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     * @param Mage_Core_Model_Store      $store
+     *
+     * @return array
+     * @throws Mage_Core_Exception
+     */
+    public function getGcCategories(
+        Mage_Catalog_Model_Product $product,
+        Mage_Core_Model_Store $store
+    ) {
+        $store = Mage::app()->getStore($store);
+        $gcCategories = array();
+
+        /** @var $collection Mage_Catalog_Model_Resource_Category_Collection */
+        $collection = $product->getCategoryCollection();
+        $collection->addAttributeToSelect('gc_category_ids');
+        foreach ($collection as $categry) {
+            $gcCategoryIds = json_decode($categry->getGcCategoryIds(), true);
+            $gcCategories[] = array(
+                'id' => $gcCategoryIds[$store->getGcChannelId()],
+            );
+        }
+
+        return $gcCategories;
+    }
+
+    /**
+     * view and company product id are the same for magento
+     *
+     * because company views are mapped to configurables and company products
+     * are mapped to simple items, so looking up the connection to store view 0
+     * (which is company in goodscloud) is easy
+     *
+     * @param $product
+     *
+     * @return int
+     */
+    public function getCompanyProductViewId($product)
+    {
+        return $this->getCompanyProductId($product);
     }
 }
