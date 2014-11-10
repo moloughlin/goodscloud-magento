@@ -167,20 +167,23 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
-     * @return Varien_Data_Collection|Varien_Object
+     * @param array $filters
+     *
+     * @return GoodsCloud_Sync_Model_Api_Channel_Product_View_Collection
      */
-    public function getChannelProductViews()
+    public function getChannelProductViews($filters)
     {
-        return $this->get('channel_product_view');
+        return $this->get('channel_product_view', $filters);
     }
 
-    public function getCompanyProductViews()
     /**
      * @param $filters
      *
+     * @return GoodsCloud_Sync_Model_Api_Company_Product_View_Collection
      */
+    public function getCompanyProductViews($filters)
     {
-        return $this->get('company_product_view');
+        return $this->get('company_product_view', $filters);
     }
 
     /**
