@@ -46,6 +46,16 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
         if (!$itemStoreId) {
             $itemStoreId = Mage::app()->getAnyStoreView()->getId();
         }
+
+        if ($item->getParentItem()) {
+            $totalNet = $item->getParentItem()->getBaseRowTotal();
+            $totalVatAmount = $item->getParentItem()->getBaseTaxAmount();
+        } else {
+            $totalNet = $item->getBaseRowTotal();
+            $totalVatAmount = $item->getBaseTaxAmount();
+        }
+
+
         return array(
             //    id	column	Integer	not NULL	 Primary key.
             //    credit_note_items	relationship	List of CreditNoteItem entries.
@@ -59,7 +69,6 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    gtin	column	String	not NULL 14 characters or less. GTIN-8, GTIN-12, GTIN-13 or GTIN-14, see Wikipedia. All GTINs will be converted to GTIN-14s before insertion, so reading this field will always return a GTIN-14. Alternatively, EAN or UPC can be provided. See these attributes for details.
             'gtin'                => $item->getProduct()
                 ->getDataUsingMethod($apiHelper->getIdentifierAttribute()),
-            # TODO calcualte gtin or just omit it if not present?
             //    net	column	Numeric	not NULL 00000000.00 The original net price for quantity one of this item.
             'net'                 => $this->sanitizePrice($item->getBasePrice()),
             //    quantity	column	Integer	not NULL
@@ -80,9 +89,9 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             'routing_status'      => self::ROUTING_STATUS_ACTIVE,
             // TODO is this correct?
             //    total_net	column	Numeric	not NULL 00000000.00 The total net price for the total quantity of products in this item.
-            'total_net'           => $this->sanitizePrice($item->getBaseRowTotal()), // TODO get price from parent if configurable
+            'total_net'           => $this->sanitizePrice($totalNet),
             //    total_vat_amount	column	Numeric 00000000.00 The total VAT amount for the total quantity of all products in this item.
-            'total_vat_amount'    => $this->sanitizePrice($item->getBaseTaxAmount()),// TODO get price from parent if configurable
+            'total_vat_amount'    => $this->sanitizePrice($totalVatAmount),
             //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
             //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
