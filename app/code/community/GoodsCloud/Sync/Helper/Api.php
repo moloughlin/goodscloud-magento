@@ -766,10 +766,32 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         }
     }
 
-    public function getSeoData(Mage_Catalog_Model_Product $product)
+    public function getSeoData(Mage_Catalog_Model_Product $product, $store)
     {
-        // TODO implement
-        return null;
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+        return array(
+            //    id	column	Integer	not NULL Primary key.
+            //    canonical	column	Boolean	not NULL	False
+            //    label	column	String 256 characters or less.
+            'label' => $product->getName(),
+            //    language_code	column	LowercaseEnum	not NULL The language for this SEO entry. Must be ISO-639 codes
+            'language_code' => $apiHelper->getLanguage($store),
+            //    meta_description	column	Text Any length allowed.
+            'meta_description' => $product->getMetaDescription(),
+            //    meta_keyword	column	Text Any length allowed.
+            'meta_keyword' => $product->getMetaKeyword(),
+            //    meta_robots	column	Text Any length allowed.
+            //    meta_title	column	Text Any length allowed.
+            'meta_title' => $product->getMetaTitle(),
+            //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+            //    url_path	column	Text Any length allowed.
+            'url_path' => $product->getUrlPath(),
+            //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
+            //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
+            //    channel_product_view_id	column	Integer	not NULL ForeignKey('channel_product_view.id') ON DELETE CASCADE
+            //    channel_product_view	relationship	Single ChannelProductView entry.
+            //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
+        );
     }
 
     /**
