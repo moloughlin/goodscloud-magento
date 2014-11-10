@@ -1105,8 +1105,11 @@ class GoodsCloud_Sync_Model_Api
             //    billing_address	relationship	Single BillingAddress entry. Cascade delete, delete-orphan.
             'billing_address'     => $apiOrderHelper->getBillingAddress($order),
             //    billing_telephone	relationship	Single BillingTelephone entry. Cascade delete, delete-orphan.
-            'billing_telephone'   => null,
-            // TODO
+            'billing_telephone'   => array(
+                'type'   => 'mobile',
+                // TODO what to choose if we don't know what it is?
+                'number' => $order->getBillingAddress()->getTelephone()
+            ),
             //    credit_notes	relationship	List of CreditNote entries.
             //    invoices	relationship	List of Invoice entries.
             //    order_items	relationship	List of OrderItem entries. Cascade delete, delete-orphan.
@@ -1119,8 +1122,11 @@ class GoodsCloud_Sync_Model_Api
             //    shipping_address	relationship	Single ShippingAddress entry. Cascade delete, delete-orphan.
             'shipping_address'    => $apiOrderHelper->getShippingAddress($order),
             //    shipping_telephone	relationship	Single ShippingTelephone entry. Cascade delete, delete-orphan.
-            'shipping_telephone'  => null,
-            // TODO
+            'shipping_telephone'  => array(
+                'type'   => 'mobile',
+                // TODO what to choose if we don't know what it is?
+                'number' => $order->getShippingAddress()->getTelephone()
+            ),
             //    sub_pay_ins	relationship	List of SubPayIn entries.
             //    sub_pay_outs	relationship	List of SubPayOut entries.
             //    awaits_routing	column	Boolean	not NULL	False Set this to True to trigger LogisticOrder creation. Afterwards, this attribute is automatically set back to False. Refer to OrderItem routing_status for info regarding the outcome of the LogisticOrder creation process.
