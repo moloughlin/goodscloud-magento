@@ -169,6 +169,14 @@ class GoodsCloud_Sync_Model_Sync_Products
     }
 
     /**
+     * merge both arrays to get a format of this type:
+     * array(
+     *  company_product, channel_product, channel_product,
+     *  company_product, channel_product, channel_product,
+     *  company_product, channel_product, channel_product,
+     * )
+     *
+     *
      * @param array $companyProducts
      * @param array $channelProducts
      *
@@ -188,6 +196,8 @@ class GoodsCloud_Sync_Model_Sync_Products
             $first = true;
             foreach ($line as $entry) {
                 if (!$first) {
+                    // only the first entry should an sku entry, so magento knows
+                    // that we have different views for the same product
                     unset($entry['sku']);
                 }
                 $import[] = $entry;
@@ -195,7 +205,6 @@ class GoodsCloud_Sync_Model_Sync_Products
             }
 
             // only import every row once
-            unset($companyProducts[$sku]);
             unset($companyProducts[$sku]);
         }
 
