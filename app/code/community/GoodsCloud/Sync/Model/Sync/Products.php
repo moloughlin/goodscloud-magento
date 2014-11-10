@@ -127,7 +127,7 @@ class GoodsCloud_Sync_Model_Sync_Products
         $products = $this->api->getCompanyProducts($filters);
         /** @var $companyProductArrayGenerator GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor */
         $companyProductArrayGenerator = Mage::getModel(
-            'goodscloud_sync/sync_companyProduct_arrayConstructor'
+            'goodscloud_sync/sync_company_product_arrayConstructor'
         );
 
         return $companyProductArrayGenerator
@@ -158,7 +158,7 @@ class GoodsCloud_Sync_Model_Sync_Products
         $products = $this->api->getChannelProducts($filters);
         /** @var $channelProductArrayGenerator GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor */
         $channelProductArrayGenerator = Mage::getModel(
-            'goodscloud_sync/sync_channelProduct_arrayConstructor'
+            'goodscloud_sync/sync_channel_product_arrayConstructor'
         );
 
         return $channelProductArrayGenerator

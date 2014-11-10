@@ -1,6 +1,6 @@
 <?php
 
-class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
+class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
     extends GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
 {
 
