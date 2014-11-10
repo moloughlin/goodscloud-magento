@@ -175,20 +175,37 @@ class GoodsCloud_Sync_Model_Api
     }
 
     public function getCompanyProductViews()
+    /**
+     * @param $filters
+     *
+     */
     {
         return $this->get('company_product_view');
     }
 
+    /**
+     * @param $id
+     */
     public function deleteCompanyProductView($id)
     {
         $this->delete('company_product_view', $id);
     }
 
+    /**
+     * @param $id
+     *
+     * @return bool|string
+     */
     public function deleteChannelProductView($id)
     {
         return $this->delete('channel_product_view', $id);
     }
 
+    /**
+     * @param $id
+     *
+     * @return bool|string
+     */
     public function deleteProductImage($id)
     {
         return $this->delete('product_image', $id);
@@ -454,11 +471,23 @@ class GoodsCloud_Sync_Model_Api
         );
     }
 
+    /**
+     * @param $id
+     *
+     * @return GoodsCloud_Sync_Model_Api_Company_Product
+     */
     public function getCompanyProductById($id)
     {
         return $this->getById('company_product', $id);
     }
 
+    /**
+     * @param $model
+     * @param $attribute
+     * @param $value
+     *
+     * @return Varien_Object
+     */
     private function getOneBy($model, $attribute, $value)
     {
         $filters = array(
@@ -473,6 +502,11 @@ class GoodsCloud_Sync_Model_Api
             self::DEFAULT_OFFSET, array(), true);
     }
 
+    /**
+     * @param $email
+     *
+     * @return GoodsCloud_Sync_Model_Api_Consumer
+     */
     public function getConsumerByEmail($email)
     {
         return $this->getOneBy('consumer', 'email', trim($email));
@@ -625,6 +659,15 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('company_product', $data);
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     * @param Mage_Core_Model_Store      $store
+     *
+     * @return GoodsCloud_Sync_Model_Api_Channel_Product_View
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws GoodsCloud_Sync_Model_Api_Exception_NoResultFound
+     * @throws Mage_Core_Exception
+     */
     public function createChannelProductView(
         Mage_Catalog_Model_Product $product,
         Mage_Core_Model_Store $store
@@ -761,6 +804,14 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('channel_product', $data);
     }
 
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     *
+     * @return GoodsCloud_Sync_Model_Api_Company_Product_View
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws GoodsCloud_Sync_Model_Api_Exception_NoResultFound
+     * @throws Mage_Core_Exception
+     */
     public function createCompanyProductView(
         Mage_Catalog_Model_Product $product
     ) {
@@ -975,6 +1026,14 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('category', $data);
     }
 
+    /**
+     * @param Mage_Customer_Model_Customer $customer
+     *
+     * @return GoodsCloud_Sync_Model_Api_Consumer
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws GoodsCloud_Sync_Model_Api_Exception_NoResultFound
+     * @throws Mage_Core_Exception
+     */
     public function createConsumer(Mage_Customer_Model_Customer $customer)
     {
         $apiHelper = Mage::helper('goodscloud_sync/api');
@@ -1105,6 +1164,14 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('order', $data);
     }
 
+    /**
+     * @param int $descriptionId
+     * @param int $companyProductId
+     *
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws GoodsCloud_Sync_Model_Api_Exception_NoResultFound
+     * @throws Mage_Core_Exception
+     */
     public function addDescriptionToCompanyProduct(
         $descriptionId,
         $companyProductId
@@ -1121,6 +1188,14 @@ class GoodsCloud_Sync_Model_Api
         $this->putPost('company_product', $requestData);
     }
 
+    /**
+     * @param int $descriptionId
+     * @param int $compayProductViewId
+     *
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws GoodsCloud_Sync_Model_Api_Exception_NoResultFound
+     * @throws Mage_Core_Exception
+     */
     public function addDescriptionToCompanyProductView(
         $descriptionId,
         $compayProductViewId
@@ -1242,31 +1317,61 @@ class GoodsCloud_Sync_Model_Api
         throw new Mage_Core_Exception('Unknown Error: ' . $msg);
     }
 
+    /**
+     * @param string $email
+     *
+     * @return string
+     */
     private function sanitizeEmail($email)
     {
         return substr($email, 0, self::CUSTOMER_MAX_EMAIL_LENGTH);
     }
 
+    /**
+     * @param string $firstname
+     *
+     * @return string
+     */
     private function sanitizeFirstname($firstname)
     {
         return substr($firstname, 0, self::CUSTOMER_MAX_FIRSTNAME_LENGTH);
     }
 
+    /**
+     * @param string $lastname
+     *
+     * @return string
+     */
     private function sanitizeLastname($lastname)
     {
         return substr($lastname, 0, self::CUSTOMER_MAX_LASTNAME_LENGTH);
     }
 
+    /**
+     * @param string $orgaName
+     *
+     * @return string
+     */
     private function sanitizeOrganisationName($orgaName)
     {
         return substr($orgaName, 0, self::CUSTOMER_MAX_LENGTH_ORGA_NAME);
     }
 
+    /**
+     * @param string $prefix
+     *
+     * @return string
+     */
     private function sanitizePrefix($prefix)
     {
         return substr($prefix, 0, self::CUSTOMER_MAX_LENGTH_PREFIX);
     }
 
+    /**
+     * @param string $suffix
+     *
+     * @return string
+     */
     private function sanitizeSuffix($suffix)
     {
         return substr($suffix, 0, self::CUSTOMER_MAX_LENGTH_SUFFIX);
