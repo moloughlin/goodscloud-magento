@@ -99,11 +99,10 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    related_order_item	relationship	Single OrderItem entry.
             //    vat_rate_id	column	Integer	not NULL ForeignKey('vat_rate.id') ON DELETE RESTRICT The VAT rate that was originally used for calculating the total VAT amount. This is purely for record-keeping and will not be used for calculations.
             'vat_rate_id'         => $apiHelper->getRateIdForItem($item, $api),
-            // TODO check whether vat rate already exists, if not, create it.
             //    vat_rate	relationship	Single VatRate entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    currency_code	hybrid_property The currency code that this item is denominated in. Must be ISO-4217 currency code.
-            #'currency_code'       => $item->getOrder()->getBaseCurrencyCode()
+            'currency_code'       => $item->getOrder()->getBaseCurrencyCode()
             //    delivery_status	hybrid_property If there are no logistic_order_items or no shipments for any of those logistic_order_items, this has the special value N/A. If all logistic_order_items have shipments with the same delivery_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
             //    ean	hybrid_property The EAN representation of the underlying GTIN value. None if conversion is not possible. Supported formats: EAN-8, EAN-13
             //    packing_status	hybrid_property If there are no logistic_order_items, this has the special value N/A. If all logistic_order_items have the same packing_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
