@@ -47,14 +47,11 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             $itemStoreId = Mage::app()->getAnyStoreView()->getId();
         }
 
+        // prices of configurables need to come from the parent
+        $itemToGetPricesFrom = $item;
         if ($item->getParentItem()) {
-            $totalNet = $item->getParentItem()->getBaseRowTotal();
-            $totalVatAmount = $item->getParentItem()->getBaseTaxAmount();
-        } else {
-            $totalNet = $item->getBaseRowTotal();
-            $totalVatAmount = $item->getBaseTaxAmount();
+            $itemToGetPricesFrom = $item->getParentItem();
         }
-
 
         return array(
             //    id	column	Integer	not NULL	 Primary key.
@@ -70,7 +67,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             'gtin'                => $item->getProduct()
                 ->getDataUsingMethod($apiHelper->getIdentifierAttribute()),
             //    net	column	Numeric	not NULL 00000000.00 The original net price for quantity one of this item.
-            'net'                 => $this->sanitizePrice($item->getBasePrice()),
+            'net'                 => $this->sanitizePrice($itemToGetPricesFrom->getBasePrice()),
             //    quantity	column	Integer	not NULL
             'quantity'            => (int)$this->sanitizeInt($item->getQtyOrdered()),
             //    routing_status	column	Enum	not NULL	active Allowed values draft, active, on hold, low stock, backorder, canceled Allowed transitions:
@@ -89,9 +86,9 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             'routing_status'      => self::ROUTING_STATUS_ACTIVE,
             // TODO is this correct?
             //    total_net	column	Numeric	not NULL 00000000.00 The total net price for the total quantity of products in this item.
-            'total_net'           => $this->sanitizePrice($totalNet),
+            'total_net'           => $this->sanitizePrice($itemToGetPricesFrom->getBaseRowTotal()),
             //    total_vat_amount	column	Numeric 00000000.00 The total VAT amount for the total quantity of all products in this item.
-            'total_vat_amount'    => $this->sanitizePrice($totalVatAmount),
+            'total_vat_amount'    => $this->sanitizePrice($itemToGetPricesFrom->getBaseTaxAmount()),
             //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
             //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
@@ -111,11 +108,12 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    vat_rate	relationship	Single VatRate entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    currency_code	hybrid_property The currency code that this item is denominated in. Must be ISO-4217 currency code.
-            'currency_code'       => $item->getOrder()->getBaseCurrencyCode()
+            'currency_code'       => $item->getOrder()->getBaseCurrencyCode(),
             //    delivery_status	hybrid_property If there are no logistic_order_items or no shipments for any of those logistic_order_items, this has the special value N/A. If all logistic_order_items have shipments with the same delivery_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
             //    ean	hybrid_property The EAN representation of the underlying GTIN value. None if conversion is not possible. Supported formats: EAN-8, EAN-13
             //    packing_status	hybrid_property If there are no logistic_order_items, this has the special value N/A. If all logistic_order_items have the same packing_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
             //    total_gross	hybrid_property The total gross price for the total quantity of products in this item. Read-only.
+            'total_gross'         => $this->sanitizePrice($itemToGetPricesFrom->getPriceInclTax()),
             //    upc	hybrid_property The UPC-A representation of the underlying GTIN value. None if conversion is not possible.
             //    parent	property	Read-only.
         );
