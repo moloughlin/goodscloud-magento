@@ -108,7 +108,6 @@ class Goodscloud
         } else {
             curl_setopt($ch, CURLOPT_URL, $uri . $path);
         }
-        curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1:8888');
 
         // reset before request (due to keepalive)
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
