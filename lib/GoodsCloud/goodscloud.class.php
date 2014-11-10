@@ -133,7 +133,7 @@ class Goodscloud
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-        // Get the response and close the channel.
+        // Get the response
         $result = curl_exec($ch);
         $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $decodedResult = json_decode($result, true);

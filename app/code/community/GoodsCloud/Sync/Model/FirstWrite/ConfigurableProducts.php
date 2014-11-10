@@ -62,8 +62,6 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
      */
     protected function createCompanyAndChannelProducts(array $views)
     {
-
-
         foreach ($views as $view) {
             // make sure to export channel products after _ALL_ company products are created
             if ($view->getId() != Mage_Core_Model_App::ADMIN_STORE_ID

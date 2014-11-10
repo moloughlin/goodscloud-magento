@@ -721,8 +721,9 @@ class GoodsCloud_Sync_Model_Api
             'packaging_unit'        => $apiHelper->getPackagingUnit($product),
             // physical_quantity	column	Integer	not NULL The total physical quantity of this product in this channel. Read-only.
             //    properties	column	JSON	not NULL	{} A JSON object.
-            'properties'            => $apiHelper->getPropertiesWithValues($product,
-                $store),
+            'properties'            => $apiHelper->getPropertiesWithValues(
+                $product, $store
+            ),
             //    reserved_quantity	column	Integer	not NUL The quantity of the product in this channel that is reserved for presales or replacements Read-only.
             //    safety_quantity	column	Integer	not NULL	0 The quantity of this product that must always be kept in stock, e.g. for photos to be taken, or as a buffer.
             //    sku	column	String 256 characters or less. The SKU (stock-keeping unit) used to track this product in this channel.
@@ -752,6 +753,9 @@ class GoodsCloud_Sync_Model_Api
             //    property_set	relationship	Single PropertySet entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    chosen_images	relationship	List of ProductImage entries.
+            'chosen_images',
+            // TODO
+
         );
 
         return $this->putPost('channel_product', $data);
@@ -786,6 +790,14 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('company_product_view', $data);
     }
 
+    /**
+     * @param array $descriptionData
+     *
+     * @return GoodsCloud_Sync_Model_Api_Product_Description
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws GoodsCloud_Sync_Model_Api_Exception_NoResultFound
+     * @throws Mage_Core_Exception
+     */
     public function createDescription($descriptionData)
     {
         return $this->putPost('product_description', $descriptionData);
