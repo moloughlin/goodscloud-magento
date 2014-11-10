@@ -8,12 +8,19 @@ class GoodsCloud_Sync_Helper_Api_Import extends Mage_Core_Helper_Abstract
      */
     private $taxConfig;
 
+    /**
+     *
+     */
     function __construct()
     {
         $this->taxConfig = Mage::getModel('tax/config');
     }
 
-
+    /**
+     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     *
+     * @return float
+     */
     public function getPriceForCompanyProduct(
         GoodsCloud_Sync_Model_Api_Company_Product $product
     ) {
@@ -25,6 +32,11 @@ class GoodsCloud_Sync_Helper_Api_Import extends Mage_Core_Helper_Abstract
         throw new RuntimeException('Product doesn\'t have a valid default price');
     }
 
+    /**
+     * @param array $price
+     *
+     * @return float
+     */
     private function getPrice(array $price)
     {
         if ($this->taxConfig->priceIncludesTax()) {

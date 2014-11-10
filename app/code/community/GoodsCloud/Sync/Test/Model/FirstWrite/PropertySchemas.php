@@ -1,15 +1,17 @@
 <?php
 
-class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchemas extends EcomDev_PHPUnit_Test_Case
+class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchemas
+    extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @loadFixture storesWithGcChannelId.yaml
      */
     public function testCreatePropertySet()
     {
-        $apiMock = $this->getModelMock('goodscloud_sync/api', array('createPropertySchema'), false, array(), '', false);
+        $apiMock = $this->getModelMock('goodscloud_sync/api',
+            array('createPropertySchema'), false, array(), '', false);
         // we'll have default + three storeviews in the fixtures, so we write three storeviews
-        $apiMock->expects($this->exactly(64)) // 14 attributes not ignored -> 14 * 4 storeviews = 56
+        $apiMock->expects($this->exactly(64))// 14 attributes not ignored -> 14 * 4 storeviews = 56
         ->method('createPropertySchema')
             ->will(
                 $this->returnCallback(
@@ -32,16 +34,21 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchemas extends EcomDev_PHPU
 
         $stores = Mage::app()->getStores();
 
-        $ignoredAttributes = Mage::helper('goodscloud_sync/api')->getIgnoredAttributes();
+        $ignoredAttributes = Mage::helper('goodscloud_sync/api')
+            ->getIgnoredAttributes();
 
         /** @var $attributes Mage_Catalog_Model_Resource_Product_Attribute_Collection */
-        $attributes = Mage::getResourceModel('catalog/product_attribute_collection');
-        $attributes->addFieldToFilter('attribute_code', array('nin' => $ignoredAttributes));
+        $attributes
+            = Mage::getResourceModel('catalog/product_attribute_collection');
+        $attributes->addFieldToFilter('attribute_code',
+            array('nin' => $ignoredAttributes));
 
-        $firstWritePropertySchemas = Mage::getModel('goodscloud_sync/firstWrite_propertySchemas');
+        $firstWritePropertySchemas
+            = Mage::getModel('goodscloud_sync/firstWrite_propertySchemas');
         /** @var GoodsCloud_Sync_Model_Api $apiMock */
         $firstWritePropertySchemas->setApi($apiMock);
-        $firstWritePropertySchemas->createPropertySchemasFromAttributes($attributes, $stores);
+        $firstWritePropertySchemas->createPropertySchemasFromAttributes($attributes,
+            $stores);
 
         foreach ($attributes as $attribute) {
             $this->assertJson($attribute->getGcPropertySchemaIds());
@@ -57,20 +64,26 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchemas extends EcomDev_PHPU
      */
     public function testCreatePropertySchemasWithoutChannelId()
     {
-        $apiMock = $this->getModelMock('goodscloud_sync/api', array('createPropertySchema'), false, array(), '', false);
+        $apiMock = $this->getModelMock('goodscloud_sync/api',
+            array('createPropertySchema'), false, array(), '', false);
 
         $stores = Mage::app()->getStores();
 
-        $ignoredAttributes = Mage::helper('goodscloud_sync/api')->getIgnoredAttributes();
+        $ignoredAttributes = Mage::helper('goodscloud_sync/api')
+            ->getIgnoredAttributes();
 
         /** @var $attributes Mage_Catalog_Model_Resource_Product_Attribute_Collection */
-        $attributes = Mage::getResourceModel('catalog/product_attribute_collection');
-        $attributes->addFieldToFilter('attribute_code', array('nin' => $ignoredAttributes));
+        $attributes
+            = Mage::getResourceModel('catalog/product_attribute_collection');
+        $attributes->addFieldToFilter('attribute_code',
+            array('nin' => $ignoredAttributes));
 
-        $firstWritePropertySchemas = Mage::getModel('goodscloud_sync/firstWrite_propertySchemas');
+        $firstWritePropertySchemas
+            = Mage::getModel('goodscloud_sync/firstWrite_propertySchemas');
         /** @var GoodsCloud_Sync_Model_Api $apiMock */
         $firstWritePropertySchemas->setApi($apiMock);
-        $firstWritePropertySchemas->createPropertySchemasFromAttributes($attributes, $stores);
+        $firstWritePropertySchemas->createPropertySchemasFromAttributes($attributes,
+            $stores);
     }
 
     protected function tearDown()

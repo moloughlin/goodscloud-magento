@@ -30,6 +30,9 @@ class GoodsCloud_Sync_Model_Sync_Products
         $this->api = $api;
     }
 
+    /**
+     *
+     */
     public function updateProducts()
     {
         // save the time before import to make sure, the next time we get all
@@ -126,7 +129,6 @@ class GoodsCloud_Sync_Model_Sync_Products
         $companyProductArrayGenerator = Mage::getModel(
             'goodscloud_sync/sync_companyProduct_arrayConstructor'
         );
-
 
         return $companyProductArrayGenerator
             ->setAttributeSetCache($this->getAttributeSetCache())

@@ -25,7 +25,8 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
     public function testGetBooleanSourceModels()
     {
         $helper = Mage::helper('goodscloud_sync/api');
-        $this->assertContains('eav/entity_attribute_source_boolean', $helper->getBooleanSourceModels());
+        $this->assertContains('eav/entity_attribute_source_boolean',
+            $helper->getBooleanSourceModels());
     }
 
     public function testGetEnumTypes()
@@ -42,10 +43,12 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
      * @param string $sourceModel
      * @param string $backendType
      */
-    public function testGetPropertySchemaType($frontendInput, $sourceModel, $backendType)
-    {
+    public function testGetPropertySchemaType(
+        $frontendInput,
+        $sourceModel,
+        $backendType
+    ) {
         $helper = Mage::helper('goodscloud_sync/api');
-
 
         /** @var $attribute Mage_Eav_Model_Entity_Attribute */
         $attribute = Mage::getModel('catalog/entity_attribute')
@@ -57,7 +60,8 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
                 )
             );
 
-        $expectationKey = str_replace('/', '_', "C$frontendInput-$sourceModel-$backendType");
+        $expectationKey = str_replace('/', '_',
+            "C$frontendInput-$sourceModel-$backendType");
 
         $this->assertEquals(
             $this->expected($expectationKey)->getType(),
@@ -74,18 +78,20 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
     {
         $helper = Mage::helper('goodscloud_sync/api');
 
-        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        $productEntityType = Mage::getModel('eav/entity_type')
+            ->loadByCode('catalog_product')->getId();
         /* @var $attribute Mage_Catalog_Model_Entity_Attribute */
         $attribute = Mage::getModel('catalog/entity_attribute')->loadByCode(
             $productEntityType, 'country_of_manufacture'
         );
         $view = Mage::app()->getStore();
 
-        $sourceModel = Mage::getModel('catalog/product_attribute_source_countryofmanufacture');
+        $sourceModel
+            = Mage::getModel('catalog/product_attribute_source_countryofmanufacture');
 
         $values = array();
         foreach ($sourceModel->getAllOptions() as $option) {
-            if($option['value']) {
+            if ($option['value']) {
                 $values[] = $option['value'];
             }
         }
@@ -100,13 +106,17 @@ class GoodsCloud_Sync_Test_Helper_Api extends EcomDev_PHPUnit_Test_Case
     {
         $helper = Mage::helper('goodscloud_sync/api');
 
-        $productEntityType = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        $productEntityType = Mage::getModel('eav/entity_type')
+            ->loadByCode('catalog_product')->getId();
         /* @var $attribute Mage_Catalog_Model_Entity_Attribute */
-        $attribute = Mage::getModel('catalog/entity_attribute')->loadByCode($productEntityType, 'msrp');
+        $attribute = Mage::getModel('catalog/entity_attribute')
+            ->loadByCode($productEntityType, 'msrp');
         $view = Mage::app()->getStore();
 
-        $this->assertInternalType('array', $helper->getPropertySchemaValuesForAttribute($attribute, $view));
-        $this->assertEmpty($helper->getPropertySchemaValuesForAttribute($attribute, $view));
+        $this->assertInternalType('array',
+            $helper->getPropertySchemaValuesForAttribute($attribute, $view));
+        $this->assertEmpty($helper->getPropertySchemaValuesForAttribute($attribute,
+                $view));
 
     }
 

@@ -1,6 +1,7 @@
 <?php
 
-class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchema2PropertySetMapper extends EcomDev_PHPUnit_Test_Case
+class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchema2PropertySetMapper
+    extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @loadFixture storesWithGcChannelId.yaml
@@ -10,7 +11,8 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchema2PropertySetMapper ext
 
         $this->createAttributeSets();
         $apiMock = $this->getModelMock(
-            'goodscloud_sync/api', array('mapPropertySchema2PropertySet'), false, array(), '', false
+            'goodscloud_sync/api', array('mapPropertySchema2PropertySet'),
+            false, array(), '', false
         );
         $apiMock->expects($this->exactly(2))
             ->method('mapPropertySchema2PropertySet')
@@ -20,16 +22,20 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchema2PropertySetMapper ext
 
         $stores = Mage::app()->getStores();
 
-        $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        $productEntityId = Mage::getModel('eav/entity_type')
+            ->loadByCode('catalog_product')->getId();
         /** @var $attributeSets Mage_Eav_Model_Resource_Entity_Attribute_Set_Collection */
-        $attributeSets = Mage::getResourceModel('eav/entity_attribute_set_collection')
+        $attributeSets
+            = Mage::getResourceModel('eav/entity_attribute_set_collection')
             ->addFieldToFilter('entity_type_id', $productEntityId);
 
 
-        $firstWritePropertySets = Mage::getModel('goodscloud_sync/firstWrite_propertySchema2PropertySetMapper');
+        $firstWritePropertySets
+            = Mage::getModel('goodscloud_sync/firstWrite_propertySchema2PropertySetMapper');
         /** @var GoodsCloud_Sync_Model_Api $apiMock */
         $firstWritePropertySets->setApi($apiMock);
-        $firstWritePropertySets->mapProperty2PropertySets($attributeSets, $stores);
+        $firstWritePropertySets->mapProperty2PropertySets($attributeSets,
+            $stores);
     }
 
 
@@ -38,7 +44,8 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchema2PropertySetMapper ext
      */
     private function createAttributeSets()
     {
-        $productEntityId = Mage::getModel('eav/entity_type')->loadByCode('catalog_product')->getId();
+        $productEntityId = Mage::getModel('eav/entity_type')
+            ->loadByCode('catalog_product')->getId();
         /* @var $default Mage_Eav_Model_Entity_Attribute_Set */
         $default = Mage::getModel('eav/entity_attribute_set')->load(4);
         $default->addData(
@@ -52,7 +59,8 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchema2PropertySetMapper ext
         $default->save();
 
         /* @var $furniture Mage_Eav_Model_Entity_Attribute_Set */
-        $furniture = Mage::getModel('eav/entity_attribute_set')->load('Furniture', 'attribute_set_name');
+        $furniture = Mage::getModel('eav/entity_attribute_set')
+            ->load('Furniture', 'attribute_set_name');
         $furniture->addData(
             array(
                 'entity_type_id'      => $productEntityId,
@@ -64,7 +72,8 @@ class GoodsCloud_Sync_Test_Model_FirstWrite_PropertySchema2PropertySetMapper ext
         $furniture->save();
 
         /* @var $shirt Mage_Eav_Model_Entity_Attribute_Set */
-        $shirt = Mage::getModel('eav/entity_attribute_set')->load('Shirt', 'attribute_set_name');
+        $shirt = Mage::getModel('eav/entity_attribute_set')
+            ->load('Shirt', 'attribute_set_name');
         $shirt->addData(
             array(
                 'entity_type_id'      => $productEntityId,

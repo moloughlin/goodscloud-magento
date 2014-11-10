@@ -15,10 +15,6 @@ class GoodsCloud_Sync_Test_Model_Sync extends EcomDev_PHPUnit_Test_Case
         $products->expects($this->once())
             ->method('updateProducts');
 
-
-
-
-
         $sync->syncWithGoodscloud();
     }
 }

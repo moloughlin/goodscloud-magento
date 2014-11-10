@@ -17,7 +17,6 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
      */
     protected $attributeCache;
 
-
     /**
      * @param Mage_Eav_Model_Entity_Attribute[] $attributes
      *

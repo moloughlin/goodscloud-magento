@@ -149,7 +149,6 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
         );
     }
 
-
     /**
      * @param GoodsCloud_Sync_Model_Api_Company_Product $product
      *
@@ -167,6 +166,11 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
         return array_unique($websiteCodes);
     }
 
+    /**
+     * @param GoodsCloud_Sync_Model_Api_Company_Product $product
+     *
+     * @return string
+     */
     private function getSku(GoodsCloud_Sync_Model_Api_Company_Product $product)
     {
         $channelProduct = $this->getAnyChannelProduct($product);
@@ -181,7 +185,7 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
     /**
      * @param GoodsCloud_Sync_Model_Api_Company_Product $product
      *
-     * @return mixed
+     * @return GoodsCloud_Sync_Model_Api_Channel_Product
      */
     private function getAnyChannelProduct(
         GoodsCloud_Sync_Model_Api_Company_Product $product
@@ -190,7 +194,6 @@ class GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor
         $channelProduct = reset($channelProducts);
         return $channelProduct;
     }
-
 
     /**
      * @param GoodsCloud_Sync_Model_Api_Company_Product $product

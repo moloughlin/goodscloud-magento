@@ -77,7 +77,6 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             ->addSetInfo()
             ->getData();
 
-
         foreach ($attributes as $attribute) {
             /** @var $attribute Mage_Eav_Model_Entity_Attribute */
             foreach (
@@ -430,7 +429,6 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 
             $taxClass->load($product->getTaxClassId());
         }
-
 
         return $this->createVatRateIfNeeded($api, $taxClass, $rate);
     }

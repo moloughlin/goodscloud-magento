@@ -650,7 +650,9 @@ class GoodsCloud_Sync_Model_Api
         $data = array(
             //        id	column	Integer	not NULL Primary key.
             //        seo	relationship	Single ProductSEO entry. Cascade delete, delete-orphan. properties	column	JSON	not NULL	{} A JSON object.
-            'seo'                     => $apiHelper->getSeoData($product, $store),
+            'seo'                     => $apiHelper->getSeoData(
+                $product, $store
+            ),
             //        sku	column	String 256 characters or less. A SKU used to track this product view in this channel. This is actually more like an SKU-template in most cases.
             'sku'                     => $product->getSku(),
             //        updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
@@ -678,7 +680,7 @@ class GoodsCloud_Sync_Model_Api
             'categories'              => $apiHelper->getGcCategories($product,
                 $store),
             //        chosen_images	relationship	List of ProductImage entries.
-        #    'chosen_images'           => null,
+            #'chosen_images'           => null, // TODO
         );
 
         return $this->putPost('channel_product_view', $data);
@@ -753,9 +755,7 @@ class GoodsCloud_Sync_Model_Api
             //    property_set	relationship	Single PropertySet entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    chosen_images	relationship	List of ProductImage entries.
-            #'chosen_images',
-            // TODO
-
+            #'chosen_images',// TODO
         );
 
         return $this->putPost('channel_product', $data);

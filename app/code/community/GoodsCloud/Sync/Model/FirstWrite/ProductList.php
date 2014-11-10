@@ -1,10 +1,16 @@
 <?php
 
-
-class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag implements Iterator, Countable
+class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag
+    implements Iterator, Countable
 {
+    /**
+     * @var string
+     */
     protected $_flagCode;
 
+    /**
+     * @var int[]
+     */
     protected $indexedProductList = array();
 
     /**
@@ -19,6 +25,9 @@ class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag 
         return $this;
     }
 
+    /**
+     * @return Mage_Core_Model_Flag
+     */
     public function loadSelf()
     {
         $return = parent::loadSelf();
@@ -99,27 +108,42 @@ class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag 
         }
     }
 
+    /**
+     * @return int
+     */
     public function current()
     {
         return key($this->indexedProductList);
     }
 
+    /**
+     * @return int
+     */
     public function next()
     {
         next($this->indexedProductList);
         return key($this->indexedProductList);
     }
 
+    /**
+     * @return int
+     */
     public function key()
     {
         return key($this->indexedProductList);
     }
 
+    /**
+     * @return bool
+     */
     public function valid()
     {
         return (key($this->indexedProductList) !== null);
     }
 
+    /**
+     * @return int
+     */
     public function rewind()
     {
         return reset($this->indexedProductList);
@@ -135,6 +159,9 @@ class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag 
         $this->save();
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         return count($this->indexedProductList);
