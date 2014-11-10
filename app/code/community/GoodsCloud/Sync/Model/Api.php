@@ -625,6 +625,65 @@ class GoodsCloud_Sync_Model_Api
         return $this->putPost('company_product', $data);
     }
 
+    public function createChannelProductView(
+        Mage_Catalog_Model_Product $product,
+        Mage_Core_Model_Store $store
+    ) {
+        /** @var $apiHelper GoodsCloud_Sync_Helper_Api */
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+        $descriptions = $apiHelper->getDescriptionData($product, $store, true);
+        $description = $this->createDescription(array_pop($descriptions));
+        if (!$apiHelper->getCompanyProductViewId($product)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Company product view not created for Product %s',
+                    $product->getSku()
+                )
+            );
+        }
+        $this->addDescriptionToCompanyProductView(
+            $description->getId(),
+            $apiHelper->getCompanyProductViewId($product)
+        );
+
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+        $data = array(
+            //        id	column	Integer	not NULL Primary key.
+            //        seo	relationship	Single ProductSEO entry. Cascade delete, delete-orphan. properties	column	JSON	not NULL	{} A JSON object.
+            #'seo'                     => $apiHelper->getSeoData($product),
+            //        sku	column	String 256 characters or less. A SKU used to track this product view in this channel. This is actually more like an SKU-template in most cases.
+            'sku'                     => $product->getSku(),
+            //        updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+            //        version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
+            //        visible	column	Boolean		True Whether or not this view is currently visible in the target system.
+            'visible'                 => $product->getStatus()
+                === Mage_Catalog_Model_Product_Status::STATUS_ENABLED,
+            //        audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
+            //        channel_id	column	Integer	not NULL ForeignKey('channel.id') ON DELETE RESTRICT
+            'channel_id'              => $store->getGcChannelId(),
+            //        channel	relationship	Single Channel entry.
+            //        chosen_description_id	column	Integer ForeignKey('product_description.id') ON DELETE SET NULL
+            'chosen_description_id'   => $description->getId(),
+            //        chosen_description	relationship	Single ProductDescription entry.
+            //        company_product_view_id	column	Integer	not NULL ForeignKey('company_product_view.id') ON DELETE CASCADE
+            'company_product_view_id' => $apiHelper->getCompanyProductViewId($product),
+            //        company_product_view	relationship	Single CompanyProductView entry.
+            //        property_set_id	column	Integer ForeignKey('property_set.id') ON DELETE SET NULL
+            'property_set_id'         => $apiHelper->getPropertySetId(
+                $product, $store
+            ),
+            //        property_set	relationship	Single PropertySet entry.
+            //        created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
+            //        categories	relationship	List of Category entries.
+            'categories'              => $apiHelper->getGcCategories($product,
+                $store),
+            //        chosen_images	relationship	List of ProductImage entries.
+        #    'chosen_images'           => null,
+        );
+
+        return $this->putPost('channel_product_view', $data);
+    }
+
     /**
      * @param Mage_Catalog_Model_Product $product
      * @param Mage_Core_Model_Store      $store
@@ -1048,6 +1107,22 @@ class GoodsCloud_Sync_Model_Api
         );
 
         $this->putPost('company_product', $requestData);
+    }
+
+    public function addDescriptionToCompanyProductView(
+        $descriptionId,
+        $compayProductViewId
+    ) {
+        $requestData = array(
+            'id'                     => $compayProductViewId,
+            'available_descriptions' => array(
+                'add' => array(
+                    array('id' => $descriptionId)
+                )
+            ),
+        );
+
+        $this->putPost('company_product_view', $requestData);
     }
 
     /**
