@@ -1100,6 +1100,17 @@ class GoodsCloud_Sync_Model_Api
     {
         $apiHelper = Mage::helper('goodscloud_sync/api');
         $apiOrderHelper = Mage::helper('goodscloud_sync/api_order');
+
+        $shippingPhone = null;
+        if (!$order->getIsVirtual()) {
+            $shippingPhone = array(
+                'type'   => 'mobile',
+                // TODO what to choose if we don't know what it is?
+                'number' => $order->getShippingAddress()->getTelephone()
+            );
+        }
+
+
         $data = array(
             //    id	column	Integer	not NULL Primary key.
             //    billing_address	relationship	Single BillingAddress entry. Cascade delete, delete-orphan.
@@ -1122,11 +1133,7 @@ class GoodsCloud_Sync_Model_Api
             //    shipping_address	relationship	Single ShippingAddress entry. Cascade delete, delete-orphan.
             'shipping_address'    => $apiOrderHelper->getShippingAddress($order),
             //    shipping_telephone	relationship	Single ShippingTelephone entry. Cascade delete, delete-orphan.
-            'shipping_telephone'  => array(
-                'type'   => 'mobile',
-                // TODO what to choose if we don't know what it is?
-                'number' => $order->getShippingAddress()->getTelephone()
-            ),
+            'shipping_telephone'  => $shippingPhone,
             //    sub_pay_ins	relationship	List of SubPayIn entries.
             //    sub_pay_outs	relationship	List of SubPayOut entries.
             //    awaits_routing	column	Boolean	not NULL	False Set this to True to trigger LogisticOrder creation. Afterwards, this attribute is automatically set back to False. Refer to OrderItem routing_status for info regarding the outcome of the LogisticOrder creation process.
