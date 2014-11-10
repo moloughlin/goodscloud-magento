@@ -74,7 +74,7 @@ class GoodsCloud_Sync_Model_FirstWrite
                 $this->createProductViews();
             } else {
                 throw new RuntimeException(
-                    'Not all simple/virtual products exported, but eport aborted?'
+                    'Not all simple/virtual products exported, but export aborted?'
                 );
             }
 

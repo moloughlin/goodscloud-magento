@@ -125,8 +125,6 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
      * @param Mage_Sales_Model_Order $order
      *
      * @return array
-     *
-     * @todo sanitize all values
      */
     public function getBillingAddress(Mage_Sales_Model_Order $order)
     {

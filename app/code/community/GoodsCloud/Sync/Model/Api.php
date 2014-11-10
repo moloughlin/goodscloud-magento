@@ -971,7 +971,6 @@ class GoodsCloud_Sync_Model_Api
             'label'               => $attribute->getName(),
             // multivalue	column	Boolean	not NULL	False
             'multivalue'          => $helper->isAttributeMultiValue($attribute),
-            // TODO
             // searchable	column	Boolean		True
             'searchable'          => $attribute->getIsSearchable(),
             // type	column	Enum	not NULL	free Allowed values free, enum, range, bool, datetime
