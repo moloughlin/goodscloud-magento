@@ -365,6 +365,45 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @param int $id
+     *
+     * @return GoodsCloud_Sync_Model_Api_Company_Product_View
+     */
+    public function getCompanyProductViewById($id)
+    {
+        return $this->getById('company_product_view', $id);
+    }
+
+    /**
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product_View $view
+     *
+     * @return GoodsCloud_Sync_Model_Api_Channel_Product_Collection
+     */
+    public function getChannelProductsForChannelView(
+        GoodsCloud_Sync_Model_Api_Channel_Product_View $view
+    ) {
+        $companyProductView = $this->getCompanyProductViewById(
+            $view->getCompanyProductViewId()
+        );
+
+        $companyProductIds = array();
+
+        foreach ($companyProductView->getCompanyProducts() as $companyProduct) {
+            /* @var $companyProduct GoodsCloud_Sync_Model_Api_Company_Product */
+            $companyProductIds[] = $companyProduct['id'];
+        }
+
+        $filter = array(
+            array(
+                'name' => 'company_product_id',
+                'op'   => 'in',
+                'val'  => $companyProductIds,
+            ),
+        );
+        return $this->getChannelProducts($filter);
+    }
+
+    /**
      * @param string $model   name of the resource which is requested
      * @param array  $filters query to filter by
      *
