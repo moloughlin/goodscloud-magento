@@ -743,6 +743,9 @@ class GoodsCloud_Sync_Model_Api
                 $product, $store
             ),
             //        properties	column	JSON	not NULL	{} A JSON object.
+            'properties'              => $apiHelper->getPropertiesWithValues(
+                $product, $store
+            ),
             //        sku	column	String 256 characters or less. A SKU used to track this product view in this channel. This is actually more like an SKU-template in most cases.
             'sku'                     => $product->getSku(),
             //        updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
@@ -770,7 +773,7 @@ class GoodsCloud_Sync_Model_Api
             'categories'              => $apiHelper->getGcCategories($product,
                 $store),
             //        chosen_images	relationship	List of ProductImage entries.
-            #'chosen_images'           => null, // TODO
+            'chosen_images'           => $apiHelper->createImages($product),
         );
 
         return $this->putPost('channel_product_view', $data);
@@ -792,12 +795,18 @@ class GoodsCloud_Sync_Model_Api
         $apiHelper = Mage::helper('goodscloud_sync/api');
         $descriptions = $apiHelper->getDescriptionData($product, $store, true);
         $description = $this->createDescription(array_pop($descriptions));
-        if (!$apiHelper->getCompanyProductId($product)) {
-            throw new RuntimeException(sprintf('Company product not created for Product %s',
-                $product->getSku()));
+        $companyProductId = $apiHelper->getCompanyProductId($product);
+        if (!$companyProductId) {
+            throw new RuntimeException(
+                sprintf(
+                    'Company product not created for Product %s',
+                    $product->getSku()
+                )
+            );
         }
-        $this->addDescriptionToCompanyProduct($description->getId(),
-            $apiHelper->getCompanyProductId($product));
+        $this->addDescriptionToCompanyProduct(
+            $description->getId(), $companyProductId
+        );
         $data = array(
             //    id	column	Integer	not NULL Primary key.
             //    logistic_order_items	relationship	List of LogisticOrderItem entries. Write-only, value not returned in API responses.
@@ -832,7 +841,7 @@ class GoodsCloud_Sync_Model_Api
             'chosen_description_id' => $description->getId(),
             //    chosen_description	relationship	Single ProductDescription entry.
             //    company_product_id	column	Integer	not NULL ForeignKey('company_product.id') ON DELETE CASCADE
-            'company_product_id'    => $apiHelper->getCompanyProductId($product),
+            'company_product_id'    => $companyProductId,
             //    company_product	relationship	Single CompanyProduct entry.
             //    discount_price_list_id	column	Integer ForeignKey('price_list.id') ON DELETE SET NULL
             //    discount_price_list	relationship	Single PriceList entry.
@@ -840,12 +849,15 @@ class GoodsCloud_Sync_Model_Api
             'price_list_id'         => $apiHelper->getDefaultPriceListId(),
             //    price_list	relationship	Single PriceList entry.
             //    property_set_id	column	Integer ForeignKey('property_set.id') ON DELETE SET NULL
-            'property_set_id'       => $apiHelper->getPropertySetId($product,
-                $store),
+            'property_set_id'       => $apiHelper->getPropertySetId(
+                $product, $store
+            ),
             //    property_set	relationship	Single PropertySet entry.
             //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
             //    chosen_images	relationship	List of ProductImage entries.
-            #'chosen_images',// TODO
+            'chosen_images'         => $this->getImageIdsByCompanyProductId(
+                $companyProductId
+            ),
         );
 
         return $this->putPost('channel_product', $data);
@@ -1265,6 +1277,24 @@ class GoodsCloud_Sync_Model_Api
         );
 
         $this->putPost('company_product_view', $requestData);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return array
+     */
+    public function getImageIdsByCompanyProductId($id)
+    {
+        $companyProduct = $this->getCompanyProductById($id);
+        $imageIds = array_column($companyProduct->getAvailableImages(), 'id');
+        $returnedIds = array();
+        foreach ($imageIds as $id) {
+            $returnedIds[] = array(
+                'id' => $id,
+            );
+        }
+        return $returnedIds;
     }
 
     /**
