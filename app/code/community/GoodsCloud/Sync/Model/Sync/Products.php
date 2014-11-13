@@ -23,6 +23,11 @@ class GoodsCloud_Sync_Model_Sync_Products
     private $attributeCache;
 
     /**
+     * @var string[]
+     */
+    private $categoryCache;
+
+    /**
      * @param GoodsCloud_Sync_Model_Api $api
      */
     public function setApi(GoodsCloud_Sync_Model_Api $api)
@@ -45,18 +50,117 @@ class GoodsCloud_Sync_Model_Sync_Products
         // TODO REMOVE!!!
         $lastUpdateTime = '2007-12-12 12:12:12Z';
 
-        // merge into big array
-        $arrayToImport = $this->getProductArrayForImport(
-        // get changed company products
-            $this->getChangedCompanyProducts($lastUpdateTime),
-            // get changed channel products
-            $this->getChangedChannelProducts($lastUpdateTime)
+        $arrayToImport = array();
+
+        //        // merge into big array
+        //        $arrayToImport += $this->getProductArrayForImport(
+        //        // get changed company products
+        //            $this->getChangedCompanyProducts($lastUpdateTime),
+        //            // get changed channel products
+        //            $this->getChangedChannelProducts($lastUpdateTime)
+        //        );
+
+        $arrayToImport += $this->getProductArrayForImport(
+            $this->getChangedCompanyProductViews($lastUpdateTime),
+            $this->getChangedChannelProductViews($lastUpdateTime)
         );
 
         // import via AvS
         $this->import($arrayToImport);
         // set new update datetime
         $this->saveUpdateTime($timeBeforeUpdate);
+    }
+
+    /**
+     * @param $lastUpdateTime
+     *
+     * @return array
+     */
+    private function getChangedCompanyProductViews($lastUpdateTime)
+    {
+        $filters = array();
+        if ($lastUpdateTime) {
+            $filters = array(
+                array(
+                    'name' => 'updated',
+                    'op'   => '>=',
+                    'val'  => $lastUpdateTime
+                )
+            );
+        }
+
+        $products = $this->api->getCompanyProductViews($filters);
+
+        /** @var $companyProductArrayGenerator GoodsCloud_Sync_Model_Sync_Company_Product_View_ArrayConstructor */
+        $companyProductArrayGenerator = Mage::getModel(
+            'goodscloud_sync/sync_company_product_view_arrayConstructor'
+        );
+
+        return $companyProductArrayGenerator
+            ->setAttributeSetCache($this->getAttributeSetCache())
+            ->setStoreViewCache(Mage::app()->getStores())
+            ->setAttributeCache($this->getAttributeCache())
+            ->construct($products);
+    }
+
+
+    /**
+     * @param $lastUpdateTime
+     *
+     * @return array
+     */
+    private function getChangedChannelProductViews($lastUpdateTime)
+    {
+        $filters = array();
+        if ($lastUpdateTime) {
+            $filters = array(
+                array(
+                    'name' => 'updated',
+                    'op'   => '>=',
+                    'val'  => $lastUpdateTime
+                )
+            );
+        }
+
+        $products = $this->api->getChannelProductViews($filters);
+
+
+        /** @var $companyProductArrayGenerator GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor */
+        $companyProductArrayGenerator = Mage::getModel(
+            'goodscloud_sync/sync_channel_product_view_arrayConstructor'
+        );
+
+        return $companyProductArrayGenerator
+            ->setAttributeSetCache($this->getAttributeSetCache())
+            ->setStoreViewCache(Mage::app()->getStores())
+            ->setAttributeCache($this->getAttributeCache())
+            ->setCategoryCache($this->getCategoryCache())
+            ->setApi($this->api)
+            ->construct($products);
+    }
+
+    /**
+     * built category path for import
+     *
+     * @return string[]
+     */
+    private function getCategoryCache()
+    {
+        if ($this->categoryCache === null) {
+            $categories = Mage::getResourceModel('catalog/category_collection')
+                ->addAttributeToSelect('name');
+            foreach ($categories as $category) {
+                $path = array();
+                $pathIds = $category->getPathIds();
+                // remove first two levels of the category
+                unset($pathIds[0], $pathIds[1]);
+                foreach ($pathIds as $id) {
+                    $path[] = $categories->getItemById($id)->getName();
+                }
+                $this->categoryCache[$category->getId()] = implode('/', $path);
+            }
+        }
+        return $this->categoryCache;
     }
 
     /**

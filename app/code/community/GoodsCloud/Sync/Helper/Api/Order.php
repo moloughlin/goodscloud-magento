@@ -72,7 +72,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             'quantity'            => (int)$this->sanitizeInt($item->getQtyOrdered()),
             //    routing_status	column	Enum	not NULL	active Allowed values draft, active, on hold, low stock, backorder, canceled Allowed transitions:
             //      START → active, draft
-            //          draft → a, c, t, i, v, e
+            //          draft → active
             //          active → on hold, low stock, backorder, canceled
             //          on hold → active, backorder, canceled
             //          low stock → active, on hold, backorder, canceled
