@@ -606,8 +606,12 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
-     * @return GoodsCloud_Sync_Model_Api_Vat_Rate
+     * @param array $data
+     *
      * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws GoodsCloud_Sync_Model_Api_Exception_NoResultFound
+     * @throws Mage_Core_Exception
+     * @return GoodsCloud_Sync_Model_Api_Vat_Rate
      */
     public function createVatRate($data)
     {
@@ -734,10 +738,11 @@ class GoodsCloud_Sync_Model_Api
         $apiHelper = Mage::helper('goodscloud_sync/api');
         $data = array(
             //        id	column	Integer	not NULL Primary key.
-            //        seo	relationship	Single ProductSEO entry. Cascade delete, delete-orphan. properties	column	JSON	not NULL	{} A JSON object.
+            //        seo	relationship	Single ProductSEO entry. Cascade delete, delete-orphan.
             'seo'                     => $apiHelper->getSeoData(
                 $product, $store
             ),
+            //        properties	column	JSON	not NULL	{} A JSON object.
             //        sku	column	String 256 characters or less. A SKU used to track this product view in this channel. This is actually more like an SKU-template in most cases.
             'sku'                     => $product->getSku(),
             //        updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
@@ -1144,11 +1149,9 @@ class GoodsCloud_Sync_Model_Api
         if (!$order->getIsVirtual()) {
             $shippingPhone = array(
                 'type'   => 'mobile',
-                // TODO what to choose if we don't know what it is?
                 'number' => $order->getShippingAddress()->getTelephone()
             );
         }
-
 
         $data = array(
             //    id	column	Integer	not NULL Primary key.
@@ -1157,7 +1160,6 @@ class GoodsCloud_Sync_Model_Api
             //    billing_telephone	relationship	Single BillingTelephone entry. Cascade delete, delete-orphan.
             'billing_telephone'   => array(
                 'type'   => 'mobile',
-                // TODO what to choose if we don't know what it is?
                 'number' => $order->getBillingAddress()->getTelephone()
             ),
             //    credit_notes	relationship	List of CreditNote entries.
@@ -1177,7 +1179,6 @@ class GoodsCloud_Sync_Model_Api
             //    sub_pay_outs	relationship	List of SubPayOut entries.
             //    awaits_routing	column	Boolean	not NULL	False Set this to True to trigger LogisticOrder creation. Afterwards, this attribute is automatically set back to False. Refer to OrderItem routing_status for info regarding the outcome of the LogisticOrder creation process.
             'awaits_routing'      => true,
-            // TODO what is it for?
             //    currency_code	column	UppercaseEnum	not NULL The currency this object is denominated in. Must be ISO-4217 currency code
             'currency_code'       => $order->getBaseCurrencyCode(),
             //    external_identifier	column	String	not NULL 256 characters or less.
