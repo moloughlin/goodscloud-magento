@@ -46,6 +46,9 @@
     <default>
         <goodscloud_sync>
             <api>
+                <unconfigurable_attributes>
+                    <weight/>
+                </unconfigurable_attributes>
                 <ignored_attributes>
                     <!--<cost/>-->
                     <!--<country_of_manufacture/>-->

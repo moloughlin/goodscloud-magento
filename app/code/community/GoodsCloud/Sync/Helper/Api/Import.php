@@ -3,6 +3,8 @@
 class GoodsCloud_Sync_Helper_Api_Import extends Mage_Core_Helper_Abstract
 {
 
+    const XML_CONFIG_UNCONFIGURABLE_ATTRIBUTES = 'goodscloud_sync/api/unconfigurable_attributes';
+
     /**
      * @var Mage_Tax_Model_Config
      */
@@ -44,5 +46,13 @@ class GoodsCloud_Sync_Helper_Api_Import extends Mage_Core_Helper_Abstract
         } else {
             return $price['net'];
         }
+    }
+
+    public function getUnConfigurableAttributes()
+    {
+        $attributes = Mage::getStoreConfig(
+            self::XML_CONFIG_UNCONFIGURABLE_ATTRIBUTES
+        );
+        return array_keys($attributes);
     }
 }
