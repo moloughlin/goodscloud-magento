@@ -460,7 +460,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             );
             $this->setVatRateId($label, $rate->getId());
         }
-        return $this->getVateRateId($label);
+        return (int)$this->getVateRateId($label);
     }
 
     /**

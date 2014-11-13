@@ -245,7 +245,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
      */
     private function sanitizePrice($price)
     {
-        return sprintf('%.2f', $price);
+        return round($price, 2);
     }
 
     /**
@@ -255,7 +255,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
      */
     private function sanitizeInt($int)
     {
-        return sprintf('%d', $int);
+        return (int)$int;
     }
 
     /**
