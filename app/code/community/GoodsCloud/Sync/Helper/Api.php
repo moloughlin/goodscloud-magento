@@ -447,6 +447,10 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     ) {
         $label = $taxClass->getClassName() . ' ' . $rate;
 
+        // Label is in the end like "Taxable Goods 9 3"
+        //                            <name> <rate> <id>
+        $label .= ' ' . $taxClass->getId();
+
         if (!$this->getVateRateId($label)) {
             $rate = $api->createVatRate(
                 array(
