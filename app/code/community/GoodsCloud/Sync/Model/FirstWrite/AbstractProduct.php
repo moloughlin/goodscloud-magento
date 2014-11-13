@@ -60,13 +60,12 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
      */
     public function isFinished()
     {
-        $oneUnfinished = true;
-        foreach ($this->productLists as $lists) {
-            if (!$lists->isFinished()) {
-                $oneUnfinished = false;
+        foreach ($this->productLists as $list) {
+            if (!$list->isFinished()) {
+                return false;
             }
         }
-        return $oneUnfinished;
+        return true;
     }
 
     /**

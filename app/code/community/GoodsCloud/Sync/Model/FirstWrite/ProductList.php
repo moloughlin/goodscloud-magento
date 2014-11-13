@@ -73,8 +73,8 @@ class GoodsCloud_Sync_Model_FirstWrite_ProductList extends Mage_Core_Model_Flag
      */
     public function isFinished()
     {
-        return (is_array($this->getProductList()
-            && count($this->getProductList()) == 0));
+        return (is_array($this->getProductList())
+            && count($this->getProductList()) == 0);
     }
 
     /**
