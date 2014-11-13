@@ -171,7 +171,7 @@ class GoodsCloud_Sync_Model_Api
      *
      * @return GoodsCloud_Sync_Model_Api_Channel_Product_View_Collection
      */
-    public function getChannelProductViews($filters)
+    public function getChannelProductViews($filters = array())
     {
         return $this->get('channel_product_view', $filters);
     }
@@ -181,7 +181,7 @@ class GoodsCloud_Sync_Model_Api
      *
      * @return GoodsCloud_Sync_Model_Api_Company_Product_View_Collection
      */
-    public function getCompanyProductViews($filters)
+    public function getCompanyProductViews($filters = array())
     {
         return $this->get('company_product_view', $filters);
     }
