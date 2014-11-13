@@ -22,8 +22,11 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
                 )
                 ->loadSelf();
         }
-        if (!$this->isFinished()) {
+        if (!$this->isFilled()) {
             $this->prepareProductLists();
+        }
+
+        if (!$this->isFinished()) {
             $this->createCompanyAndChannelProducts($views);
         }
 
@@ -62,6 +65,7 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
      */
     protected function createCompanyAndChannelProducts(array $views)
     {
+        $productHelper = Mage::helper('goodscloud_sync/product');
         foreach ($views as $view) {
             // make sure to export channel products after _ALL_ company products are created
             if ($view->getId() != Mage_Core_Model_App::ADMIN_STORE_ID
@@ -94,6 +98,13 @@ class GoodsCloud_Sync_Model_FirstWrite_ConfigurableProducts
                     $page,
                     $view->getId()
                 );
+
+                if ($view->getId() !== Mage_Core_Model_App::ADMIN_STORE_ID) {
+                    $productHelper->addMediaGalleryAttributeToCollection(
+                        $collection, $view->getId()
+                    );
+                }
+
 
                 $this->exportProductCollectionPage($collection, $view);
                 $collection->save();

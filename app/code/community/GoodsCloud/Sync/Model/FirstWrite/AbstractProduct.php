@@ -45,8 +45,11 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
                 )
                 ->loadSelf();
         }
-        if (!$this->isFinished()) {
+        if (!$this->isFilled()) {
             $this->prepareProductLists();
+        }
+
+        if (!$this->isFinished()) {
             $this->createCompanyAndChannelProducts($views);
         }
 
@@ -67,6 +70,20 @@ abstract class GoodsCloud_Sync_Model_FirstWrite_AbstractProduct
         }
         return true;
     }
+
+    /**
+     * @return bool
+     */
+    protected function isFilled()
+    {
+        foreach ($this->productLists as $list) {
+            if (!$list->isFilled()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /**
      * @param Mage_Core_Model_Store $view
