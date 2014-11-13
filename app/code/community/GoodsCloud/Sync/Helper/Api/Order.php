@@ -113,7 +113,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    ean	hybrid_property The EAN representation of the underlying GTIN value. None if conversion is not possible. Supported formats: EAN-8, EAN-13
             //    packing_status	hybrid_property If there are no logistic_order_items, this has the special value N/A. If all logistic_order_items have the same packing_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
             //    total_gross	hybrid_property The total gross price for the total quantity of products in this item. Read-only.
-            'total_gross'         => $this->sanitizePrice($itemToGetPricesFrom->getPriceInclTax()),
+            'total_gross'         => $this->sanitizePrice($itemToGetPricesFrom->getRowTotalInclTax()),
             //    upc	hybrid_property The UPC-A representation of the underlying GTIN value. None if conversion is not possible.
             //    parent	property	Read-only.
         );
