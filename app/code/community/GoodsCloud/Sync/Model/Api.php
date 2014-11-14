@@ -105,9 +105,9 @@ class GoodsCloud_Sync_Model_Api
     /**
      * @return GoodsCloud_Sync_Model_Api_Order_Collection
      */
-    public function getOrders()
+    public function getOrders($filter = array())
     {
-        return $this->get('order');
+        return $this->get('order', $filter);
     }
 
     /**
