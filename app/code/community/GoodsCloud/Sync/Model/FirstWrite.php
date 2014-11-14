@@ -287,12 +287,17 @@ class GoodsCloud_Sync_Model_FirstWrite
 
     private function saveUpdateDateTime()
     {
-        $updateTime = Mage::getModel('goodscloud_sync/sync_updateDateTime')
-            ->loadSelf();
+        // set time for product update
+        Mage::getModel('goodscloud_sync/sync_updateDateTime')
+            ->loadSelf()
+            ->setFlagData(now())
+            ->save();
 
-        $updateTime->setFlagData(now());
-
-        $updateTime->save();
+        // set time for order/invoice/... update
+        Mage::getModel('goodscloud_sync/sync_orderSyncDateTime')
+            ->loadSelf()
+            ->setFlagData(now())
+            ->save();
 
     }
 }
