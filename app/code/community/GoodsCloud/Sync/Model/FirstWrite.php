@@ -38,6 +38,9 @@ class GoodsCloud_Sync_Model_FirstWrite
             Mage::log(' Add a Channel for every StoreView');
             $this->createChannelsFromStoreView();
 
+            // Create all payment methods
+            $this->createPaymentMethods();
+
             // Add every AttributeSet as PropertySet to every Channel
             Mage::log('Add every AttributeSet as PropertySet to every Channel');
             $this->createPropertySetsFromAttributeSets();
@@ -87,6 +90,45 @@ class GoodsCloud_Sync_Model_FirstWrite
         $emulation->stopEnvironmentEmulation($initialEnvironmentInfo);
     }
 
+    /**
+     * @throws Exception
+     */
+    private function createPaymentMethods()
+    {
+        // check whether this already happend
+        $flag = Mage::getModel(
+            'core/flag',
+            array('flag_code' => 'gc_exported_payment_methods')
+        );
+        $flag->loadSelf();
+
+        if ($flag->getFlagData()) {
+            return;
+        }
+
+        $payments = Mage::getSingleton('payment/config')->getActiveMethods();
+        $views = Mage::app()->getStores();
+        foreach ($payments as $paymentCode => $paymentModel) {
+            $paymentTitle = Mage::getStoreConfig(
+                'payment/' . $paymentCode . '/title'
+            );
+
+            $this->api->createPaymentMethod(
+                array(
+                    'label' => $paymentTitle,
+                    'code'  => $paymentCode,
+                ),
+                $views
+            );
+        }
+
+        $flag->setFlagData(true);
+        $flag->save();
+    }
+
+    /**
+     * @return bool
+     */
     private function createProductViews()
     {
         /* @var $stores Mage_Core_Model_Store[] */

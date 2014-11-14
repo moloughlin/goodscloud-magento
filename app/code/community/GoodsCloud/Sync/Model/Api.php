@@ -1144,6 +1144,47 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @param array                   $data
+     * @param Mage_Core_Model_Store[] $views
+     *
+     * @return GoodsCloud_Sync_Model_Api_Payment_Method
+     *
+     * @throws GoodsCloud_Sync_Model_Api_Exception_IntegrityError
+     * @throws GoodsCloud_Sync_Model_Api_Exception_NoResultFound
+     * @throws Mage_Core_Exception
+     */
+    public function createPaymentMethod($data, $views)
+    {
+        $channels = array();
+        foreach ($views as $view) {
+            $channels[] = array(
+                'id' => $view->getGcChannelId(),
+            );
+        }
+
+        $apiHelper = Mage::helper('goodscloud_sync/api');
+
+        $data = array(
+            //    id	column	Integer	not NULL Primary key.
+            //    payin_channels	relationship	List of Channel entries.
+            'payin_channels'  => $channels,
+            //    payout_channels	relationship	List of Channel entries.
+            'payout_channels' => $channels,
+            //    label	column	String	not NULL 256 characters or less.
+            'label'           => $data['code'],
+            //    updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
+            //    version	column	Integer	not NULL	1 Current version number of this entry, incremented each time it is changed. Read-only.
+            //    audit_user_id	column	Integer ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
+            //    company_id	column	Integer	not NULL ForeignKey('company.id') ON DELETE CASCADE
+            'company_id'      => $apiHelper->getCompanyId(),
+            //    company	relationship	Single Company entry.
+            //    created	hybrid_property The time when this row was created. Determined by looking in the history for this table. Read-only.
+        );
+
+        return $this->putPost('payment_method', $data);
+    }
+
+    /**
      * @param Mage_Sales_Model_Order $order
      * @param int                    $gcConsumerId
      *
