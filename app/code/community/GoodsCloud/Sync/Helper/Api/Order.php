@@ -84,7 +84,6 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //          backorder: this order item was not found in any inventory channel; the sales channel is awaiting delivery of this order item
             //          canceled: this order item will not be shipped
             'routing_status'      => self::ROUTING_STATUS_ACTIVE,
-            // TODO is this correct?
             //    total_net	column	Numeric	not NULL 00000000.00 The total net price for the total quantity of products in this item.
             'total_net'           => $this->sanitizePrice($itemToGetPricesFrom->getBaseRowTotal()),
             //    total_vat_amount	column	Numeric 00000000.00 The total VAT amount for the total quantity of all products in this item.
@@ -113,7 +112,6 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
             //    ean	hybrid_property The EAN representation of the underlying GTIN value. None if conversion is not possible. Supported formats: EAN-8, EAN-13
             //    packing_status	hybrid_property If there are no logistic_order_items, this has the special value N/A. If all logistic_order_items have the same packing_status, this has the value of that common status. Otherwise, it has the special value mixed. Read-only.
             //    total_gross	hybrid_property The total gross price for the total quantity of products in this item. Read-only.
-            'total_gross'         => $this->sanitizePrice($itemToGetPricesFrom->getRowTotalInclTax()),
             //    upc	hybrid_property The UPC-A representation of the underlying GTIN value. None if conversion is not possible.
             //    parent	property	Read-only.
         );
@@ -245,7 +243,7 @@ class GoodsCloud_Sync_Helper_Api_Order extends Mage_Core_Helper_Abstract
      */
     private function sanitizePrice($price)
     {
-        return round($price, 2);
+        return (float)$price;
     }
 
     /**
