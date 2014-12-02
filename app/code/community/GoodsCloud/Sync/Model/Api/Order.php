@@ -48,4 +48,37 @@
 class GoodsCloud_Sync_Model_Api_Order extends Varien_Object
 {
 
+    /**
+     * @param array|string $key
+     * @param null         $value
+     *
+     * @return Varien_Object|void
+     */
+    public function setData($key, $value = null)
+    {
+        parent::setData($key, $value);
+
+        if ($value === null) {
+            $this->indexOrderItems();
+        }
+
+        return $this;
+    }
+
+    private function indexArrayKey($key)
+    {
+        $items = array();
+        foreach ($this->getDataUsingMethod($key) as $item) {
+            $items[$item['id']] = $item;
+        }
+        $this->setData($key, $items);
+    }
+
+    /**
+     *
+     */
+    private function indexOrderItems()
+    {
+        $this->indexArrayKey('order_items');
+    }
 }
