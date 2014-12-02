@@ -109,7 +109,15 @@ class GoodsCloud_Sync_Model_Api
      */
     public function getOrders($filter = array())
     {
-        return $this->get('order', $filter);
+        $deep = array(
+            'invoices'    => array(
+                'invoice_items' => new stdClass(),
+            ),
+            'order_items' => new stdClass(),
+        );
+
+        return $this->get('order', $filter, array(), null,
+            0, array(), false, $deep);
     }
 
     /**
@@ -415,9 +423,10 @@ class GoodsCloud_Sync_Model_Api
      * @param array  $orderBy
      * @param bool   $single
      *
+     * @param array  $deep
+     *
      * @throws Mage_Core_Exception
      * @return Varien_Data_Collection|Varien_Object collection with items from api or single item
-     *
      */
     private function get(
         $model,
@@ -426,7 +435,8 @@ class GoodsCloud_Sync_Model_Api
         $limit = null,
         $offset = 0,
         $orderBy = array(),
-        $single = false
+        $single = false,
+        $deep = array()
     ) {
         $params = $this->buildGetParamsArray(
             $filters,
@@ -434,7 +444,8 @@ class GoodsCloud_Sync_Model_Api
             $limit,
             $offset,
             $orderBy,
-            $single
+            $single,
+            $deep
         );
 
         $requestPath = "/api/internal/$model";
@@ -463,6 +474,7 @@ class GoodsCloud_Sync_Model_Api
      * @param int    $offset  offset as in mysql
      * @param string $orderBy order by attribute
      * @param bool   $single  expect single result - avoids collection and returns one object
+     * @param array  $deep
      *
      * @return array
      */
@@ -472,7 +484,8 @@ class GoodsCloud_Sync_Model_Api
         $limit,
         $offset,
         $orderBy,
-        $single
+        $single,
+        array $deep
     ) {
         $params = array();
         if (!empty($filters)) {
@@ -498,6 +511,11 @@ class GoodsCloud_Sync_Model_Api
         }
 
         $params = array('q' => $params);
+
+        if ($deep) {
+            $params['deep'] = $deep;
+        }
+
         return $params;
     }
 
