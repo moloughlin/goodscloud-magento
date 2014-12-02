@@ -103,6 +103,8 @@ class GoodsCloud_Sync_Model_Api
     }
 
     /**
+     * @param array $filter
+     *
      * @return GoodsCloud_Sync_Model_Api_Order_Collection
      */
     public function getOrders($filter = array())
