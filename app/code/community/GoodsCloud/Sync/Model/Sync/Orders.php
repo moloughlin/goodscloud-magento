@@ -72,28 +72,13 @@ class GoodsCloud_Sync_Model_Sync_Orders
                     $this->checkOrderItems($order);
                     break;
             }
-            // get all invoices to create magento invoices
-            foreach ($order->getInvoices() as $invoice) {
-                if ($invoice['final']) {
-                    $this->updateInvoice($invoice, $order);
-                }
-            }
 
-            // get all shipments to create magento shipments
-            foreach ($order->getShipments() as $shipment) {
-                if ($this->createShipmentForShipment($shipment)) {
-                    $this->updateShipment($shipment);
-                }
-            }
-
-            // finally get all credit notes to generate credit memos
-            foreach ($order->getCreditNotes() as $creditNote) {
-                if ($creditNote['final']) {
-                    $this->updateCreditNote($creditNote);
-                }
-            }
+            $this->createInvoices($order);
+            $this->createShipments($order);
+            $this->createCreditNotes($order);
         }
     }
+
 
     /**
      * @param array                           $gcInvoice
@@ -105,14 +90,7 @@ class GoodsCloud_Sync_Model_Sync_Orders
         array $gcInvoice,
         GoodsCloud_Sync_Model_Api_Order $gcOrder
     ) {
-        $qtys = array();
-
-        foreach ($gcInvoice['invoice_items'] as $item) {
-            $orderItems = $gcOrder->getOrderItems();
-            $magentoOrderItemId
-                = $orderItems[$item['order_item_id']]['external_identifier'];
-            $qtys[$magentoOrderItemId] = $item['quantity'];
-        }
+        $qtys = $this->getQtys($gcInvoice, $gcOrder, 'invoice_items');
 
         if (empty($qtys)) {
             return;
@@ -218,7 +196,7 @@ class GoodsCloud_Sync_Model_Sync_Orders
                 //'value' => $timestamp
                 'name' => 'external_identifier',
                 'op'   => 'eq',
-                'val'  => '145000003'
+                'val'  => '100000201'
             )
         );
     }
@@ -287,5 +265,88 @@ class GoodsCloud_Sync_Model_Sync_Orders
     {
         return in_array($shipment['delivery_status'],
             $this->statusesToCreateShipment);
+    }
+
+    /**
+     * @param array                           $gcInvoiceShipmentOrCreditNote
+     * @param GoodsCloud_Sync_Model_Api_Order $gcOrder
+     * @param string                          $itemKey
+     *
+     * @return array
+     */
+    private function getQtys(
+        array $gcInvoiceShipmentOrCreditNote,
+        GoodsCloud_Sync_Model_Api_Order $gcOrder,
+        $itemKey
+    ) {
+        $qtys = array();
+
+        foreach ($gcInvoiceShipmentOrCreditNote[$itemKey] as $item) {
+            $orderItems = $gcOrder->getOrderItems();
+            $magentoOrderItemId
+                = $orderItems[$item['order_item_id']]['external_identifier'];
+            $qtys[$magentoOrderItemId] = $item['quantity'];
+        }
+        return $qtys;
+    }
+
+    /**
+     * @param GoodsCloud_Sync_Model_Api_Order $order
+     */
+    private function createInvoices(GoodsCloud_Sync_Model_Api_Order $order)
+    {
+        // get all invoices to create magento invoices
+        foreach ($order->getInvoices() as $invoice) {
+            if ($invoice['final']) {
+                $this->updateInvoice($invoice, $order);
+            }
+        }
+    }
+
+    /**
+     * @param GoodsCloud_Sync_Model_Api_Order $order
+     */
+    private function createShipments(GoodsCloud_Sync_Model_Api_Order $order)
+    {
+        // get all shipments to create magento shipments
+        foreach ($order->getShipments() as $shipment) {
+            if ($this->createShipmentForShipment($shipment)) {
+                $this->updateShipment($shipment, $order);
+            }
+        }
+    }
+
+    private function updateShipment(
+        array $gcShipment,
+        GoodsCloud_Sync_Model_Api_Order $gcOrder
+    ) {
+        $qtys = $this->getQtys($gcShipment, $gcOrder, 'shipment_items');
+
+        if (empty($qtys)) {
+            return;
+        }
+
+        $qtys = $this->getParentOrderItemIds($qtys);
+
+        try {
+            Mage::getModel('sales/order_invoice_api')
+                ->create($gcOrder->getExternalIdentifier(), $qtys);
+
+        } catch (Mage_Core_Exception $e) {
+            Mage::logException($e);
+        }
+    }
+
+    /**
+     * @param GoodsCloud_Sync_Model_Api_Order $order
+     */
+    private function createCreditNotes(GoodsCloud_Sync_Model_Api_Order $order)
+    {
+        // finally get all credit notes to generate credit memos
+        foreach ($order->getCreditNotes() as $creditNote) {
+            if ($creditNote['final']) {
+                $this->updateCreditNote($creditNote);
+            }
+        }
     }
 }
