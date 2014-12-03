@@ -122,8 +122,13 @@ class GoodsCloud_Sync_Model_Api
             ),
         );
 
-        return $this->get('order', $filter, array(), null,
+        return $this->get('order', $filter, false, null,
             0, array(), false, $deep);
+    }
+
+    public function getCreditNoteById($id)
+    {
+        $this->getById('credit_note', $id);
     }
 
     /**
