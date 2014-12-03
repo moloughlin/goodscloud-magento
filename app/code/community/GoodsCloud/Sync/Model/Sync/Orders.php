@@ -345,8 +345,33 @@ class GoodsCloud_Sync_Model_Sync_Orders
         // finally get all credit notes to generate credit memos
         foreach ($order->getCreditNotes() as $creditNote) {
             if ($creditNote['final']) {
-                $this->updateCreditNote($creditNote);
+                $this->updateCreditNote($creditNote, $order);
             }
+        }
+    }
+
+    /**
+     * @param array                           $gcCreditNote
+     * @param GoodsCloud_Sync_Model_Api_Order $gcOrder
+     */
+    private function updateCreditNote(
+        array $gcCreditNote,
+        GoodsCloud_Sync_Model_Api_Order $gcOrder
+    ) {
+        $qtys = $this->getQtys($gcCreditNote, $gcOrder, 'credit_note_items');
+
+        if (empty($qtys)) {
+            return;
+        }
+
+        $qtys = $this->getParentOrderItemIds($qtys);
+
+        try {
+            Mage::getModel('sales/order_creditmemo_api_v2')
+                ->create($gcOrder->getExternalIdentifier(), $qtys);
+
+        } catch (Mage_Core_Exception $e) {
+            Mage::logException($e);
         }
     }
 }
