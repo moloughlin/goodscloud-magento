@@ -99,6 +99,7 @@ class Goodscloud
         curl_setopt(
             $ch, CURLOPT_HTTPHEADER, array(
                 'Content-Type: application/json',
+                'Accept: application/json; version=20141029'
             )
         );
 
