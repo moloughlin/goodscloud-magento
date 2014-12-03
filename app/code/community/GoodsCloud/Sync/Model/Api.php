@@ -110,10 +110,16 @@ class GoodsCloud_Sync_Model_Api
     public function getOrders($filter = array())
     {
         $deep = array(
-            'invoices'    => array(
+            'invoices'     => array(
                 'invoice_items' => new stdClass(),
             ),
-            'order_items' => new stdClass(),
+            'order_items'  => new stdClass(),
+            'shipments'    => array(
+                'shipment_items' => new stdClass(),
+            ),
+            'credit_notes' => array(
+                'credit_note_items' => new stdClass(),
+            ),
         );
 
         return $this->get('order', $filter, array(), null,
