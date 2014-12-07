@@ -25,8 +25,15 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
     ) {
         $importArray = array();
         foreach ($products as $product) {
-            $importArray[$this->getSku($product)][]
-                = $this->buildProductArray($product);
+            try {
+
+                $importArray[$this->getSku($product)][]
+                    = $this->buildProductArray($product);
+
+            } catch (Exception $e) {
+                Mage::logException($e);
+                continue;
+            }
         }
 
         return $importArray;
@@ -34,6 +41,8 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
 
     /**
      * @param GoodsCloud_Sync_Model_Api $api
+     *
+     * @return $this
      */
     public function setApi(GoodsCloud_Sync_Model_Api $api)
     {
