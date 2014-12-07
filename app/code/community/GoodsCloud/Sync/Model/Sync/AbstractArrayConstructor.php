@@ -62,17 +62,24 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
     {
         /** @var $attributeSet Mage_Eav_Model_Entity_Attribute_Set */
         $attributeSet = $this->attributeSetCache[$propertySetId];
+        if ($attributeSet === null) {
+            throw new RuntimeException('Product has no property set.');
+        }
         return $attributeSet->getAttributeSetName();
     }
 
     /**
      * @param $channelId
      *
+     * @throws Exception
      * @return string
      */
     protected function getWebsiteByChannelId($channelId)
     {
-        return $this->storeViewCache[$channelId]->getWebsite()->getCode();
+        if ($this->storeViewCache[$channelId] === null) {
+            return $this->storeViewCache[$channelId]->getWebsite()->getCode();
+        }
+        throw new Exception('Channel not found, either inventory channel or not magento related channel');
     }
 
     /**
