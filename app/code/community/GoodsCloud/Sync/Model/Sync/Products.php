@@ -52,13 +52,13 @@ class GoodsCloud_Sync_Model_Sync_Products
 
         $arrayToImport = array();
 
-        //        // merge into big array
-        //        $arrayToImport += $this->getProductArrayForImport(
-        //        // get changed company products
-        //            $this->getChangedCompanyProducts($lastUpdateTime),
-        //            // get changed channel products
-        //            $this->getChangedChannelProducts($lastUpdateTime)
-        //        );
+        // merge into big array
+        $arrayToImport += $this->getProductArrayForImport(
+            // get changed company products
+            $this->getChangedCompanyProducts($lastUpdateTime),
+            // get changed channel products
+            $this->getChangedChannelProducts($lastUpdateTime)
+        );
 
         $arrayToImport += $this->getProductArrayForImport(
             $this->getChangedCompanyProductViews($lastUpdateTime),
