@@ -67,6 +67,7 @@ class GoodsCloud_Sync_Model_Sync_Products
 
         // import via AvS
         $this->import($arrayToImport);
+
         // set new update datetime
         $this->saveUpdateTime($timeBeforeUpdate);
     }
@@ -78,16 +79,7 @@ class GoodsCloud_Sync_Model_Sync_Products
      */
     private function getChangedCompanyProductViews($lastUpdateTime)
     {
-        $filters = array();
-        if ($lastUpdateTime) {
-            $filters = array(
-                array(
-                    'name' => 'updated',
-                    'op'   => '>=',
-                    'val'  => $lastUpdateTime
-                )
-            );
-        }
+        $filters = $this->getFilter($lastUpdateTime);
 
         $products = $this->api->getCompanyProductViews($filters);
 
@@ -111,16 +103,7 @@ class GoodsCloud_Sync_Model_Sync_Products
      */
     private function getChangedChannelProductViews($lastUpdateTime)
     {
-        $filters = array();
-        if ($lastUpdateTime) {
-            $filters = array(
-                array(
-                    'name' => 'updated',
-                    'op'   => '>=',
-                    'val'  => $lastUpdateTime
-                )
-            );
-        }
+        $filters = $this->getFilter($lastUpdateTime);
 
         $products = $this->api->getChannelProductViews($filters);
 
@@ -217,16 +200,7 @@ class GoodsCloud_Sync_Model_Sync_Products
      */
     private function getChangedCompanyProducts($lastUpdateTime)
     {
-        $filters = array();
-        if ($lastUpdateTime) {
-            $filters = array(
-                array(
-                    'name' => 'updated',
-                    'op'   => '>=',
-                    'val'  => $lastUpdateTime
-                )
-            );
-        }
+        $filters = $this->getFilter($lastUpdateTime);
 
         $products = $this->api->getCompanyProducts($filters);
         /** @var $companyProductArrayGenerator GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor */
@@ -248,16 +222,7 @@ class GoodsCloud_Sync_Model_Sync_Products
      */
     private function getChangedChannelProducts($lastUpdateTime)
     {
-        $filters = array();
-        if ($lastUpdateTime) {
-            $filters = array(
-                array(
-                    'name' => 'updated',
-                    'op'   => '>=',
-                    'val'  => $lastUpdateTime
-                )
-            );
-        }
+        $filters = $this->getFilter($lastUpdateTime);
 
         $products = $this->api->getChannelProducts($filters);
         /** @var $channelProductArrayGenerator GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor */
@@ -386,5 +351,28 @@ class GoodsCloud_Sync_Model_Sync_Products
             }
         }
         return $this->attributeCache;
+    }
+
+    /**
+     * @param $lastUpdateTime
+     *
+     * @return array
+     */
+    private function getFilter($lastUpdateTime)
+    {
+        $lastUpdateTime = '2014-12-01T13:00:31.300450+00:00';
+
+        $filters = array();
+        if ($lastUpdateTime) {
+            $filters = array(
+                array(
+                    'name' => 'updated',
+                    'op'   => '>=',
+                    'val'  => $lastUpdateTime
+                )
+            );
+            return $filters;
+        }
+        return $filters;
     }
 }
