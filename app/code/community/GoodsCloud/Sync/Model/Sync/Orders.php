@@ -60,22 +60,26 @@ class GoodsCloud_Sync_Model_Sync_Orders
         $filter = $this->getUpdatedFilter($lastUpdateTime);
         $orders = $this->api->getOrders($filter);
         foreach ($orders as $order) {
-            /* @var $order GoodsCloud_Sync_Model_Api_Order */
-            switch ($order->getRoutingStatus()) {
-                case self::ORDER_ROUTING_STATUS_CANCELED:
-                    $this->cancelOrder($order->getExternalIdentifier());
-                    break;
-                case self::ORDER_ROUTING_STATUS_ON_HOLD:
-                    $this->putOrderOnHold($order->getExternalIdentifier());
-                    break;
-                case self::ORDER_ROUTING_STATUS_MIXED:
-                    $this->checkOrderItems($order);
-                    break;
-            }
+            try {
+                /* @var $order GoodsCloud_Sync_Model_Api_Order */
+                switch ($order->getRoutingStatus()) {
+                    case self::ORDER_ROUTING_STATUS_CANCELED:
+                        $this->cancelOrder($order->getExternalIdentifier());
+                        break;
+                    case self::ORDER_ROUTING_STATUS_ON_HOLD:
+                        $this->putOrderOnHold($order->getExternalIdentifier());
+                        break;
+                    case self::ORDER_ROUTING_STATUS_MIXED:
+                        $this->checkOrderItems($order);
+                        break;
+                }
 
-            $this->createInvoices($order);
-            $this->createShipments($order);
-            $this->createCreditNotes($order);
+                $this->createInvoices($order);
+                $this->createShipments($order);
+                $this->createCreditNotes($order);
+            } catch (Exception $e) {
+                Mage::logException($e);
+            }
         }
     }
 
