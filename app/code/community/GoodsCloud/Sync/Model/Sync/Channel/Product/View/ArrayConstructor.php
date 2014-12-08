@@ -156,8 +156,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
      *
      * @return array
      */
-    private
-    function buildPropertyKeys(
+    private function buildPropertyKeys(
         GoodsCloud_Sync_Model_Api_Channel_Product_View $product
     ) {
 
@@ -194,8 +193,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
      *
      * @return array
      */
-    private
-    function buildSpecialKeys(
+    private function buildSpecialKeys(
         GoodsCloud_Sync_Model_Api_Channel_Product_View $product
     ) {
         return array(
@@ -218,8 +216,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
      *
      * @return string[]
      */
-    private
-    function getCategories(
+    private function getCategories(
         GoodsCloud_Sync_Model_Api_Channel_Product_View $product
     ) {
         $categories = array();
@@ -236,8 +233,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
      *
      * @return string
      */
-    private
-    function getCategoryPath(
+    private function getCategoryPath(
         $id
     ) {
         return $this->categoryCache[$id];
@@ -286,8 +282,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
      *
      * @return string
      */
-    private
-    function getAttributeSetForProduct(
+    private function getAttributeSetForProduct(
         GoodsCloud_Sync_Model_Api_Channel_Product_View $channelProduct
     ) {
         if ($channelProduct) {
@@ -303,8 +298,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
         );
     }
 
-    private
-    function getSku(
+    private function getSku(
         GoodsCloud_Sync_Model_Api_Channel_Product_View $product
     ) {
         return $product->getSku();
@@ -315,8 +309,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
      *
      * @return int
      */
-    private
-    function getProductStatus(
+    private function getProductStatus(
         GoodsCloud_Sync_Model_Api_Channel_Product_View $product
     ) {
         if ($product->getActive()) {
@@ -325,8 +318,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
         return Mage_Catalog_Model_Product_Status::STATUS_DISABLED;
     }
 
-    private
-    function getStoreForProduct(
+    private function getStoreForProduct(
         GoodsCloud_Sync_Model_Api_Channel_Product_View $product
     ) {
         return $this->storeViewCache[$product->getChannelId()]->getCode();
