@@ -47,9 +47,6 @@ class GoodsCloud_Sync_Model_Sync_Products
         // get last update datetime
         $lastUpdateTime = $this->retrieveUpdateTime();
 
-        // TODO REMOVE!!!
-        $lastUpdateTime = '2007-12-12 12:12:12Z';
-
         $arrayToImport = array();
 
         // merge into big array
