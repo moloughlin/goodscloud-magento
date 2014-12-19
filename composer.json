@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "avstudnitz/fast-simple-import": "0.6.2"
+        "avstudnitz/fast-simple-import": "0.6.2",
+        "organicinternet/magento-configurable-simple": "dev-master#98deafc9ff17f19b44924a6f84784aa4ce3951fe"
     },
     "require-dev": {
         "ivanchepurnyi/ecomdev_phpunit": "dev-dev"
@@ -19,6 +20,15 @@
         {
             "type": "composer",
             "url": "http://packages.firegento.com"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/obigroup/magento-configurable-simple.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/goodscloud/goodscloud-magento.git"
         }
+
     ]
 }
