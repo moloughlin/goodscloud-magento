@@ -2,14 +2,29 @@
 
 This magento extension integrates your magento store into the GoodsCloud universe.
 
-Steps of implementation:
+## Install
 
-1. Setup extension
-    - Username
-    - Password
-    
-2. Add a Channel for every StoreView
-3. Add every AttributeSet as PropertySet to every Channel
-4. Add every Attribute as PropertySchema to every PropertySet
-5. Map properties to property sets
-6. Copy every store view category tree to GoodsCloud
+### modman
+Just use modman to clone this repo. Install [SCP](https://github.com/obigroup/magento-configurable-simple) and [AvS_FastSimpleImport](https://github.com/avstudnitz/AvS_FastSimpleImport)
+
+### composer.json
+
+Add the repositories  and goodscloud_sync to your composer.json:
+
+    {
+      "require": {"goodscloud/magento_sync": "dev-master"},
+      "repositories": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/goodscloud/goodscloud-magento.git"
+        },
+        {
+          "type": "composer",
+          "url": "http://packages.firegento.com"
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/obigroup/magento-configurable-simple.git"
+        }
+      ]
+    }    

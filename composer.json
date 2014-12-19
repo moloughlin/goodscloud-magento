@@ -1,19 +1,19 @@
 {
-    "name": "goodscloud/magento_sync",
-    "description": "Magento Extension to sync magento with goodscloud data",
-    "minimum-stability": "dev",
-    "license": "proprietary",
-    "authors": [
-        {
-            "name": "Fabian Blechschmidt",
-            "email": "blechschmidt@fabian-blechschmidt.de"
-        }
-    ],
-    "require": {
-        "avstudnitz/fast-simple-import": "0.6.2",
-        "organicinternet/magento-configurable-simple": "dev-master"
-    },
-    "require-dev": {
-        "ivanchepurnyi/ecomdev_phpunit": "dev-dev"
+  "name": "goodscloud/magento_sync",
+  "description": "Magento Extension to sync magento with goodscloud data",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Fabian Blechschmidt",
+      "email": "blechschmidt@fabian-blechschmidt.de"
     }
+  ],
+  "require": {
+    "avstudnitz/fast-simple-import": "0.6.2",
+    "organicinternet/magento-configurable-simple": "dev-master"
+  },
+  "require-dev": {
+    "ivanchepurnyi/ecomdev_phpunit": "dev-dev"
+  }
 }
