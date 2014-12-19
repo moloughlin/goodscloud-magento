@@ -13,6 +13,7 @@ Add the repositories  and goodscloud_sync to your composer.json:
 
     {
       "require": {"goodscloud/magento_sync": "dev-master"},
+      "minimum-stability": "dev",
       "repositories": [
         {
           "type": "vcs",
