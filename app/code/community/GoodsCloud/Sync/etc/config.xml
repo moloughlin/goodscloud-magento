@@ -382,6 +382,7 @@
         </suite>
     </phpunit>
     <adminhtml>
+        <!--
         <events>
             <catalog_product_save_before>
                 <observers>
@@ -438,6 +439,7 @@
                 </observers>
             </eav_entity_attribute_set_save_before>
         </events>
+        -->
         <translate>
             <modules>
                 <goodscloud_sync>
@@ -448,4 +450,24 @@
             </modules>
         </translate>
     </adminhtml>
+    <crontab>
+        <jobs>
+            <gc_order_export>
+                <schedule>
+                    <cron_expr>0 */5 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>goodscloud_sync/export_cron::exportOrders</model>
+                </run>
+            </gc_order_export>
+            <gc_sync>
+                <schedule>
+                    <cron_expr>0 */5 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>GoodsCloud_Sync_Model_sync_cron::sync</model>
+                </run>
+            </gc_sync>
+        </jobs>
+    </crontab>
 </config>
