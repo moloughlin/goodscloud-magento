@@ -656,7 +656,7 @@ class GoodsCloud_Sync_Model_Api
             //label	column	String	not NULL 256 characters or less.
             'label'      => $data['label'],
             //rate	column	Numeric			 00.00000000
-            'rate'       => $data['rate'],
+            'rate'       => number_format($data['rate'] / 100, 8),
             //updated	column	DateTime	not NULL ISO format datetime with timezone offset: 1997-07-16T19:20:30.45+01:00. The time when this row was last updated. Read-only.
             //version	column	Integer	not NULL	1	Current version number of this entry, incremented each time it is changed. Read-only.
             //audit_user_id	column	Integer			ForeignKey('company_user.id') ON DELETE None ID of the user responsible for the last change of this object
