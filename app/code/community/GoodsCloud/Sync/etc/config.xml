@@ -470,4 +470,15 @@
             </gc_sync>
         </jobs>
     </crontab>
+    <frontend>
+        <routers>
+            <goodscloud_sync>
+                <use>standard</use>
+                <args>
+                    <module>GoodsCloud_Sync</module>
+                    <frontName>goodscloud_sync</frontName>
+                </args>
+            </goodscloud_sync>
+        </routers>
+    </frontend>
 </config>

@@ -55,10 +55,13 @@ class GoodsCloud_Sync_Model_Export_Order
 
     /**
      * @param GoodsCloud_Sync_Model_Api $api
+     *
+     * @return $this
      */
     public function setApi(GoodsCloud_Sync_Model_Api $api)
     {
         $this->api = $api;
+        return $this;
     }
 
     /**

@@ -14,7 +14,7 @@ class GoodsCloud_Sync_Model_Sync
     {
         $products = Mage::getModel('goodscloud_sync/sync_products');
         $products->setApi($this->getApi());
-        $products->updateProducts();
+        $products->updateProductsByTimestamp();
     }
 
     /**
