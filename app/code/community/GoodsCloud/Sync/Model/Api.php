@@ -126,9 +126,60 @@ class GoodsCloud_Sync_Model_Api
             0, array(), false, $deep);
     }
 
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Credit_Note_Collection
+     */
+    public function getCreditNotes()
+    {
+        return $this->get('credit_note');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Credit_Note_Item_Collection
+     */
+    public function getCreditNoteItems()
+    {
+        return $this->get('credit_note_item');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Logistic_Order_Item_Collection
+     */
+    public function getLogisticOrderItem()
+    {
+        return $this->get('logistic_order_item');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Logistic_Order_Collection
+     */
+    public function getLogisticOrder()
+    {
+        return $this->get('logistic_order');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Shipment_Collection
+     */
+    public function getShipments()
+    {
+        return $this->get('shipment');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Shipment_Item_Collection
+     */
+    public function getShipmentItems()
+    {
+        return $this->get('shipment_item');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Credit_Note
+     */
     public function getCreditNoteById($id)
     {
-        $this->getById('credit_note', $id);
+        return $this->getById('credit_note', $id);
     }
 
     /**
@@ -177,6 +228,14 @@ class GoodsCloud_Sync_Model_Api
     public function getInvoices()
     {
         return $this->get('invoice');
+    }
+
+    /**
+     * @return GoodsCloud_Sync_Model_Api_Invoice_Item_Collection
+     */
+    public function getInvoiceItems()
+    {
+        return $this->get('invoice_item');
     }
 
     /**
@@ -241,6 +300,62 @@ class GoodsCloud_Sync_Model_Api
     public function deleteInvoice($id)
     {
         $this->delete('invoice', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteInvoiceItem($id)
+    {
+        $this->delete('invoice_item', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteCreditNoteItem($id)
+    {
+        $this->delete('credit_note_item', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteCreditNote($id)
+    {
+        $this->delete('credit_note', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteLogisticOrder($id)
+    {
+        $this->delete('logistic_order', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteLogisticOrderItem($id)
+    {
+        $this->delete('logistic_order_item', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteShipment($id)
+    {
+        $this->delete('shipment', $id);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteShipmentItem($id)
+    {
+        $this->delete('shipment_item', $id);
     }
 
     /**
@@ -382,6 +497,7 @@ class GoodsCloud_Sync_Model_Api
             Zend_Log::DEBUG,
             'goodscloud.log'
         );
+
         return $this->api->delete("/api/internal/$resource/$id");
     }
 
@@ -421,6 +537,7 @@ class GoodsCloud_Sync_Model_Api
                 'val'  => $companyProductIds,
             ),
         );
+
         return $this->getChannelProducts($filter);
     }
 
@@ -475,6 +592,7 @@ class GoodsCloud_Sync_Model_Api
         }
 
         Mage::log($response, Zend_Log::DEBUG, 'goodscloud.log');
+
         return $this->createObjects($model, $single, $response);
     }
 
@@ -1018,6 +1136,7 @@ class GoodsCloud_Sync_Model_Api
         );
 
         $response = $this->putPost('property_set', $data);
+
         return $response;
     }
 
@@ -1366,6 +1485,7 @@ class GoodsCloud_Sync_Model_Api
                 'id' => $id,
             );
         }
+
         return $returnedIds;
     }
 
@@ -1420,6 +1540,7 @@ class GoodsCloud_Sync_Model_Api
             /** @var $item Varien_Object */
             $item = Mage::getModel('goodscloud_sync/api_' . $resource);
             $item->setData($response);
+
             return $item;
 
         } catch (Exception $e) {
@@ -1456,6 +1577,7 @@ class GoodsCloud_Sync_Model_Api
                 );
                 $exception->setDetails($matches[4]);
                 $exception->setLongDetails($matches[5]);
+
                 return $exception;
             }
         } elseif (preg_match('#API .* \(status code (\d*)\): \((.*?)\) (.*)#',
@@ -1467,6 +1589,7 @@ class GoodsCloud_Sync_Model_Api
                     $matches[2] . "\n" . $matches[3], $matches[1], $exception
                 );
                 $exception->setDetails($matches[3]);
+
                 return $exception;
             }
         }
@@ -1548,6 +1671,7 @@ class GoodsCloud_Sync_Model_Api
             /* @var $item Varien_Object */
             $item = Mage::getModel('goodscloud_sync/api_' . $model);
             $item->setData($response);
+
             return $item;
         } else {
             /* @var $collection GoodsCloud_Sync_Model_Api_AbstractCollection */
