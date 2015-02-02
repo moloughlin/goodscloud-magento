@@ -1096,7 +1096,7 @@ class GoodsCloud_Sync_Model_Api
             //        external_identifier	column	String 256 characters or less.
             'external_identifier' => $category->getId(),
             //        label	column	String	not NULL 256 characters or less.
-            'label'               => $category->getName(),
+            'label'               => $store->getId() . ': ' . $category->getName(),
             //        position	column	Integer Position of this category in the list of categories in its parent category.
             'position'            => $category->getPosition(),
             //        selectable	column	Boolean	not NULL	True True means this category can contain products.
