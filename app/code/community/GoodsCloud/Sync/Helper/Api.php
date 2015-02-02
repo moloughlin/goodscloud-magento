@@ -149,7 +149,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     /**
      * @return bool
      */
-    private function isSandboxMode()
+    public function isSandboxMode()
     {
         return MAge::getStoreConfigFlag(self::XML_CONFIG_SANDBOX_MODE);
     }
