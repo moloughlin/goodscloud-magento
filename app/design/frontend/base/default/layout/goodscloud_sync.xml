@@ -1,10 +1,17 @@
 <?xml version="1.0" ?>
 <layout>
     <default>
-        <remove name="sales.order.info"/>
         <remove name="sales.order.view"/>
         <remove name="sales.order.invoice"/>
         <remove name="sales.order.creditmemo"/>
         <remove name="sales.order.shipment"/>
     </default>
+    <sales_order_view>
+        <reference name="sales.order.info">
+            <action method="setTemplate">
+                <template>goodscloud_sync/customer/info.phtml</template>
+            </action>
+        </reference>
+    </sales_order_view>
 </layout>
+
