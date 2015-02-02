@@ -3,5 +3,7 @@ lib/GoodsCloud                                                      lib/GoodsClo
 app/locale/de_DE/GoodsCloud_Sync.csv                                app/locale/de_DE/GoodsCloud_Sync.csv
 
 app/design/adminhtml/default/default/template/goodscloud_sync   app/design/adminhtml/default/default/template/goodscloud_sync
+app/design/frontend/base/default/layout/goodscloud_sync.xml     app/design/frontend/base/default/layout/goodscloud_sync.xml
+app/design/frontend/base/default/template/goodscloud_sync       app/design/frontend/base/default/template/goodscloud_sync
 
 app/etc/modules/GoodsCloud_Sync.xml                                 app/etc/modules/GoodsCloud_Sync.xml

@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<layout>
+    <default>
+        <remove name="sales.order.info"/>
+        <remove name="sales.order.view"/>
+        <remove name="sales.order.invoice"/>
+        <remove name="sales.order.creditmemo"/>
+        <remove name="sales.order.shipment"/>
+    </default>
+</layout>

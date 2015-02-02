@@ -507,5 +507,12 @@
                 </args>
             </goodscloud_sync>
         </routers>
+        <layout>
+            <updates>
+                <goodscloud_sync>
+                    <file>goodscloud_sync.xml</file>
+                </goodscloud_sync>
+            </updates>
+        </layout>
     </frontend>
 </config>
