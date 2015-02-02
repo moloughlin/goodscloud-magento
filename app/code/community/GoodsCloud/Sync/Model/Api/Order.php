@@ -68,8 +68,11 @@ class GoodsCloud_Sync_Model_Api_Order extends Varien_Object
     private function indexArrayKey($key)
     {
         $items = array();
-        foreach ($this->getDataUsingMethod($key) as $item) {
-            $items[$item['id']] = $item;
+        $data = $this->getDataUsingMethod($key);
+        if (is_array($data || $data instanceof Iterator)) {
+            foreach ($data as $item) {
+                $items[$item['id']] = $item;
+            }
         }
         $this->setData($key, $items);
     }
