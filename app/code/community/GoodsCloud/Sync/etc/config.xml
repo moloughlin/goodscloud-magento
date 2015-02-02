@@ -372,6 +372,11 @@
                     <ZW/>
                 </goodscloud_country_codes>
             </api>
+            <advanced>
+                <base_url></base_url>
+                <sandbox_base_url>https://sandbox.goodscloud.com/</sandbox_base_url>
+                <sandbox_mode>1</sandbox_mode>
+            </advanced>
         </goodscloud_sync>
     </default>
     <phpunit>
