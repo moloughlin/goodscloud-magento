@@ -142,6 +142,15 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </sandbox_mode>
+                        <aws_access_key_button>
+                            <label>Get AWS Settings</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>goodscloud_sync/renderer_button</frontend_model>
+                            <sort_order>260</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </aws_access_key_button>
                         <aws_access_key_id>
                             <label>AWS Access Key ID</label>
                             <frontend_type>text</frontend_type>
