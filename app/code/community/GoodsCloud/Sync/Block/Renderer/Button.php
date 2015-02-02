@@ -32,8 +32,7 @@ class GoodsCloud_Sync_Block_Renderer_Button
      */
     public function getAjaxCheckUrl()
     {
-        return Mage::helper('adminhtml')
-            ->getUrl('adminhtml/adminhtml_atwixtweaks/check');
+        return Mage::helper('adminhtml')->getUrl('adminhtml/getAws');
     }
 
     /**

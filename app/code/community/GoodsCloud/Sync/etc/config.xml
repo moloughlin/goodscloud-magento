@@ -486,6 +486,17 @@
             </gc_sync>
         </jobs>
     </crontab>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <goodscloud_sync before="Mage_Adminhtml">GoodsCloud_Sync_Adminhtml</goodscloud_sync>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <frontend>
         <routers>
             <goodscloud_sync>
