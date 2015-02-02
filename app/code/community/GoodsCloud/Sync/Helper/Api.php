@@ -125,6 +125,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                     : $product->getDataUsingMethod($attributeCode);
             }
         }
+
         return $properties;
     }
 
@@ -213,6 +214,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         if ($attribute->getBackendType() == 'datetime') {
             return 'datetime';
         }
+
         return 'free';
     }
 
@@ -232,6 +234,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                     $values[] = $option['value'];
                 }
             }
+
             return $values;
         } catch (Mage_Core_Exception $e) {
             $sourceModelNotFound = 'Source model "" not found for attribute ';
@@ -460,6 +463,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             );
             $this->setVatRateId($label, $rate->getId());
         }
+
         return (int)$this->getVateRateId($label);
     }
 
@@ -498,6 +502,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     private function getVateRateId($label)
     {
         $cleanLabel = preg_replace('#[^a-zA-Z0-9]#', '_', $label);
+
         return Mage::getStoreConfig(self::XML_CONFIG_VAT_RATES . $cleanLabel);
     }
 
@@ -603,6 +608,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
         if (isset($json[$storeId])) {
             return $json[$storeId];
         }
+
         return null;
     }
 
@@ -697,6 +703,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     public function getLanguage($store = null)
     {
         $store = Mage::app()->getStore($store);
+
         return substr(Mage::getStoreConfig('general/locale/code', $store), 0,
             2);
     }
@@ -717,6 +724,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
                 return $stockItem->getQtyIncrements();
             }
         }
+
         return 1;
     }
 
@@ -742,6 +750,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             $ids = json_decode($product->getGcProductIds(), true);
             $gcProductIds[] = array('id' => $ids[0]);
         }
+
         return $gcProductIds;
     }
 
@@ -751,6 +760,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     private function getGcProductIdAttributeId()
     {
         $this->initGcProductIdAttribute();
+
         return $this->gcProductIdAttribute->getId();
     }
 
@@ -771,6 +781,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
     public function getSeoData(Mage_Catalog_Model_Product $product, $store)
     {
         $apiHelper = Mage::helper('goodscloud_sync/api');
+
         return array(
             //    id	column	Integer	not NULL Primary key.
             //    canonical	column	Boolean	not NULL	False
@@ -781,7 +792,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             //    meta_description	column	Text Any length allowed.
             'meta_description' => $product->getMetaDescription(),
             //    meta_keyword	column	Text Any length allowed.
-            'meta_keywords'     => explode(',', $product->getMetaKeyword()),
+            'meta_keywords'    => explode(',', $product->getMetaKeyword()),
             //    meta_robots	column	Text Any length allowed.
             //    meta_title	column	Text Any length allowed.
             'meta_title'       => $product->getMetaTitle(),
