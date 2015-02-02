@@ -4,7 +4,9 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
 {
     const XML_CONFIG_IDENTIFIER_TYPE = 'goodscloud_sync/shop/identifier_type';
     const XML_CONFIG_IDENTIFIER_ATTRIBUTE = 'goodscloud_sync/shop/identifier_attribute';
+    const XML_CONFIG_SANDBOX_BASE_URL = 'goodscloud_sync/advanced/sandbox_base_url';
     const XML_CONFIG_BASE_URL = 'goodscloud_sync/advanced/base_url';
+    const XML_CONFIG_SANDBOX_MODE = 'goodscloud_sync/advanced/sandbox_mode';
     const XML_CONFIG_EMAIL = 'goodscloud_sync/basic/username';
     const XML_CONFIG_PASSWORD = 'goodscloud_sync/basic/password';
     const XML_CONFIG_IGNORED_ATTRIBUTES = 'goodscloud_sync/api/ignored_attributes';
@@ -136,7 +138,20 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getUri()
     {
-        return Mage::getStoreConfig(self::XML_CONFIG_BASE_URL);
+        if ($this->isSandboxMode()) {
+            return Mage::getStoreConfig(self::XML_CONFIG_SANDBOX_BASE_URL);
+        } else {
+            return Mage::getStoreConfig(self::XML_CONFIG_BASE_URL);
+        }
+
+    }
+
+    /**
+     * @return bool
+     */
+    private function isSandboxMode()
+    {
+        return MAge::getStoreConfigFlag(self::XML_CONFIG_SANDBOX_MODE);
     }
 
     /**
