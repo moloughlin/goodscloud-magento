@@ -781,7 +781,7 @@ class GoodsCloud_Sync_Helper_Api extends Mage_Core_Helper_Abstract
             //    meta_description	column	Text Any length allowed.
             'meta_description' => $product->getMetaDescription(),
             //    meta_keyword	column	Text Any length allowed.
-            'meta_keyword'     => explode(',', $product->getMetaKeyword()),
+            'meta_keywords'     => explode(',', $product->getMetaKeyword()),
             //    meta_robots	column	Text Any length allowed.
             //    meta_title	column	Text Any length allowed.
             'meta_title'       => $product->getMetaTitle(),
