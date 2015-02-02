@@ -1,0 +1,40 @@
+<?php $gcOrder = $this->getOrderFromGc(); ?>
+
+<?php if (count($gcOrder->getInvoices())): ?>
+    <h2><?php echo $this->__('Invoices'); ?></h2>
+    <ul>
+        <?php foreach ($gcOrder->getInvoices() as $invoice): ?>
+            <li>
+                <a href="<?php echo $this->getInvoiceLink($invoice['external_identifier']); ?>">
+                    <?php echo $this->__('Invoice %s',
+                        $invoice['external_identifier']); ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
+<?php /*
+<?php if (count($gcOrder->getShipments())): ?>
+    <h2><?php echo $this->__('Shipments'); ?></h2>
+    <ul>
+        <?php foreach ($gcOrder->getShipments() as $shipment): ?>
+            <li></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+*/ ?>
+
+<?php if ($gcOrder->getCreditNotes()): ?>
+    <h2><?php echo $this->__('Creditnotes'); ?></h2>
+    <ul>
+        <?php foreach ($gcOrder->getCreditNotes() as $creditnote): ?>
+            <li>
+                <a href="<?php echo $this->getCreditNoteLink($creditnote['external_identifier']); ?>">
+                    <?php echo $this->__('Creditnote %s',
+                        $creditnote['external_identifier']); ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

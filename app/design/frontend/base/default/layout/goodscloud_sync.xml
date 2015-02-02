@@ -12,6 +12,10 @@
                 <template>goodscloud_sync/customer/info.phtml</template>
             </action>
         </reference>
+        <reference name="my.account.wrapper">
+            <block type="goodscloud_sync/customer_documents" as="documents" name="goodscloud_sync.documents"
+                   template="goodscloud_sync/customer/documents.phtml"/>
+        </reference>
     </sales_order_view>
 </layout>
 
