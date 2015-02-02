@@ -377,6 +377,12 @@
                 <sandbox_base_url>https://sandbox.goodscloud.com/</sandbox_base_url>
                 <sandbox_mode>1</sandbox_mode>
             </advanced>
+            <invoice>
+                <format>plain</format>
+            </invoice>
+            <creditnote>
+                <format>plain</format>
+            </creditnote>
         </goodscloud_sync>
     </default>
     <phpunit>
