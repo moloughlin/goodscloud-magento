@@ -9,6 +9,34 @@ Mage::app();
 $api = Mage::getModel('goodscloud_sync/api');
 
 do {
+    $shipmentItems = $api->getShipmentItems();
+    foreach ($shipmentItems as $id => $item) {
+        $api->deleteShipmentItem($id);
+    }
+} while ($shipmentItems->getLastPageNumber() > 1);
+
+do {
+    $logisticOrderItems = $api->getLogisticOrderItem();
+    foreach ($logisticOrderItems as $id => $item) {
+        $api->deleteLogisticOrderItem($id);
+    }
+} while ($logisticOrderItems->getLastPageNumber() > 1);
+
+do {
+    $creditNoteItems = $api->getCreditNoteItems();
+    foreach ($creditNoteItems as $id => $item) {
+        $api->deleteCreditNoteItem($id);
+    }
+} while ($creditNoteItems->getLastPageNumber() > 1);
+
+do {
+    $invoiceItems = $api->getInvoiceItems();
+    foreach ($invoiceItems as $id => $item) {
+        $api->deleteInvoiceItem($id);
+    }
+} while ($invoiceItems->getLastPageNumber() > 1);
+
+do {
     $orderItems = $api->getOrderItem();
     foreach ($orderItems as $id => $orderItem) {
         $api->deleteOrderItem($id);
@@ -16,11 +44,18 @@ do {
 } while ($orderItems->getLastPageNumber() > 1);
 
 do {
-    $orders = $api->getOrders();
-    foreach ($orders as $id => $order) {
-        $api->deleteOrder($id);
+    $shipments = $api->getShipments();
+    foreach ($shipments as $id => $item) {
+        $api->deleteShipment($id);
     }
-} while ($orders->getLastPageNumber() > 1);
+} while ($shipments->getLastPageNumber() > 1);
+
+do {
+    $logisticOrders = $api->getLogisticOrder();
+    foreach ($logisticOrders as $id => $item) {
+        $api->deleteLogisticOrder($id);
+    }
+} while ($logisticOrders->getLastPageNumber() > 1);
 
 do {
     $invoices = $api->getInvoices();
@@ -28,6 +63,20 @@ do {
         $api->deleteInvoice($id);
     }
 } while ($invoices->getLastPageNumber() > 1);
+
+do {
+    $creditNotes = $api->getCreditNotes();
+    foreach ($creditNotes as $id => $creditNote) {
+        $api->deleteCreditNote($id);
+    }
+} while ($creditNotes->getLastPageNumber() > 1);
+
+do {
+    $orders = $api->getOrders();
+    foreach ($orders as $id => $order) {
+        $api->deleteOrder($id);
+    }
+} while ($orders->getLastPageNumber() > 1);
 
 do {
     $consumers = $api->getConsumers();

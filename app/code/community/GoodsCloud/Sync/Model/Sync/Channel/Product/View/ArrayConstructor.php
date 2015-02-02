@@ -63,6 +63,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
             $this->buildPropertyKeys($product),
             $this->buildSpecialKeys($product),
             $this->buildRelations($product),
+            $this->buildSeoData($product),
             $this->buildConfigurableAttributes($product)
         );
 
@@ -185,6 +186,20 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
             'visibility'        => 4,
             'tax_class_id'      => 2,
             // TODO
+        );
+    }
+
+
+    private function buildSeoData(
+        GoodsCloud_Sync_Model_Api_Channel_Product_View $product
+    ) {
+        $seo = $product->getSeo();
+
+        return array(
+            //            'meta_title',
+            'meta_keyword'     => implode(',', $seo['meta_keyword']),
+            'meta_description' => $seo['meta_description'],
+            //            'meta_autogenerate',
         );
     }
 
