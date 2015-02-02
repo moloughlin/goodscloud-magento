@@ -11,6 +11,11 @@
                 <class>GoodsCloud_Sync_Model</class>
             </goodscloud_sync>
         </models>
+        <blocks>
+            <goodscloud_sync>
+                <class>GoodsCloud_Sync_Block</class>
+            </goodscloud_sync>
+        </blocks>
         <resources>
             <goodscloud_sync_setup>
                 <setup>

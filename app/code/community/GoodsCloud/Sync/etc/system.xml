@@ -142,6 +142,15 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </sandbox_mode>
+                        <aws_access_key_id>
+                            <label>AWS Access Key ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>280</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <frontend_model>goodscloud_sync/renderer_readonly</frontend_model>
+                        </aws_access_key_id>
                     </fields>
                 </advanced>
             </groups>
