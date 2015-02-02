@@ -1,13 +1,11 @@
 <script type="text/javascript">
     //<![CDATA[
     function check() {
+        $('goodscloud_sync_button').addClassName('success').writeAttribute('disable');
         new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
             method: 'get',
             onSuccess: function (transport) {
-
-                if (transport.responseText) {
-                    alert('Checked')
-                }
+                $('goodscloud_sync_button').removeClassName('success').writeAttribute('disable', false);
             }
         });
     }
