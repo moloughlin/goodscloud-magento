@@ -126,6 +126,26 @@ class GoodsCloud_Sync_Model_Api
             0, array(), false, $deep);
     }
 
+    public function getOrderByExternalId($id)
+    {
+        $deep = array(
+            'invoices'     => new stdClass(),
+            'shipments'    => new stdClass(),
+            'credit_notes' => new stdClass(),
+        );
+
+        $filter = array(
+            array(
+                'name' => 'external_identifier',
+                'op'   => 'eq',
+                'val'  => $id,
+            ),
+        );
+
+        return $this->get('order', $filter, false, null,
+            0, array(), true, $deep);
+    }
+
     /**
      * @return GoodsCloud_Sync_Model_Api_Credit_Note_Collection
      */

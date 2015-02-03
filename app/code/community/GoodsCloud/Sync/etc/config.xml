@@ -11,6 +11,11 @@
                 <class>GoodsCloud_Sync_Model</class>
             </goodscloud_sync>
         </models>
+        <blocks>
+            <goodscloud_sync>
+                <class>GoodsCloud_Sync_Block</class>
+            </goodscloud_sync>
+        </blocks>
         <resources>
             <goodscloud_sync_setup>
                 <setup>
@@ -372,6 +377,17 @@
                     <ZW/>
                 </goodscloud_country_codes>
             </api>
+            <advanced>
+                <base_url></base_url>
+                <sandbox_base_url>https://sandbox.goodscloud.com/</sandbox_base_url>
+                <sandbox_mode>1</sandbox_mode>
+            </advanced>
+            <invoice>
+                <format>plain</format>
+            </invoice>
+            <creditnote>
+                <format>plain</format>
+            </creditnote>
         </goodscloud_sync>
     </default>
     <phpunit>
@@ -470,6 +486,17 @@
             </gc_sync>
         </jobs>
     </crontab>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <goodscloud_sync before="Mage_Adminhtml">GoodsCloud_Sync_Adminhtml</goodscloud_sync>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <frontend>
         <routers>
             <goodscloud_sync>
@@ -480,5 +507,12 @@
                 </args>
             </goodscloud_sync>
         </routers>
+        <layout>
+            <updates>
+                <goodscloud_sync>
+                    <file>goodscloud_sync.xml</file>
+                </goodscloud_sync>
+            </updates>
+        </layout>
     </frontend>
 </config>
