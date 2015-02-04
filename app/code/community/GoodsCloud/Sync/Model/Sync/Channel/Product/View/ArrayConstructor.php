@@ -47,6 +47,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
     public function setApi(GoodsCloud_Sync_Model_Api $api)
     {
         $this->api = $api;
+
         return $this;
     }
 
@@ -237,6 +238,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
                 $category['external_identifier']
             );
         }
+
         return $categories;
     }
 
@@ -261,6 +263,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
         $categories
     ) {
         $this->categoryCache = $categories;
+
         return $this;
     }
 
@@ -275,6 +278,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
     ) {
         // TODO supported by API but not yet used
         return array();
+
         return array(
             // Upsell
             '_links_upsell_sku',
@@ -327,6 +331,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
         if ($product->getActive()) {
             return Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
         }
+
         return Mage_Catalog_Model_Product_Status::STATUS_DISABLED;
     }
 

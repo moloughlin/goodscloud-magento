@@ -70,6 +70,7 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
 
         $availableDescription = $product->getAvailableDescriptions();
         $firstDescription = reset($availableDescription);
+
         return $importArray + array(
 
             'name'              => $product->getLabel(),
@@ -119,6 +120,7 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
     ) {
         // TODO supported by API but not yet used
         return array();
+
         return array(
             // Upsell
             '_links_upsell_sku',
@@ -198,6 +200,7 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
     ) {
         $channelProducts = $product->getChannelProducts();
         $channelProduct = reset($channelProducts);
+
         return $channelProduct;
     }
 
@@ -212,6 +215,7 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
         if ($product->getActive()) {
             return Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
         }
+
         return Mage_Catalog_Model_Product_Status::STATUS_DISABLED;
     }
 }
