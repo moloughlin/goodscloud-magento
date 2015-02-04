@@ -301,6 +301,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                     // only the first entry should an sku entry, so magento knows
                     // that we have different views for the same product
                     unset($entry['sku']);
+                    unset($entry[Mage::helper('goodscloud_sync/api')->getIdentifierAttribute()]);
                 }
                 $import[] = $entry;
                 $first = false;
