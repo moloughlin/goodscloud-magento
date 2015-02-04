@@ -93,9 +93,13 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
      */
     protected function getPropertyValue($name, $value)
     {
+        if (!isset($this->attributeCache[$name])) {
+            return $value;
+        }
+        $attribute = $this->attributeCache[$name];
         $helper = Mage::helper('goodscloud_sync/api');
         $gcPropertyType = $helper->getPropertySchemaTypeForAttribute(
-            $this->attributeCache[$name]
+            $attribute
         );
 
         switch ($gcPropertyType) {
@@ -103,7 +107,7 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
                 return $value == 'Yes' ? true : false;
                 break;
             case 'enum':
-                return trim($value);
+                return $this->getAttributeValue($value, $attribute);
                 break;
             case 'datetime':
                 return $value;
@@ -119,4 +123,22 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
             )
         );
     }
+
+    /**
+     * @param string                              $value
+     * @param Mage_Catalog_Model_Entity_Attribute $attribute
+     *
+     * @return string
+     */
+    protected function getAttributeValue($value, $attribute)
+    {
+        if ($attribute instanceof Mage_Catalog_Model_Resource_Eav_Attribute
+            && $attribute->getAttributeCode() == 'visibility'
+        ) {
+            return $attribute->getSource()->getOptionId($value);
+        }
+
+        return trim($value);
+    }
+
 }
