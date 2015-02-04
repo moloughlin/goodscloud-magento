@@ -196,7 +196,8 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
 
         return array(
             //            'meta_title',
-            'meta_keyword'     => implode(',', $seo['meta_keyword']),
+            'meta_keyword'     => isset($seo['meta_keyword']) ? implode(',',
+                $seo['meta_keyword']) : '',
             'meta_description' => $seo['meta_description'],
             //            'meta_autogenerate',
         );
