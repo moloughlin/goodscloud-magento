@@ -35,6 +35,7 @@ class GoodsCloud_Sync_Model_Sync_Products
     public function setApi(GoodsCloud_Sync_Model_Api $api)
     {
         $this->api = $api;
+
         return $this;
     }
 
@@ -97,14 +98,14 @@ class GoodsCloud_Sync_Model_Sync_Products
         // merge into big array
         $arrayToImport += $this->getProductArrayForImport(
         // get changed company products
-            $this->getChangedCompanyProducts($lastUpdateTime),
+            $this->getChangedCompanyProducts($filter),
             // get changed channel products
-            $this->getChangedChannelProducts($lastUpdateTime)
+            $this->getChangedChannelProducts($filter)
         );
 
         $arrayToImport += $this->getProductArrayForImport(
-            $this->getChangedCompanyProductViews($lastUpdateTime),
-            $this->getChangedChannelProductViews($lastUpdateTime)
+            $this->getChangedCompanyProductViews($filter),
+            $this->getChangedChannelProductViews($filter)
         );
 
         // import via AvS
@@ -177,6 +178,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                 $this->categoryCache[$category->getId()] = implode('/', $path);
             }
         }
+
         return $this->categoryCache;
     }
 
@@ -299,6 +301,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                     // only the first entry should an sku entry, so magento knows
                     // that we have different views for the same product
                     unset($entry['sku']);
+                    unset($entry[Mage::helper('goodscloud_sync/api')->getIdentifierAttribute()]);
                 }
                 $import[] = $entry;
                 $first = false;
@@ -361,6 +364,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                 }
             }
         }
+
         return $this->attributeSetCache;
     }
 
@@ -381,6 +385,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                 $this->attributeCache[$attributeCode] = $attribute;
             }
         }
+
         return $this->attributeCache;
     }
 

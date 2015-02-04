@@ -40,7 +40,8 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_ArrayConstructor
         $importArray = array_merge(
             $this->buildPropertyKeys($product),
             $this->buildSpecialKeys($product),
-            $this->buildRelations($product)
+            $this->buildRelations($product),
+            $this->buildImageKeys($product)
         );
 
         return $importArray;
@@ -97,14 +98,6 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_ArrayConstructor
         return array(
             '_type'          => 'simple',
             '_attribute_set' => $this->getAttributeSetForProduct($product),
-            // TODO not yet implemented
-            '_category',
-            '_media_image',
-            '_media_attribute_id',
-            '_media_is_disabled',
-            '_media_position',
-            // TYPO in magento core, don't fix!
-            '_media_lable',
             '_store'         => $this->getStoreForProduct($product),
         );
     }
@@ -119,6 +112,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_ArrayConstructor
     ) {
         // TODO supported by API but not yet used
         return array();
+
         return array(
             // Upsell
             '_links_upsell_sku',
@@ -170,6 +164,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_ArrayConstructor
         if ($product->getActive()) {
             return Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
         }
+
         return Mage_Catalog_Model_Product_Status::STATUS_DISABLED;
     }
 
