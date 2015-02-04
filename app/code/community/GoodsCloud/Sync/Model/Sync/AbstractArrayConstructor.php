@@ -25,6 +25,7 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
     public function setAttributeCache(array $attributes)
     {
         $this->attributeCache = $attributes;
+
         return $this;
     }
 
@@ -36,6 +37,7 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
     public function setAttributeSetCache(array $attributeSets)
     {
         $this->attributeSetCache = $attributeSets;
+
         return $this;
     }
 
@@ -65,6 +67,7 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
         if ($attributeSet === null) {
             throw new RuntimeException('Product has no property set.');
         }
+
         return $attributeSet->getAttributeSetName();
     }
 
