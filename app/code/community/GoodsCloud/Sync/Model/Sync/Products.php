@@ -97,14 +97,14 @@ class GoodsCloud_Sync_Model_Sync_Products
         // merge into big array
         $arrayToImport += $this->getProductArrayForImport(
         // get changed company products
-            $this->getChangedCompanyProducts($lastUpdateTime),
+            $this->getChangedCompanyProducts($filter),
             // get changed channel products
-            $this->getChangedChannelProducts($lastUpdateTime)
+            $this->getChangedChannelProducts($filter)
         );
 
         $arrayToImport += $this->getProductArrayForImport(
-            $this->getChangedCompanyProductViews($lastUpdateTime),
-            $this->getChangedChannelProductViews($lastUpdateTime)
+            $this->getChangedCompanyProductViews($filter),
+            $this->getChangedChannelProductViews($filter)
         );
 
         // import via AvS
