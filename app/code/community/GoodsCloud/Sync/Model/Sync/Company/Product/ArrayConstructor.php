@@ -40,7 +40,8 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
         $importArray = array_merge(
             $this->buildPropertyKeys($product),
             $this->buildSpecialKeys($product),
-            $this->buildRelations($product)
+            $this->buildRelations($product),
+            $this->buildImageKeys($product)
         );
 
         return $importArray;
@@ -64,12 +65,16 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
         );
 
         foreach ($product->getProperties() as $propertyName => $propertyValue) {
-            $importArray[$propertyName] = $this->getPropertyValue($propertyName,
+            $value = $this->getPropertyValue($propertyName,
                 $propertyValue);
+            if ($value) {
+                $importArray[$propertyName] = $value;
+            }
         }
 
         $availableDescription = $product->getAvailableDescriptions();
         $firstDescription = reset($availableDescription);
+
         return $importArray + array(
 
             'name'              => $product->getLabel(),
@@ -97,14 +102,6 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
             '_type'             => 'simple',
             '_attribute_set'    => $this->getAttributeSetForProduct($product),
             '_product_websites' => $this->getWebsites($product),
-            // TODO not yet implemented
-            '_category',
-            '_media_image',
-            '_media_attribute_id',
-            '_media_is_disabled',
-            '_media_position',
-            '_media_lable',
-            // TYPO in magento core, don't fix!
             '_store',
         );
     }
@@ -119,6 +116,7 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
     ) {
         // TODO supported by API but not yet used
         return array();
+
         return array(
             // Upsell
             '_links_upsell_sku',
@@ -198,6 +196,7 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
     ) {
         $channelProducts = $product->getChannelProducts();
         $channelProduct = reset($channelProducts);
+
         return $channelProduct;
     }
 
@@ -212,6 +211,7 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
         if ($product->getActive()) {
             return Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
         }
+
         return Mage_Catalog_Model_Product_Status::STATUS_DISABLED;
     }
 }

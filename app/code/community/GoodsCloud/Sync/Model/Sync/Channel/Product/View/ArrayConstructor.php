@@ -47,6 +47,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
     public function setApi(GoodsCloud_Sync_Model_Api $api)
     {
         $this->api = $api;
+
         return $this;
     }
 
@@ -63,7 +64,9 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
             $this->buildPropertyKeys($product),
             $this->buildSpecialKeys($product),
             $this->buildRelations($product),
-            $this->buildConfigurableAttributes($product)
+            $this->buildSeoData($product),
+            $this->buildConfigurableAttributes($product),
+            $this->buildImageKeys($product)
         );
 
         return $importArray;
@@ -93,9 +96,6 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
             foreach ($attributes as $attribute) {
                 $properties = $product->getProperties();
                 $configurableSettings = array();
-                // TODO implement
-                //            '_super_attribute_option',
-                //            '_super_attribute_price_corr',
             }
         }
 
@@ -188,6 +188,21 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
         );
     }
 
+
+    private function buildSeoData(
+        GoodsCloud_Sync_Model_Api_Channel_Product_View $product
+    ) {
+        $seo = $product->getSeo();
+
+        return array(
+            //            'meta_title',
+            'meta_keyword'     => isset($seo['meta_keyword']) ? implode(',',
+                $seo['meta_keyword']) : '',
+            'meta_description' => $seo['meta_description'],
+            //            'meta_autogenerate',
+        );
+    }
+
     /**
      * @param GoodsCloud_Sync_Model_Api_Channel_Product_View $product
      *
@@ -200,13 +215,6 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
             '_type'          => 'simple',
             '_attribute_set' => $this->getAttributeSetForProduct($product),
             '_category'      => $this->getCategories($product),
-            // TODO not yet implemented
-            '_media_image',
-            '_media_attribute_id',
-            '_media_is_disabled',
-            '_media_position',
-            // TYPO in magento core, don't fix!
-            '_media_lable',
             '_store'         => $this->getStoreForProduct($product),
         );
     }
@@ -225,6 +233,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
                 $category['external_identifier']
             );
         }
+
         return $categories;
     }
 
@@ -249,6 +258,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
         $categories
     ) {
         $this->categoryCache = $categories;
+
         return $this;
     }
 
@@ -263,6 +273,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
     ) {
         // TODO supported by API but not yet used
         return array();
+
         return array(
             // Upsell
             '_links_upsell_sku',
@@ -315,6 +326,7 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
         if ($product->getActive()) {
             return Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
         }
+
         return Mage_Catalog_Model_Product_Status::STATUS_DISABLED;
     }
 

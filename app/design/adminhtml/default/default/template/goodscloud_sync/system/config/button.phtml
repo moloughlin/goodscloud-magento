@@ -1,0 +1,16 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function check() {
+        $('goodscloud_sync_button').addClassName('success').writeAttribute('disable');
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
+            method: 'get',
+            onSuccess: function (transport) {
+                $('goodscloud_sync_button').removeClassName('success').writeAttribute('disable', false);
+                $('goodscloud_sync_advanced_aws_access_key_id').setValue(transport.responseText);
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>

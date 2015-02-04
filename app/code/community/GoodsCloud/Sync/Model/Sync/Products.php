@@ -29,16 +29,53 @@ class GoodsCloud_Sync_Model_Sync_Products
 
     /**
      * @param GoodsCloud_Sync_Model_Api $api
+     *
+     * @return $this
      */
     public function setApi(GoodsCloud_Sync_Model_Api $api)
     {
         $this->api = $api;
+
+        return $this;
+    }
+
+    public function updateProductsById(
+        array $companyProductIds,
+        array $channelProductIds,
+        array $companyProductViewIds,
+        array $channelProductViewIds
+    ) {
+        $arrayToImport = array();
+
+        // merge into big array
+        $arrayToImport += $this->getProductArrayForImport(
+        // get changed company products
+            $this->getChangedCompanyProducts(
+                $this->getIdFilter($companyProductIds)
+            ),
+            // get changed channel products
+            $this->getChangedChannelProducts(
+                $this->getIdFilter($channelProductIds)
+            )
+        );
+
+        $arrayToImport += $this->getProductArrayForImport(
+            $this->getChangedCompanyProductViews(
+                $this->getIdFilter($companyProductViewIds)
+            ),
+            $this->getChangedChannelProductViews(
+                $this->getIdFilter($channelProductViewIds)
+            )
+        );
+
+        // import via AvS
+        $this->import($arrayToImport);
     }
 
     /**
      *
      */
-    public function updateProducts()
+    public function updateProductsByTimestamp()
     {
         // save the time before import to make sure, the next time we get all
         // products which were updated during import
@@ -47,37 +84,41 @@ class GoodsCloud_Sync_Model_Sync_Products
         // get last update datetime
         $lastUpdateTime = $this->retrieveUpdateTime();
 
-        $arrayToImport = array();
-
-        // merge into big array
-        $arrayToImport += $this->getProductArrayForImport(
-            // get changed company products
-            $this->getChangedCompanyProducts($lastUpdateTime),
-            // get changed channel products
-            $this->getChangedChannelProducts($lastUpdateTime)
-        );
-
-        $arrayToImport += $this->getProductArrayForImport(
-            $this->getChangedCompanyProductViews($lastUpdateTime),
-            $this->getChangedChannelProductViews($lastUpdateTime)
-        );
-
-        // import via AvS
-        $this->import($arrayToImport);
+        $filter = $this->getTimestampFilter($lastUpdateTime);
+        $this->updateProducts($filter);
 
         // set new update datetime
         $this->saveUpdateTime($timeBeforeUpdate);
     }
 
+    private function updateProducts(array $filter)
+    {
+        $arrayToImport = array();
+
+        // merge into big array
+        $arrayToImport += $this->getProductArrayForImport(
+        // get changed company products
+            $this->getChangedCompanyProducts($filter),
+            // get changed channel products
+            $this->getChangedChannelProducts($filter)
+        );
+
+        $arrayToImport += $this->getProductArrayForImport(
+            $this->getChangedCompanyProductViews($filter),
+            $this->getChangedChannelProductViews($filter)
+        );
+
+        // import via AvS
+        $this->import($arrayToImport);
+    }
+
     /**
-     * @param $lastUpdateTime
+     * @param array $filters
      *
      * @return array
      */
-    private function getChangedCompanyProductViews($lastUpdateTime)
+    private function getChangedCompanyProductViews($filters)
     {
-        $filters = $this->getFilter($lastUpdateTime);
-
         $products = $this->api->getCompanyProductViews($filters);
 
         /** @var $companyProductArrayGenerator GoodsCloud_Sync_Model_Sync_Company_Product_View_ArrayConstructor */
@@ -94,16 +135,13 @@ class GoodsCloud_Sync_Model_Sync_Products
 
 
     /**
-     * @param $lastUpdateTime
+     * @param array $filters
      *
      * @return array
      */
-    private function getChangedChannelProductViews($lastUpdateTime)
+    private function getChangedChannelProductViews($filters)
     {
-        $filters = $this->getFilter($lastUpdateTime);
-
         $products = $this->api->getChannelProductViews($filters);
-
 
         /** @var $companyProductArrayGenerator GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor */
         $companyProductArrayGenerator = Mage::getModel(
@@ -140,6 +178,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                 $this->categoryCache[$category->getId()] = implode('/', $path);
             }
         }
+
         return $this->categoryCache;
     }
 
@@ -191,14 +230,12 @@ class GoodsCloud_Sync_Model_Sync_Products
     }
 
     /**
-     * @param $lastUpdateTime
+     * @param array $filters
      *
      * @return array
      */
-    private function getChangedCompanyProducts($lastUpdateTime)
+    private function getChangedCompanyProducts($filters)
     {
-        $filters = $this->getFilter($lastUpdateTime);
-
         $products = $this->api->getCompanyProducts($filters);
         /** @var $companyProductArrayGenerator GoodsCloud_Sync_Model_Sync_CompanyProduct_ArrayConstructor */
         $companyProductArrayGenerator = Mage::getModel(
@@ -213,14 +250,13 @@ class GoodsCloud_Sync_Model_Sync_Products
     }
 
     /**
-     * @param $lastUpdateTime
+     * @param array $filters
      *
      * @return array
+     *
      */
-    private function getChangedChannelProducts($lastUpdateTime)
+    private function getChangedChannelProducts($filters)
     {
-        $filters = $this->getFilter($lastUpdateTime);
-
         $products = $this->api->getChannelProducts($filters);
         /** @var $channelProductArrayGenerator GoodsCloud_Sync_Model_Sync_ChannelProduct_ArrayConstructor */
         $channelProductArrayGenerator = Mage::getModel(
@@ -265,6 +301,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                     // only the first entry should an sku entry, so magento knows
                     // that we have different views for the same product
                     unset($entry['sku']);
+                    unset($entry[Mage::helper('goodscloud_sync/api')->getIdentifierAttribute()]);
                 }
                 $import[] = $entry;
                 $first = false;
@@ -327,6 +364,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                 }
             }
         }
+
         return $this->attributeSetCache;
     }
 
@@ -347,6 +385,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                 $this->attributeCache[$attributeCode] = $attribute;
             }
         }
+
         return $this->attributeCache;
     }
 
@@ -355,7 +394,7 @@ class GoodsCloud_Sync_Model_Sync_Products
      *
      * @return array
      */
-    private function getFilter($lastUpdateTime)
+    private function getTimestampFilter($lastUpdateTime)
     {
         $lastUpdateTime = '2014-12-01T13:00:31.300450+00:00';
 
@@ -368,8 +407,18 @@ class GoodsCloud_Sync_Model_Sync_Products
                     'val'  => $lastUpdateTime
                 )
             );
-            return $filters;
         }
         return $filters;
+    }
+
+    private function getIdFilter($ids)
+    {
+        return array(
+            array(
+                'name' => 'id',
+                'op'   => 'in',
+                'val'  => $ids
+            )
+        );
     }
 }

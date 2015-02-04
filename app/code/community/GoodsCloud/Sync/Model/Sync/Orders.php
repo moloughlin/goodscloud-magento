@@ -58,31 +58,14 @@ class GoodsCloud_Sync_Model_Sync_Orders
     private function updateOrders($lastUpdateTime)
     {
         $filter = $this->getUpdatedFilter($lastUpdateTime);
-        $orders = $this->api->getOrders($filter);
-        foreach ($orders as $order) {
-            try {
-                /* @var $order GoodsCloud_Sync_Model_Api_Order */
-                switch ($order->getRoutingStatus()) {
-                    case self::ORDER_ROUTING_STATUS_CANCELED:
-                        $this->cancelOrder($order->getExternalIdentifier());
-                        break;
-                    case self::ORDER_ROUTING_STATUS_ON_HOLD:
-                        $this->putOrderOnHold($order->getExternalIdentifier());
-                        break;
-                    case self::ORDER_ROUTING_STATUS_MIXED:
-                        $this->checkOrderItems($order);
-                        break;
-                }
-
-                $this->createInvoices($order);
-                $this->createShipments($order);
-                $this->createCreditNotes($order);
-            } catch (Exception $e) {
-                Mage::logException($e);
-            }
-        }
+        $this->updateFilteredOrders($filter);
     }
 
+    public function updateOrdersById($ids)
+    {
+        $filter = $this->getIdFilter($ids);
+        $this->updateFilteredOrders($filter);
+    }
 
     /**
      * @param array                           $gcInvoice
@@ -195,12 +178,20 @@ class GoodsCloud_Sync_Model_Sync_Orders
     {
         return array(
             array(
-                //'name'  => 'updated',
-                //'op'    => '<=',
-                //'value' => $timestamp
-                'name' => 'external_identifier',
-                'op'   => 'eq',
-                'val'  => '100000201'
+                'name'  => 'updated',
+                'op'    => '<=',
+                'value' => $timestamp
+            )
+        );
+    }
+
+    private function getIdFilter($ids)
+    {
+        return array(
+            array(
+                'name' => 'id',
+                'op'   => 'in',
+                'val'  => $ids
             )
         );
     }
@@ -376,6 +367,36 @@ class GoodsCloud_Sync_Model_Sync_Orders
 
         } catch (Mage_Core_Exception $e) {
             Mage::logException($e);
+        }
+    }
+
+    /**
+     * @param $filter
+     */
+    private function updateFilteredOrders($filter)
+    {
+        $orders = $this->api->getOrders($filter);
+        foreach ($orders as $order) {
+            try {
+                /* @var $order GoodsCloud_Sync_Model_Api_Order */
+                switch ($order->getRoutingStatus()) {
+                    case self::ORDER_ROUTING_STATUS_CANCELED:
+                        $this->cancelOrder($order->getExternalIdentifier());
+                        break;
+                    case self::ORDER_ROUTING_STATUS_ON_HOLD:
+                        $this->putOrderOnHold($order->getExternalIdentifier());
+                        break;
+                    case self::ORDER_ROUTING_STATUS_MIXED:
+                        $this->checkOrderItems($order);
+                        break;
+                }
+
+                $this->createInvoices($order);
+                $this->createShipments($order);
+                $this->createCreditNotes($order);
+            } catch (Exception $e) {
+                Mage::logException($e);
+            }
         }
     }
 }
