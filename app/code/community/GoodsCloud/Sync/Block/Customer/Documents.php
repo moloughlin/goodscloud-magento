@@ -59,5 +59,12 @@ class GoodsCloud_Sync_Block_Customer_Documents
 
     private function getAwsAccessKeyId()
     {
+        if (!$this->awsAccessKey) {
+            $api = Mage::getModel('goodscloud_sync/api_factory')->getApi();
+            $session = $api->get_session();
+            $this->awsAccessKey = $session->auth->access;
+        }
+
+        return $this->awsAccessKey;
     }
 }
