@@ -35,6 +35,7 @@ class GoodsCloud_Sync_Model_Sync_Products
     public function setApi(GoodsCloud_Sync_Model_Api $api)
     {
         $this->api = $api;
+
         return $this;
     }
 
@@ -177,6 +178,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                 $this->categoryCache[$category->getId()] = implode('/', $path);
             }
         }
+
         return $this->categoryCache;
     }
 
@@ -361,6 +363,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                 }
             }
         }
+
         return $this->attributeSetCache;
     }
 
@@ -381,6 +384,7 @@ class GoodsCloud_Sync_Model_Sync_Products
                 $this->attributeCache[$attributeCode] = $attribute;
             }
         }
+
         return $this->attributeCache;
     }
 
