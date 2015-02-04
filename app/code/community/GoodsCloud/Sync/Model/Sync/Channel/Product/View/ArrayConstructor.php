@@ -65,7 +65,8 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
             $this->buildSpecialKeys($product),
             $this->buildRelations($product),
             $this->buildSeoData($product),
-            $this->buildConfigurableAttributes($product)
+            $this->buildConfigurableAttributes($product),
+            $this->buildImageKeys($product)
         );
 
         return $importArray;

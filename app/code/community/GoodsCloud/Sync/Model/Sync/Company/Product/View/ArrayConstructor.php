@@ -40,7 +40,8 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_View_ArrayConstructor
         $importArray = array_merge(
             $this->buildPropertyKeys($product),
             $this->buildSpecialKeys($product),
-            $this->buildRelations($product)
+            $this->buildRelations($product),
+            $this->buildImageKeys($product)
         );
 
         return $importArray;
