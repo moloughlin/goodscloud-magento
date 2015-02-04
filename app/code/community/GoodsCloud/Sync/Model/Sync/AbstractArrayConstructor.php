@@ -141,4 +141,65 @@ class GoodsCloud_Sync_Model_Sync_AbstractArrayConstructor
         return trim($value);
     }
 
+
+    /**
+     * @param GoodsCloud_Sync_Model_Api_Channel_Product_View $product
+     *
+     * @return array
+     * @throws Mage_Core_Exception
+     */
+    protected function buildImageKeys($product)
+    {
+        $mediaGalleryAttribute = Mage::getModel('eav/entity_attribute')
+            ->loadByCode(
+                Mage_Catalog_Model_Product::ENTITY,
+                'media_gallery'
+            );
+
+        $_media_image = array();
+        $_media_attribute_id = array();
+        $_media_is_disabled = array();
+        $_media_lable = array();
+        $imagePropertyName = $this->getImagePropertyName($product);
+        $images = $product->getDataUsingMethod($imagePropertyName);
+        foreach ($images as $image) {
+            $_media_image[] = $this->getLink($image['url_fragment']);
+            $_media_attribute_id[] = $mediaGalleryAttribute->getId();
+            $_media_is_disabled[] = false;
+            $_media_lable[] = $image['alt_text'];
+        }
+
+        return array(
+            '_media_image'        => $_media_image,
+            '_media_attribute_id' => $_media_attribute_id,
+            '_media_is_disabled'  => $_media_is_disabled,
+            '_media_lable'        => $_media_lable,
+        );
+    }
+
+    private function getImagePropertyName($product)
+    {
+        switch (get_class($product)) {
+            case 'GoodsCloud_Sync_Model_Api_Channel_Product':
+                return 'chosen_images';
+            case 'GoodsCloud_Sync_Model_Api_Channel_Product_View':
+                return 'chosen_images';
+            case 'GoodsCloud_Sync_Model_Api_Company_Product':
+                return 'available_images';
+            case 'GoodsCloud_Sync_Model_Api_Company_Product_View':
+                return 'available_images';
+        }
+        throw new InvalidArgumentException('Argument must be a product type');
+    }
+
+    /**
+     * @param string $image
+     *
+     * @return string
+     */
+    private function getLink($image)
+    {
+        return Mage::getSingleton('goodscloud_sync/sync_image_downloader')
+            ->getLink($image);
+    }
 }
