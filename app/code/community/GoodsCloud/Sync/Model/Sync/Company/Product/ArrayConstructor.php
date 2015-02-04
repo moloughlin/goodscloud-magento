@@ -65,8 +65,11 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
         );
 
         foreach ($product->getProperties() as $propertyName => $propertyValue) {
-            $importArray[$propertyName] = $this->getPropertyValue($propertyName,
+            $value = $this->getPropertyValue($propertyName,
                 $propertyValue);
+            if ($value) {
+                $importArray[$propertyName] = $value;
+            }
         }
 
         $availableDescription = $product->getAvailableDescriptions();
