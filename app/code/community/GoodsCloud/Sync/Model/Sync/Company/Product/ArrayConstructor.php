@@ -99,14 +99,6 @@ class GoodsCloud_Sync_Model_Sync_Company_Product_ArrayConstructor
             '_type'             => 'simple',
             '_attribute_set'    => $this->getAttributeSetForProduct($product),
             '_product_websites' => $this->getWebsites($product),
-            // TODO not yet implemented
-            '_category',
-            '_media_image',
-            '_media_attribute_id',
-            '_media_is_disabled',
-            '_media_position',
-            '_media_lable',
-            // TYPO in magento core, don't fix!
             '_store',
         );
     }

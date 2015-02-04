@@ -214,13 +214,6 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
             '_type'          => 'simple',
             '_attribute_set' => $this->getAttributeSetForProduct($product),
             '_category'      => $this->getCategories($product),
-            // TODO not yet implemented
-            '_media_image',
-            '_media_attribute_id',
-            '_media_is_disabled',
-            '_media_position',
-            // TYPO in magento core, don't fix!
-            '_media_lable',
             '_store'         => $this->getStoreForProduct($product),
         );
     }
