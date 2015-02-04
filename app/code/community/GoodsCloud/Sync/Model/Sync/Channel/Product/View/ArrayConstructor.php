@@ -94,9 +94,6 @@ class GoodsCloud_Sync_Model_Sync_Channel_Product_View_ArrayConstructor
             foreach ($attributes as $attribute) {
                 $properties = $product->getProperties();
                 $configurableSettings = array();
-                // TODO implement
-                //            '_super_attribute_option',
-                //            '_super_attribute_price_corr',
             }
         }
 
